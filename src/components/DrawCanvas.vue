@@ -1,17 +1,38 @@
 <template lang="pug">
-  div.column Cosa de dibujar
+  div.canvasDrawingWrapper(:style="maxSizeCanvasCSS")
+    div.canvasDrawingContainer
+      canvas.canvasDrawing(:id="this.canvasId", :width="this.canvasResolution", :height="this.canvasResolution") Canvas
 </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from 'vue-property-decorator'
-
-@Component
-export default class DrawCanvas extends Vue {
-}
-</script>
+<script lang="ts" src="../libs/DrawCanvas.ts"></script>
 
 <style scoped lang="sass">
   @import ../styles/variables
-  div
-    background-color: $primary-colour2
+  .canvasDrawing
+    border: 1px solid red
+    position:  absolute
+    top: 0
+    left: 0
+    bottom: 0
+    right: 0
+    text-align: center
+    font-size: 20px
+    color: white
+    width: 100%
+    height: 100%
+    image-rendering: optimizeSpeed             /* Older versions of FF          */
+    image-rendering: -moz-crisp-edges          /* FF 6.0+                       */
+    image-rendering: -o-crisp-edges            /* OS X & Windows Opera (12.02+) */
+    image-rendering: pixelated                 /* Awesome future-browsers       */
+    -ms-interpolation-mode: nearest-neighbor   /* IE                            */
+  .canvasDrawingContainer
+    display: table
+    margin: 0 auto
+    position: relative
+    width: 100%
+    padding-top: 100% /* 1:1 Aspect Ratio */
+  .canvasDrawingWrapper
+    margin-top: 10px
+    max-width: 480px
+    max-height: 480px
 </style>

@@ -7,4 +7,8 @@
 </template>
 
 <style lang="sass">
+  body
+    background-color: green
 </style>
+
+sty
