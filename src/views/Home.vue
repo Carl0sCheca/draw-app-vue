@@ -1,7 +1,7 @@
 <template lang="pug">
   div#main
     div.columns.is-centered
-      DrawCanvas(canvas-id="drawCanvas", max-size="800" canvas-resolution="1280").column.is-half
+      DrawCanvas(canvas-id="drawCanvas", max-size="824" grid-size="32").column.is-half
 </template>
 
 <script lang="ts">

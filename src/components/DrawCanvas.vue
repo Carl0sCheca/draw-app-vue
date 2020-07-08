@@ -9,7 +9,6 @@
 <style scoped lang="sass">
   @import ../styles/variables
   .canvasDrawing
-    border: 1px solid red
     position:  absolute
     top: 0
     left: 0

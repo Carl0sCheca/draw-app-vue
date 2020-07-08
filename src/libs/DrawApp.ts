@@ -1,5 +1,6 @@
 import { Vector, RandomColor, Clamp } from './DrawApp/Utils'
 import { MouseButton } from '@/libs/DrawApp/Mouse'
+import { ISettings } from './DrawApp/Interfaces'
 
 export class DrawApp {
   private _ctx: CanvasRenderingContext2D
@@ -8,7 +9,7 @@ export class DrawApp {
   private _pixelSize: number
   private _zoom: number
   private _zoomPoint: Vector
-  private readonly _maxPixels = 16
+  private readonly _maxPixels: number
   private _pixels: string[][]
 
   private readonly color1: string
@@ -16,11 +17,13 @@ export class DrawApp {
   private readonly color3: string
   private readonly color4: string
 
-  public constructor (canvas: HTMLCanvasElement) {
+  public constructor (canvas: HTMLCanvasElement, settings: ISettings) {
     this._ctx = canvas.getContext('2d')
     this._mousePos = { x: 0, y: 0 }
     this._mouseOffset = { x: 0, y: 0 }
     this._zoom = 1
+    this._zoomPoint = null
+    this._maxPixels = settings.gridSize
 
     this.color1 = RandomColor()
     this.color2 = RandomColor()
@@ -33,9 +36,9 @@ export class DrawApp {
     this._ctx.canvas.addEventListener('mousemove', (e: MouseEvent) => {
       this._setMousePos(e)
 
-      if (this._zoomPoint !== null) {
-        this._zoomPoint = null
-      }
+      // if (this._zoomPoint !== null) { // no se que hacer con esto
+      //   this._zoomPoint = null
+      // }
     })
 
     this._ctx.canvas.addEventListener('wheel', (e: WheelEvent) => {
@@ -119,8 +122,8 @@ export class DrawApp {
     this._ctx.strokeRect(-2, -2, this._ctx.canvas.width + 4, this._ctx.canvas.height + 4)
 
     this._ctx.lineWidth = this._pixelSize < 40 ? 2 : 4
-    for (let i = 0; i < 16; i++) {
-      for (let j = 0; j < 16; j++) {
+    for (let i = 0; i < this._maxPixels; i++) {
+      for (let j = 0; j < this._maxPixels; j++) {
         this._ctx.strokeRect(i * this._pixelSize, j * this._pixelSize, this._pixelSize, this._pixelSize)
       }
     }
@@ -155,7 +158,7 @@ export class DrawApp {
   private _setSizeCanvas (): void {
     this._ctx.canvas.width = (this._ctx.canvas as HTMLElement).offsetWidth
     this._ctx.canvas.height = (this._ctx.canvas as HTMLElement).offsetHeight
-    this._pixelSize = this._ctx.canvas.width / 16
+    this._pixelSize = this._ctx.canvas.width / this._maxPixels
     // console.log(this._pixelSize)
   }
 

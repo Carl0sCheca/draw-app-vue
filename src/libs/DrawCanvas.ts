@@ -5,7 +5,7 @@ import { DrawApp } from './DrawApp'
 export default class DrawCanvas extends Vue {
   @Prop({ required: true }) canvasId!: string
   @Prop({ required: false, default: 600 }) maxSize!: number
-  @Prop({ required: false, default: 1280 }) canvasResolution!: number
+  @Prop({ required: false, default: 16 }) gridSize!: number
 
   canvas: DrawApp
 
@@ -17,7 +17,7 @@ export default class DrawCanvas extends Vue {
   }
 
   mounted (): void {
-    this.canvas = new DrawApp(document.getElementById(this.canvasId) as HTMLCanvasElement)
+    this.canvas = new DrawApp((document.getElementById(this.canvasId) as HTMLCanvasElement), { gridSize: this.gridSize })
     this.canvas.init()
   }
 }
