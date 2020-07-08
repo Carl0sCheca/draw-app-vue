@@ -1,7 +1,7 @@
 <template lang="pug">
   div.canvasDrawingWrapper(:style="maxSizeCanvasCSS")
     div.canvasDrawingContainer
-      canvas.canvasDrawing(:id="this.canvasId", :width="this.canvasResolution", :height="this.canvasResolution") Canvas
+      canvas.canvasDrawing(:id="this.canvasId") Canvas
 </template>
 
 <script lang="ts" src="../libs/DrawCanvas.ts"></script>
