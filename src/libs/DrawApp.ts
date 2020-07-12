@@ -115,8 +115,11 @@ export class DrawApp {
     if (this._zoomPoint === null) {
       this._setMousePos(e)
       this._zoomPoint = {
-        x: Math.trunc(this._mousePos.x / this._pixelSize) * this._pixelSize,
-        y: Math.trunc(this._mousePos.y / this._pixelSize) * this._pixelSize
+        x: this._mousePos.x,
+        y: this._mousePos.y
+        // Para saltos de cuadrado en cuadrado con el zoom
+        // x: Math.trunc(this._mousePos.x / this._pixelSize) * this._pixelSize,
+        // y: Math.trunc(this._mousePos.y / this._pixelSize) * this._pixelSize
       }
     }
 
@@ -137,26 +140,27 @@ export class DrawApp {
     const pixelSize: number = this._pixelSize * this._zoom
 
     if (moved) {
-      if (!zoomOut) {
-        this._mouseOffset.x = pixelSize * (pixelQty * 0.5) - (pixelSize * (this._zoomPoint.x / this._pixelSize))
-        this._mouseOffset.y = pixelSize * (pixelQty * 0.5) - (pixelSize * (this._zoomPoint.y / this._pixelSize))
-      }
-
-      if (zoomOut) {
-        const leftCanvas: Vector = {
-          x: this._maxPixels - (((size + this._mouseOffset.x) / this._ctx.canvas.width) * pixelQty),
-          y: this._maxPixels - (((size + this._mouseOffset.y) / this._ctx.canvas.width) * pixelQty)
-        }
-        // const centerCanvas: Vector = { x: leftCanvas.x + (pixelQty * 0.5), y: leftCanvas.y + (pixelQty * 0.5) }
-        // this._pixels[Math.trunc(centerCanvas.x)][Math.trunc(centerCanvas.y)] = RandomColor()
-
-        this._mouseOffset.x = -leftCanvas.x * pixelSize
-        this._mouseOffset.y = -leftCanvas.y * pixelSize
-      }
+      this._mouseOffset.x = pixelSize * (pixelQty * 0.5) - (pixelSize * (this._zoomPoint.x / this._pixelSize))
+      this._mouseOffset.y = pixelSize * (pixelQty * 0.5) - (pixelSize * (this._zoomPoint.y / this._pixelSize))
 
       this._mouseOffset.x = Clamp(this._mouseOffset.x, maxSize, 0)
       this._mouseOffset.y = Clamp(this._mouseOffset.y, maxSize, 0)
     }
+
+    // if (zoomOut) {
+    //   const leftCanvas: Vector = {
+    //     x: this._maxPixels - (((size + this._mouseOffset.x) / this._ctx.canvas.width) * pixelQty),
+    //     y: this._maxPixels - (((size + this._mouseOffset.y) / this._ctx.canvas.width) * pixelQty)
+    //   }
+    //   const centerCanvas: Vector = { x: leftCanvas.x + (pixelQty * 0.5), y: leftCanvas.y + (pixelQty * 0.5) }
+    //   this._pixels[Math.trunc(centerCanvas.x)][Math.trunc(centerCanvas.y)] = 'red'
+    //
+    //   this._mouseOffset.x = pixelSize * (pixelQty * 0.5) - (pixelSize * centerCanvas.x)
+    //   this._mouseOffset.y = pixelSize * (pixelQty * 0.5) - (pixelSize * centerCanvas.y)
+    //
+    //   this._mouseOffset.x = Clamp(this._mouseOffset.x, maxSize, 0)
+    //   this._mouseOffset.y = Clamp(this._mouseOffset.y, maxSize, 0)
+    // }
 
     this.init()
     this._redrawCanvas()
