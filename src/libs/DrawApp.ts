@@ -1,10 +1,12 @@
-import { Vector, RandomColor, Clamp } from './DrawApp/Utils'
+import { Vector, VectorZero, RandomColor, Clamp, Lerp } from './DrawApp/Utils'
 import { MouseButton } from '@/libs/DrawApp/Mouse'
 import { ISettings } from './DrawApp/Interfaces'
 
 export class DrawApp {
   private _ctx: CanvasRenderingContext2D
   private readonly _mousePos: Vector
+  private _mousePosPrev: Vector
+  private _mouseClicked: boolean
   private _mouseOffset: Vector
   private _pixelSize: number
   private _zoom: number
@@ -20,10 +22,12 @@ export class DrawApp {
   public constructor (canvas: HTMLCanvasElement, settings: ISettings) {
     this._ctx = canvas.getContext('2d')
     this._mousePos = { x: 0, y: 0 }
+    this._mousePosPrev = { x: 0, y: 0 }
     this._mouseOffset = { x: 0, y: 0 }
     this._zoom = 1
     this._zoomPoint = null
     this._maxPixels = settings.gridSize
+    this._mouseClicked = false
 
     this.color1 = RandomColor()
     this.color2 = RandomColor()
@@ -36,6 +40,12 @@ export class DrawApp {
     this._ctx.canvas.addEventListener('mousemove', this._mouseMoveEvent.bind(this))
     this._ctx.canvas.addEventListener('wheel', this._mouseWheelEvent.bind(this))
     this._ctx.canvas.addEventListener('mousedown', this._mouseDownEvent.bind(this))
+    this._ctx.canvas.addEventListener('mouseleave', () => {
+      this._mouseClicked = false
+    })
+    this._ctx.canvas.addEventListener('mouseup', () => {
+      this._mouseClicked = false
+    })
     this._ctx.canvas.addEventListener('contextmenu', (e: MouseEvent) => e.preventDefault())
     window.addEventListener('resize', this._windowResizeEvent.bind(this))
   }
@@ -100,10 +110,30 @@ export class DrawApp {
   }
 
   private _mouseMoveEvent (e: MouseEvent): void {
+    this._mousePosPrev = { x: this._mousePos.x, y: this._mousePos.y }
     this._setMousePos(e)
 
     if (this._zoomPoint !== null) {
       this._zoomPoint = null
+    }
+
+    if (this._mouseClicked) {
+      const distance: number = Math.max(Math.abs(this._mousePosPrev.x - this._mousePos.x), Math.abs(this._mousePosPrev.y - this._mousePos.y))
+      const _lerpSteps: number = 0.5 / distance
+
+      let currentPos: Vector = { x: this._mousePos.x, y: this._mousePos.y }
+
+      for (let _lerp = 0; _lerp <= 1; _lerp += _lerpSteps) {
+        currentPos = {
+          x: Math.trunc(Lerp(this._mousePosPrev.x, this._mousePos.x, _lerp)),
+          y: Math.trunc(Lerp(this._mousePosPrev.y, this._mousePos.y, _lerp))
+        }
+
+        this._ctx.fillStyle = this.color3
+        this._ctx.fillRect(Math.trunc((currentPos.x / this._ctx.canvas.width) * this._maxPixels * this._pixelSize), currentPos.y, this._pixelSize, this._pixelSize)
+
+        this._pixels[Math.trunc((currentPos.x / this._ctx.canvas.width) * this._maxPixels)][Math.trunc((currentPos.y / this._ctx.canvas.width) * this._maxPixels)] = 'red'
+      }
     }
   }
 
@@ -124,13 +154,13 @@ export class DrawApp {
     }
 
     let moved = false
-    let zoomOut = false
+    // let zoomOut = false
     if (e.deltaY < 0 && this._zoom < 4) { // up scrolling
       moved = true
       this._zoom += 0.25
     } else if (e.deltaY > 0 && this._zoom > 1) { // down scrolling
       moved = true
-      zoomOut = true
+      // zoomOut = true
       this._zoom -= 0.25
     }
 
@@ -175,17 +205,24 @@ export class DrawApp {
         return
       }
 
-      const x: number = Math.trunc(this._mousePos.x / this._pixelSize) * this._pixelSize
-      const y: number = Math.trunc(this._mousePos.y / this._pixelSize) * this._pixelSize
+      if (!this._mouseClicked) {
+        const x: number = Math.trunc(this._mousePos.x / this._pixelSize) * this._pixelSize
+        const y: number = Math.trunc(this._mousePos.y / this._pixelSize) * this._pixelSize
 
-      const color: string = RandomColor()
-      this._pixels[x / this._pixelSize][y / this._pixelSize] = color
+        const color: string = RandomColor()
+        this._pixels[x / this._pixelSize][y / this._pixelSize] = color
 
-      this._ctx.fillStyle = color
-      this._ctx.fillRect(x, y, this._pixelSize, this._pixelSize)
+        this._ctx.fillStyle = color
+        this._ctx.fillRect(x, y, this._pixelSize, this._pixelSize)
 
-      this._ctx.strokeStyle = this.color1
-      this._ctx.strokeRect(x, y, this._pixelSize, this._pixelSize)
+        this._ctx.strokeStyle = this.color1
+        this._ctx.strokeRect(x, y, this._pixelSize, this._pixelSize)
+
+        this._mousePosPrev = { x, y }
+        this._mouseClicked = true
+      } else {
+        // coso
+      }
     } else if (e.button === MouseButton.RIGHT) {
       console.log('boton derecho')
     }

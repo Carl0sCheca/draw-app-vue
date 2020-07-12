@@ -3,6 +3,10 @@ export type Vector = {
   y: number;
 };
 
+export function VectorZero (): Vector {
+  return { x: 0, y: 0 }
+}
+
 export function RandomNumber (min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
@@ -27,6 +31,10 @@ export function Clamp (value: number, min: number, max: number): number {
   } else {
     return value
   }
+}
+
+export function Lerp (v0: number, v1: number, t: number): number {
+  return (1 - t) * v0 + t * v1
 }
 
 // private line (x0: number, y0: number, x1: number, y1: number): void {n
