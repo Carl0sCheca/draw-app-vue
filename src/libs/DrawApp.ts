@@ -1,5 +1,6 @@
-import { Vector, VectorZero, RandomColor, Clamp, Lerp } from './DrawApp/Utils'
-import { MouseButton } from '@/libs/DrawApp/Mouse'
+import { Vector, VectorZero, RandomColour, Clamp, Lerp } from './DrawApp/Utils'
+import { Mouse, MouseButton } from '@/libs/DrawApp/Mouse'
+import { EventCanvas } from '@/libs/DrawApp/EventCanvas'
 import { ISettings } from './DrawApp/Interfaces'
 
 export class DrawApp {
@@ -14,12 +15,16 @@ export class DrawApp {
   private readonly _maxPixels: number
   private _pixels: string[][]
 
+  private mouse: Mouse
+  private eventCanvas: EventCanvas
+
   private readonly color1: string
   private readonly color2: string
   private readonly color3: string
   private readonly color4: string
 
   public constructor (canvas: HTMLCanvasElement, settings: ISettings) {
+    // =========================================================================================
     this._ctx = canvas.getContext('2d')
     this._mousePos = { x: 0, y: 0 }
     this._mousePosPrev = { x: 0, y: 0 }
@@ -29,25 +34,41 @@ export class DrawApp {
     this._maxPixels = settings.gridSize
     this._mouseClicked = false
 
-    this.color1 = RandomColor()
-    this.color2 = RandomColor()
-    this.color3 = RandomColor()
-    this.color4 = RandomColor()
+    this.color1 = RandomColour()
+    this.color2 = RandomColour()
+    this.color3 = RandomColour()
+    this.color4 = RandomColour()
+    // =========================================================================================
+
+    this.mouse = new Mouse()
+    this.eventCanvas = new EventCanvas()
 
     this._setSizeCanvas()
     this.clearCanvas(true)
 
-    this._ctx.canvas.addEventListener('mousemove', this._mouseMoveEvent.bind(this))
-    this._ctx.canvas.addEventListener('wheel', this._mouseWheelEvent.bind(this))
-    this._ctx.canvas.addEventListener('mousedown', this._mouseDownEvent.bind(this))
-    this._ctx.canvas.addEventListener('mouseleave', () => {
-      this._mouseClicked = false
-    })
-    this._ctx.canvas.addEventListener('mouseup', () => {
-      this._mouseClicked = false
-    })
-    this._ctx.canvas.addEventListener('contextmenu', (e: MouseEvent) => e.preventDefault())
+    // =========================================================================================
+    // this._ctx.canvas.addEventListener('mousemove', this._mouseMoveEvent.bind(this))
+    // this._ctx.canvas.addEventListener('wheel', this._mouseWheelEvent.bind(this))
+    // this._ctx.canvas.addEventListener('mousedown', this.paintCanvas.bind(this))
+
+    this._ctx.canvas.addEventListener('mousemove', this.eventCanvas.onMouseMove.bind(this.mouse))
+    this._ctx.canvas.addEventListener('mouseleave', this.eventCanvas.onMouseLeave.bind(this.mouse))
+    this._ctx.canvas.addEventListener('mousedown', this.eventCanvas.onMouseDown.bind(this.mouse))
+    this._ctx.canvas.addEventListener('mouseup', this.eventCanvas.onMouseUp.bind(this.mouse))
+    this._ctx.canvas.addEventListener('wheel', this.eventCanvas.onMouseWheel.bind(this.mouse))
+
+    this._ctx.canvas.addEventListener('contextmenu', this.eventCanvas.onContextMenu)
+
+    // this._ctx.canvas.addEventListener('mouseleave', () => {
+    //   this._mouseClicked = false
+    // })
+    // this._ctx.canvas.addEventListener('mouseup', () => {
+    //   this._mouseClicked = false
+    // })
     window.addEventListener('resize', this._windowResizeEvent.bind(this))
+    // =========================================================================================
+
+    this.init()
   }
 
   public init () {
@@ -139,7 +160,10 @@ export class DrawApp {
 
   private _mouseWheelEvent (e: WheelEvent): void {
     e.preventDefault()
+    this._zoomCanvas(e)
+  }
 
+  private _zoomCanvas (e: WheelEvent): void {
     this._setSizeCanvas()
 
     if (this._zoomPoint === null) {
@@ -196,7 +220,7 @@ export class DrawApp {
     this._redrawCanvas()
   }
 
-  private _mouseDownEvent (e: MouseEvent): void {
+  public paintCanvas (e: MouseEvent): void {
     if (e.button === MouseButton.LEFT) {
       this._setMousePos(e)
 
@@ -209,7 +233,7 @@ export class DrawApp {
         const x: number = Math.trunc(this._mousePos.x / this._pixelSize) * this._pixelSize
         const y: number = Math.trunc(this._mousePos.y / this._pixelSize) * this._pixelSize
 
-        const color: string = RandomColor()
+        const color: string = RandomColour()
         this._pixels[x / this._pixelSize][y / this._pixelSize] = color
 
         this._ctx.fillStyle = color

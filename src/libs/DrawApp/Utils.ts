@@ -3,15 +3,13 @@ export type Vector = {
   y: number;
 };
 
-export function VectorZero (): Vector {
-  return { x: 0, y: 0 }
-}
+export const VectorZero: Vector = { x: 0, y: 0 }
 
 export function RandomNumber (min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-export function RandomColor (): string {
+export function RandomColour (): string {
   let finalColour = '#'
   for (let i = 0; i < 3; i++) {
     let number: string = RandomNumber(0, 255).toString(16)
