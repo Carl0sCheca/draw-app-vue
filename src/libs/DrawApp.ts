@@ -2,9 +2,10 @@ import { Vector, VectorZero, RandomColour, Clamp, Lerp } from './DrawApp/Utils'
 import { Mouse, MouseButton } from '@/libs/DrawApp/Mouse'
 import { EventCanvas } from '@/libs/DrawApp/EventCanvas'
 import { ISettings } from './DrawApp/Interfaces'
+import { Canvas } from '@/libs/DrawApp/Canvas'
 
 export class DrawApp {
-  private _ctx: CanvasRenderingContext2D
+  private readonly _ctx: CanvasRenderingContext2D
   private readonly _mousePos: Vector
   private _mousePosPrev: Vector
   private _mouseClicked: boolean
@@ -15,8 +16,7 @@ export class DrawApp {
   private readonly _maxPixels: number
   private _pixels: string[][]
 
-  private mouse: Mouse
-  private eventCanvas: EventCanvas
+  private readonly _canvas: Canvas
 
   private readonly color1: string
   private readonly color2: string
@@ -25,14 +25,14 @@ export class DrawApp {
 
   public constructor (canvas: HTMLCanvasElement, settings: ISettings) {
     // =========================================================================================
-    this._ctx = canvas.getContext('2d')
-    this._mousePos = { x: 0, y: 0 }
-    this._mousePosPrev = { x: 0, y: 0 }
-    this._mouseOffset = { x: 0, y: 0 }
-    this._zoom = 1
-    this._zoomPoint = null
-    this._maxPixels = settings.gridSize
-    this._mouseClicked = false
+    // this._ctx = canvas.getContext('2d')
+    // this._mousePos = { x: 0, y: 0 }
+    // this._mousePosPrev = { x: 0, y: 0 }
+    // this._mouseOffset = { x: 0, y: 0 }
+    // this._zoom = 1
+    // this._zoomPoint = null
+    // this._maxPixels = settings.gridSize
+    // this._mouseClicked = false
 
     this.color1 = RandomColour()
     this.color2 = RandomColour()
@@ -40,35 +40,25 @@ export class DrawApp {
     this.color4 = RandomColour()
     // =========================================================================================
 
-    this.mouse = new Mouse()
-    this.eventCanvas = new EventCanvas()
+    this._canvas = new Canvas(canvas, settings)
 
-    this._setSizeCanvas()
-    this.clearCanvas(true)
+    // this._setSizeCanvas()
+    // this.clearCanvas(true)
 
     // =========================================================================================
     // this._ctx.canvas.addEventListener('mousemove', this._mouseMoveEvent.bind(this))
     // this._ctx.canvas.addEventListener('wheel', this._mouseWheelEvent.bind(this))
     // this._ctx.canvas.addEventListener('mousedown', this.paintCanvas.bind(this))
-
-    this._ctx.canvas.addEventListener('mousemove', this.eventCanvas.onMouseMove.bind(this.mouse))
-    this._ctx.canvas.addEventListener('mouseleave', this.eventCanvas.onMouseLeave.bind(this.mouse))
-    this._ctx.canvas.addEventListener('mousedown', this.eventCanvas.onMouseDown.bind(this.mouse))
-    this._ctx.canvas.addEventListener('mouseup', this.eventCanvas.onMouseUp.bind(this.mouse))
-    this._ctx.canvas.addEventListener('wheel', this.eventCanvas.onMouseWheel.bind(this.mouse))
-
-    this._ctx.canvas.addEventListener('contextmenu', this.eventCanvas.onContextMenu)
-
+    //
     // this._ctx.canvas.addEventListener('mouseleave', () => {
     //   this._mouseClicked = false
     // })
     // this._ctx.canvas.addEventListener('mouseup', () => {
     //   this._mouseClicked = false
     // })
-    window.addEventListener('resize', this._windowResizeEvent.bind(this))
     // =========================================================================================
 
-    this.init()
+    // this.init()
   }
 
   public init () {

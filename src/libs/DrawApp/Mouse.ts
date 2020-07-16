@@ -1,4 +1,5 @@
 import { Vector, VectorZero } from '@/libs/DrawApp/Utils'
+import { IZoom } from '@/libs/DrawApp/Interfaces'
 
 export enum MouseButton {
   NONE = -1,
@@ -8,15 +9,14 @@ export enum MouseButton {
 }
 
 export class Mouse {
-  private position: Vector
-  private lastPosition: Vector
-  private offset: Vector
+  public position: Vector
+  public lastPosition: Vector
+  public offset: Vector
+  public zoom: IZoom
 
   public clicked: MouseButton
 
   public constructor () {
-    console.log('Mouse constructor')
-
     this.clicked = MouseButton.NONE
     this.position = VectorZero
     this.lastPosition = VectorZero
@@ -24,43 +24,40 @@ export class Mouse {
   }
 
   public mouseDownLeft (): void {
-    // TODO: this
-    console.log('boton izquierdo abajo')
+    this.clicked = MouseButton.LEFT
+    // console.log('izq abajo')
   }
 
   public mouseDownRight (): void {
-    // TODO: this
-    console.log('boton derecho abajo')
+    this.clicked = MouseButton.RIGHT
+    // console.log('derecha abajo')
   }
 
   public mouseUpLeft (): void {
-    // TODO: this
-    console.log('boton izquierdo arriba')
+    this.clicked = MouseButton.NONE
+    // console.log('izq arriba')
   }
 
   public mouseUpRight (): void {
-    // TODO: this
-    console.log('boton derecho arriba')
+    this.clicked = MouseButton.NONE
+    // console.log('derecha abajp')
   }
 
   public mouseWheelDown (): void {
-    // TODO: this
-    console.log('rueda abajo')
+    // console.log('rueda abajo')
   }
 
   public mouseWheelUp (): void {
-    // TODO: this
-    console.log('rueda arriba')
+    // console.log('rueda arriba')
   }
 
   public mouseMove (position: Vector): void {
-    // TODO: this
     this.position = position
-    console.log('mouse move', this.position)
+    // console.log('mouse move', this.position)
   }
 
   public mouseLeave (): void {
-    // TODO: this
-    console.log('mouse leave')
+    this.clicked = MouseButton.NONE
+    // console.log('mouse leave')
   }
 }
