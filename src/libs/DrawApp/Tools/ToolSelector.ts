@@ -1,7 +1,7 @@
-import { ITool } from '@/libs/DrawApp/ITool'
-import { PencilTool } from '@/libs/DrawApp/PencilTool'
+import { ITool } from '@/libs/DrawApp/Tools/ITool'
+import { PencilTool } from '@/libs/DrawApp/Tools/PencilTool'
 import { Canvas } from '@/libs/DrawApp/Canvas'
-import { BucketTool } from '@/libs/DrawApp/BucketTool'
+import { BucketTool } from '@/libs/DrawApp/Tools/BucketTool'
 
 export enum Tool {
   NONE = -1,
@@ -13,8 +13,14 @@ export class ToolSelector {
   public readonly tools: ITool[]
   private selected: number
 
+  public colorSelected: string
+
+  public showGrid: boolean
+
   public constructor (canvas: Canvas) {
     this.selected = 0
+    this.colorSelected = 'red'
+    this.showGrid = true
 
     this.tools = []
     this.tools.push(new PencilTool(canvas))

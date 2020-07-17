@@ -1,5 +1,6 @@
-import { Vector, VectorZero } from '@/libs/DrawApp/Utils'
+import { DiscretizationDataPosition, DiscretizationPosition, Vector, VectorZero } from '@/libs/DrawApp/Utils'
 import { IZoom } from '@/libs/DrawApp/Interfaces'
+import { Canvas } from '@/libs/DrawApp/Canvas'
 
 export enum MouseButton {
   NONE = -1,
@@ -9,18 +10,38 @@ export enum MouseButton {
 }
 
 export class Mouse {
-  public position: Vector
+  public realPosition: Vector
   public lastPosition: Vector
-  public offset: Vector
+  private _position: Vector
+  private _dataPosition: Vector
   public zoom: IZoom
 
   public clicked: MouseButton
 
-  public constructor () {
+  private _canvas: Canvas
+
+  public constructor (canvas: Canvas) {
+    this._canvas = canvas
     this.clicked = MouseButton.NONE
-    this.position = VectorZero
+    this.realPosition = VectorZero
+    this._position = VectorZero
+    this._dataPosition = VectorZero
     this.lastPosition = VectorZero
-    this.offset = VectorZero
+    this.zoom = {
+      level: 1,
+      position: VectorZero,
+      offset: VectorZero,
+      minLevel: 1,
+      maxLevel: 4
+    }
+  }
+
+  public get position (): Vector {
+    return DiscretizationPosition(this.dataPosition, this._canvas)
+  }
+
+  public get dataPosition (): Vector {
+    return DiscretizationDataPosition(this.realPosition, this._canvas)
   }
 
   public mouseDownLeft (): void {
@@ -52,7 +73,7 @@ export class Mouse {
   }
 
   public mouseMove (position: Vector): void {
-    this.position = position
+    this.realPosition = position
     // console.log('mouse move', this.position)
   }
 

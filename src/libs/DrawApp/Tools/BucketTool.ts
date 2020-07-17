@@ -1,4 +1,4 @@
-import { ITool } from '@/libs/DrawApp/ITool'
+import { ITool } from '@/libs/DrawApp/Tools/ITool'
 import { Mouse } from '@/libs/DrawApp/Mouse'
 import { Canvas } from '@/libs/DrawApp/Canvas'
 

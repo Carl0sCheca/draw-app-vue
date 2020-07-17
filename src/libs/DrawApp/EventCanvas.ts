@@ -3,17 +3,15 @@ import { Canvas } from '@/libs/DrawApp/Canvas'
 
 export class EventCanvas {
   private readonly _canvas: Canvas
-  private readonly _mouse: Mouse
 
-  public constructor (canvas: Canvas, mouse: Mouse) {
+  public constructor (canvas: Canvas) {
     this._canvas = canvas
-    this._mouse = mouse
 
-    this._canvas.canvas.addEventListener('mousedown', (e: MouseEvent) => this.onMouseDown(e, this._mouse))
-    this._canvas.canvas.addEventListener('mouseup', (e: MouseEvent) => this.onMouseUp(e, this._mouse))
-    this._canvas.canvas.addEventListener('wheel', (e: WheelEvent) => this.onMouseWheel(e, this._mouse))
-    this._canvas.canvas.addEventListener('mousemove', (e: MouseEvent) => this.onMouseMove(e, this._mouse))
-    this._canvas.canvas.addEventListener('mouseleave', () => this.onMouseLeave(this._mouse))
+    this._canvas.canvas.addEventListener('mousedown', (e: MouseEvent) => this.onMouseDown(e, this._canvas.mouse))
+    this._canvas.canvas.addEventListener('mouseup', (e: MouseEvent) => this.onMouseUp(e, this._canvas.mouse))
+    this._canvas.canvas.addEventListener('wheel', (e: WheelEvent) => this.onMouseWheel(e, this._canvas.mouse))
+    this._canvas.canvas.addEventListener('mousemove', (e: MouseEvent) => this.onMouseMove(e, this._canvas.mouse))
+    this._canvas.canvas.addEventListener('mouseleave', () => this.onMouseLeave(this._canvas.mouse))
     this._canvas.canvas.addEventListener('contextmenu', (e: MouseEvent) => this.onContextMenu(e))
     window.addEventListener('resize', () => this.onResizeWindow(this._canvas))
   }
@@ -46,6 +44,7 @@ export class EventCanvas {
   }
 
   public onMouseMove (e: MouseEvent, mouse: Mouse): void {
+    mouse.lastPosition = { x: mouse.position.x, y: mouse.position.y }
     mouse.mouseMove({ x: e.offsetX, y: e.offsetY })
 
     this._canvas.canvas.dispatchEvent(this._canvas.toolSelector.tool.event)

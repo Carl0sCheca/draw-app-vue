@@ -8,4 +8,7 @@ export interface ISettings {
 export interface IZoom {
   level: number
   position: Vector
+  offset: Vector
+  minLevel: number
+  maxLevel: number
 }

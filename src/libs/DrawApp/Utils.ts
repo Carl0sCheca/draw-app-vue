@@ -1,3 +1,5 @@
+import { Canvas } from '@/libs/DrawApp/Canvas'
+
 export type Vector = {
   x: number;
   y: number;
@@ -33,6 +35,20 @@ export function Clamp (value: number, min: number, max: number): number {
 
 export function Lerp (v0: number, v1: number, t: number): number {
   return (1 - t) * v0 + t * v1
+}
+
+export function DiscretizationPosition (discretePosition: Vector, canvas: Canvas): Vector {
+  return {
+    x: discretePosition.x * canvas.settings.pixelSize,
+    y: discretePosition.y * canvas.settings.pixelSize
+  }
+}
+
+export function DiscretizationDataPosition (position: Vector, canvas: Canvas): Vector {
+  return {
+    x: Math.trunc(position.x / canvas.canvas.width * canvas.settings.gridSize),
+    y: Math.trunc(position.y / canvas.canvas.width * canvas.settings.gridSize)
+  }
 }
 
 // private line (x0: number, y0: number, x1: number, y1: number): void {n
