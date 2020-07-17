@@ -1,4 +1,4 @@
-import { Vector } from '@/libs/DrawApp/Utils'
+import { Clamp, Vector } from '@/libs/DrawApp/Utils'
 
 export class Data {
   public pixels: string[][]

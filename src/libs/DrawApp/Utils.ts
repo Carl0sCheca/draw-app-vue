@@ -3,7 +3,7 @@ import { Canvas } from '@/libs/DrawApp/Canvas'
 export type Vector = {
   x: number;
   y: number;
-};
+}
 
 export const VectorZero: Vector = { x: 0, y: 0 }
 
@@ -46,8 +46,8 @@ export function DiscretizationPosition (discretePosition: Vector, canvas: Canvas
 
 export function DiscretizationDataPosition (position: Vector, canvas: Canvas): Vector {
   return {
-    x: Math.trunc(position.x / canvas.canvas.width * canvas.settings.gridSize),
-    y: Math.trunc(position.y / canvas.canvas.width * canvas.settings.gridSize)
+    x: Clamp(Math.trunc(position.x / canvas.settings.pixelSize), 0, canvas.settings.gridSize - 1),
+    y: Clamp(Math.trunc(position.y / canvas.settings.pixelSize), 0, canvas.settings.gridSize - 1)
   }
 }
 

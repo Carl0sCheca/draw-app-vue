@@ -17,8 +17,12 @@ export class PencilTool extends ITool {
 
   public onClick (): void {
     if (this.canvas.mouse.clicked === MouseButton.LEFT) {
-      if (this.canvas.mouse.position.x < 0 || this.canvas.mouse.position.x > this.canvas.ctx.canvas.width ||
-        this.canvas.mouse.position.y < 0 || this.canvas.mouse.position.y > this.canvas.ctx.canvas.height) {
+      if (
+        this.canvas.mouse.dataPosition.x < 0 || this.canvas.mouse.dataPosition.x >= this.canvas.settings.gridSize ||
+        this.canvas.mouse.dataPosition.y < 0 || this.canvas.mouse.dataPosition.y >= this.canvas.settings.gridSize ||
+        this.canvas.mouse.position.x < 0 || this.canvas.mouse.position.x >= this.canvas.ctx.canvas.width ||
+        this.canvas.mouse.position.y < 0 || this.canvas.mouse.position.y >= this.canvas.ctx.canvas.height
+      ) {
         return
       }
 

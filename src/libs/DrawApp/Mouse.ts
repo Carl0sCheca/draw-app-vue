@@ -14,11 +14,9 @@ export class Mouse {
   public lastPosition: Vector
   private _position: Vector
   private _dataPosition: Vector
-  public zoom: IZoom
-
   public clicked: MouseButton
 
-  private _canvas: Canvas
+  private readonly _canvas: Canvas
 
   public constructor (canvas: Canvas) {
     this._canvas = canvas
@@ -27,13 +25,6 @@ export class Mouse {
     this._position = VectorZero
     this._dataPosition = VectorZero
     this.lastPosition = VectorZero
-    this.zoom = {
-      level: 1,
-      position: VectorZero,
-      offset: VectorZero,
-      minLevel: 1,
-      maxLevel: 4
-    }
   }
 
   public get position (): Vector {
@@ -41,7 +32,14 @@ export class Mouse {
   }
 
   public get dataPosition (): Vector {
-    return DiscretizationDataPosition(this.realPosition, this._canvas)
+    const position: Vector = { x: this.realPosition.x, y: this.realPosition.y }
+    position.x -= this._canvas.settings.zoom.offset.x
+    position.x /= this._canvas.settings.zoom.level
+
+    position.y -= this._canvas.settings.zoom.offset.y
+    position.y /= this._canvas.settings.zoom.level
+
+    return DiscretizationDataPosition(position, this._canvas)
   }
 
   public mouseDownLeft (): void {
@@ -66,10 +64,12 @@ export class Mouse {
 
   public mouseWheelDown (): void {
     // console.log('rueda abajo')
+    this._canvas.zoomOut()
   }
 
   public mouseWheelUp (): void {
     // console.log('rueda arriba')
+    this._canvas.zoomIn()
   }
 
   public mouseMove (position: Vector): void {

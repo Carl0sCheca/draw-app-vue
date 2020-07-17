@@ -1,8 +1,9 @@
 import { Vector } from '@/libs/DrawApp/Utils';
 
 export interface ISettings {
-  gridSize: number,
-  pixelSize?: number,
+  gridSize: number
+  pixelSize?: number
+  zoom?: IZoom
 }
 
 export interface IZoom {
