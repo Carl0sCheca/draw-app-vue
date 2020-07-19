@@ -1,6 +1,5 @@
-import { Vector, VectorZero, RandomColour, Clamp, Lerp } from './DrawApp/Utils'
-import { Mouse, MouseButton } from '@/libs/DrawApp/Mouse'
-import { EventCanvas } from '@/libs/DrawApp/EventCanvas'
+import { Vector, RandomColour, Clamp, Lerp } from './DrawApp/Utils'
+import { MouseButton } from '@/libs/DrawApp/Mouse'
 import { ISettings } from './DrawApp/Interfaces'
 import { Canvas } from '@/libs/DrawApp/Canvas'
 

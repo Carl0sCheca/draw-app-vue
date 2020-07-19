@@ -1,7 +1,7 @@
 import { ITool } from '@/libs/DrawApp/Tools/ITool'
 import { Canvas } from '@/libs/DrawApp/Canvas'
 import { MouseButton } from '@/libs/DrawApp/Mouse'
-import { DiscretizationDataPosition, DiscretizationPosition, Lerp, Vector } from '@/libs/DrawApp/Utils'
+import { DiscretizationDataPosition, DiscretizationPosition, Lerp, RandomColour, Vector } from '@/libs/DrawApp/Utils'
 
 export class PencilTool extends ITool {
   public name: string
@@ -40,8 +40,7 @@ export class PencilTool extends ITool {
           y: Lerp(this.canvas.mouse.lastPosition.y, this.canvas.mouse.position.y, _lerp)
         }, this.canvas)
 
-        this.canvas.paintCanvas(DiscretizationPosition(_currentPos, this.canvas), this.canvas.toolSelector.showGrid)
-        this.canvas.data.writeData(_currentPos, this.canvas.toolSelector.colorSelected)
+        this.canvas.paintCanvas(DiscretizationPosition(_currentPos, this.canvas), this.canvas.toolSelector.showGrid, RandomColour())
       }
     }
   }

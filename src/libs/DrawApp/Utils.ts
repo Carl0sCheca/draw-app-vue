@@ -5,8 +5,6 @@ export type Vector = {
   y: number;
 }
 
-export const VectorZero: Vector = { x: 0, y: 0 }
-
 export function RandomNumber (min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }

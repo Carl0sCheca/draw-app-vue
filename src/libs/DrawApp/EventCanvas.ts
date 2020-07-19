@@ -17,6 +17,8 @@ export class EventCanvas {
   }
 
   public onMouseDown (e: MouseEvent, mouse: Mouse): void {
+    this._setupMousePosition(e, mouse)
+
     if (e.button === MouseButton.LEFT) {
       mouse.mouseDownLeft()
     } else if (e.button === MouseButton.RIGHT) {
@@ -27,6 +29,8 @@ export class EventCanvas {
   }
 
   public onMouseUp (e: MouseEvent, mouse: Mouse): void {
+    this._setupMousePosition(e, mouse)
+
     if (e.button === MouseButton.LEFT) {
       mouse.mouseUpLeft()
     } else if (e.button === MouseButton.RIGHT) {
@@ -36,6 +40,9 @@ export class EventCanvas {
 
   public onMouseWheel (e: WheelEvent, mouse: Mouse): void {
     e.preventDefault()
+
+    this._setupMousePosition(e, mouse)
+
     if (e.deltaY > 0) {
       mouse.mouseWheelDown()
     } else if (e.deltaY < 0) {
@@ -44,9 +51,7 @@ export class EventCanvas {
   }
 
   public onMouseMove (e: MouseEvent, mouse: Mouse): void {
-    mouse.lastPosition = { x: mouse.position.x, y: mouse.position.y }
-    mouse.mouseMove({ x: e.offsetX, y: e.offsetY })
-
+    this._setupMousePosition(e, mouse)
     this._canvas.canvas.dispatchEvent(this._canvas.toolSelector.tool.event)
   }
 
@@ -60,5 +65,10 @@ export class EventCanvas {
 
   public onResizeWindow (canvas: Canvas): void {
     canvas.resizeWindow()
+  }
+
+  private _setupMousePosition (e: MouseEvent, mouse: Mouse): void {
+    mouse.lastPosition = { x: mouse.position.x, y: mouse.position.y }
+    mouse.mouseMove({ x: e.offsetX, y: e.offsetY })
   }
 }

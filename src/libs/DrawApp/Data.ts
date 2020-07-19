@@ -1,4 +1,4 @@
-import { Clamp, Vector } from '@/libs/DrawApp/Utils'
+import { Vector } from '@/libs/DrawApp/Utils'
 
 export class Data {
   public pixels: string[][]
@@ -28,6 +28,8 @@ export class Data {
   }
 
   public writeData (position: Vector, color: string): void {
-    this.pixels[position.x][position.y] = color
+    if (this.pixels !== undefined || position !== undefined) {
+      this.pixels[position.x][position.y] = color
+    }
   }
 }
