@@ -56,6 +56,14 @@ export class Mouse {
     this.clicked = MouseButton.NONE
   }
 
+  public mouseWheelButtonDown (): void {
+    this.clicked = MouseButton.MIDDLE
+  }
+
+  public mouseWheelButtonUp (): void {
+    this.clicked = MouseButton.NONE
+  }
+
   public mouseWheelDown (): void {
     this._canvas.zoomOut()
   }
@@ -66,6 +74,7 @@ export class Mouse {
 
   public mouseMove (position: Vector): void {
     this.realPosition = position
+    // console.log(this.relativeRealPosition, this.realPosition)
   }
 
   public mouseLeave (): void {

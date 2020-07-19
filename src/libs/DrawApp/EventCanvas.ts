@@ -17,24 +17,30 @@ export class EventCanvas {
   }
 
   public onMouseDown (e: MouseEvent, mouse: Mouse): void {
+    e.preventDefault()
     this._setupMousePosition(e, mouse)
 
     if (e.button === MouseButton.LEFT) {
       mouse.mouseDownLeft()
     } else if (e.button === MouseButton.RIGHT) {
       mouse.mouseDownRight()
+    } else if (e.button === MouseButton.MIDDLE) {
+      mouse.mouseWheelButtonDown()
     }
 
     this._canvas.canvas.dispatchEvent(this._canvas.toolSelector.tool.event)
   }
 
   public onMouseUp (e: MouseEvent, mouse: Mouse): void {
+    e.preventDefault()
     this._setupMousePosition(e, mouse)
 
     if (e.button === MouseButton.LEFT) {
       mouse.mouseUpLeft()
     } else if (e.button === MouseButton.RIGHT) {
       mouse.mouseUpRight()
+    } else if (e.button === MouseButton.MIDDLE) {
+      mouse.mouseWheelButtonUp()
     }
   }
 

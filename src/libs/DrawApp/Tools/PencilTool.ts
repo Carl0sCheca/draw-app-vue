@@ -1,20 +1,8 @@
-import { ITool } from '@/libs/DrawApp/Tools/ITool'
-import { Canvas } from '@/libs/DrawApp/Canvas'
+import { Tool } from '@/libs/DrawApp/Tools/Tool'
 import { MouseButton } from '@/libs/DrawApp/Mouse'
 import { DiscretizationDataPosition, DiscretizationPosition, Lerp, RandomColour, Vector } from '@/libs/DrawApp/Utils'
 
-export class PencilTool extends ITool {
-  public name: string
-  public event: Event
-
-  public constructor (canvas: Canvas) {
-    super(canvas)
-
-    this.name = 'Pencil'
-    this.event = new Event(this.name)
-    canvas.canvas.addEventListener(this.name, () => this.onClick())
-  }
-
+export class PencilTool extends Tool {
   public onClick (): void {
     if (this.canvas.mouse.clicked === MouseButton.LEFT) {
       if (
