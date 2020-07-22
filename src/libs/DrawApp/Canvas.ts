@@ -3,7 +3,7 @@ import { Mouse } from '@/libs/DrawApp/Mouse'
 import { EventCanvas } from '@/libs/DrawApp/EventCanvas'
 import { Data } from '@/libs/DrawApp/Data'
 import { ToolSelector } from '@/libs/DrawApp/Tools/ToolSelector'
-import { Clamp, DiscretizationDataPosition, DiscretizationPosition, RandomColour, Vector } from '@/libs/DrawApp/Utils'
+import { DiscretizationDataPosition, DiscretizationPosition, Vector } from '@/libs/DrawApp/Utils'
 import { Zoom } from '@/libs/DrawApp/Zoom'
 
 export class Canvas {
@@ -42,10 +42,6 @@ export class Canvas {
     this.reloadCanvas()
   }
 
-  public resizeWindow (): void {
-    this.reloadCanvas()
-  }
-
   public paintCanvas (position: Vector, showGrid = false, color: string = this.toolSelector.colorSelected, size: number = this.settings.pixelSize): void {
     this.ctx.fillStyle = color
     this.ctx.fillRect(
@@ -66,6 +62,12 @@ export class Canvas {
     }
 
     this.data.writeData(DiscretizationDataPosition(position, this), color)
+  }
+
+  public resizeWindow (): void {
+    this.zoom.zoomIn()
+    this.zoom.zoomOut()
+    this.reloadCanvas()
   }
 
   public reloadCanvas (): void {

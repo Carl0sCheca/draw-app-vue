@@ -28,7 +28,9 @@ export class EventCanvas {
       mouse.mouseWheelButtonDown()
     }
 
-    this._canvas.canvas.dispatchEvent(this._canvas.toolSelector.tool.event)
+    if (mouse.clicked !== MouseButton.NONE) {
+      this._canvas.canvas.dispatchEvent(this._canvas.toolSelector.tool.event)
+    }
   }
 
   public onMouseUp (e: MouseEvent, mouse: Mouse): void {
@@ -58,7 +60,10 @@ export class EventCanvas {
 
   public onMouseMove (e: MouseEvent, mouse: Mouse): void {
     this._setupMousePosition(e, mouse)
-    this._canvas.canvas.dispatchEvent(this._canvas.toolSelector.tool.event)
+
+    if (mouse.clicked !== MouseButton.NONE) {
+      this._canvas.canvas.dispatchEvent(this._canvas.toolSelector.tool.event)
+    }
   }
 
   public onMouseLeave (mouse: Mouse): void {

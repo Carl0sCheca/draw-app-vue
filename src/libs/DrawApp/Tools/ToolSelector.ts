@@ -10,13 +10,13 @@ export enum ToolType {
   PENCIL = 0,
   BUCKET = 1,
   COLOUR_PICKER = 2,
-  MOVE = 3,
-  ZOOM = 4
+  MOVE = 3
 }
 
 export class ToolSelector {
   public readonly tools: Tool[]
   private selected: number
+  private previousSelected: number
 
   public colorSelected: string
 
@@ -24,6 +24,8 @@ export class ToolSelector {
 
   public constructor (canvas: Canvas) {
     this.selected = 0
+    this.previousSelected = -1
+
     this.colorSelected = 'red'
     this.showGrid = true
 
@@ -36,5 +38,19 @@ export class ToolSelector {
 
   public get tool (): Tool {
     return this.tools[this.selected]
+  }
+
+  public set selectTool (toolType: ToolType) {
+    if (this.selected !== toolType.valueOf()) {
+      this.previousSelected = this.selected
+      this.selected = toolType.valueOf()
+    }
+  }
+
+  public restoreTool (): void {
+    if (this.previousSelected !== -1) {
+      this.selected = this.previousSelected
+      this.previousSelected = -1
+    }
   }
 }

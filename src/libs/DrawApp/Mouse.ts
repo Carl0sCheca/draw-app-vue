@@ -1,5 +1,6 @@
 import { DiscretizationDataPosition, DiscretizationPosition, Vector } from '@/libs/DrawApp/Utils'
 import { Canvas } from '@/libs/DrawApp/Canvas'
+import { ToolType } from '@/libs/DrawApp/Tools/ToolSelector'
 
 export enum MouseButton {
   NONE = -1,
@@ -58,10 +59,12 @@ export class Mouse {
 
   public mouseWheelButtonDown (): void {
     this.clicked = MouseButton.MIDDLE
+    this._canvas.toolSelector.selectTool = ToolType.MOVE
   }
 
   public mouseWheelButtonUp (): void {
     this.clicked = MouseButton.NONE
+    this._canvas.canvas.dispatchEvent(this._canvas.toolSelector.tool.event)
   }
 
   public mouseWheelDown (): void {
