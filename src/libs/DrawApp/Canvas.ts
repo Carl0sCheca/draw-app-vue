@@ -4,11 +4,13 @@ import { EventCanvas } from '@/libs/DrawApp/EventCanvas'
 import { Data } from '@/libs/DrawApp/Data'
 import { ToolSelector } from '@/libs/DrawApp/Tools/ToolSelector'
 import { Clamp, DiscretizationDataPosition, DiscretizationPosition, RandomColour, Vector } from '@/libs/DrawApp/Utils'
+import { Zoom } from '@/libs/DrawApp/Zoom'
 
 export class Canvas {
   public readonly canvas: HTMLCanvasElement
   public readonly mouse: Mouse
   public readonly eventCanvas: EventCanvas
+  public readonly zoom: Zoom
   public readonly settings: ISettings
   public readonly data: Data
   public readonly toolSelector: ToolSelector
@@ -19,23 +21,16 @@ export class Canvas {
     this.canvas = canvas
     this.mouse = new Mouse(this)
     this.eventCanvas = new EventCanvas(this)
+    this.zoom = new Zoom(this, {
+      level: 1,
+      minLevel: 1,
+      maxLevel: 8,
+      steps: 0.1
+    })
 
     // Data and setting from canvas
     this.data = new Data(settings.gridSize)
     this.settings = settings
-    const algo = 4
-    this.settings.zoom = {
-      level: algo,
-      position: { x: 0, y: 0 },
-      offset: { x: 0, y: 0 },
-      minLevel: 1,
-      maxLevel: algo
-    }
-
-    setInterval(() => {
-      this.settings.zoom.offset.x -= 1
-      this._reloadCanvas()
-    }, 100)
 
     // Canvas context
     this.ctx = canvas.getContext('2d')
@@ -44,73 +39,50 @@ export class Canvas {
     this.toolSelector = new ToolSelector(this)
 
     // Init canvas
-    this._reloadCanvas()
+    this.reloadCanvas()
   }
 
   public resizeWindow (): void {
-    this._reloadCanvas()
+    this.reloadCanvas()
   }
 
   public paintCanvas (position: Vector, showGrid = false, color: string = this.toolSelector.colorSelected, size: number = this.settings.pixelSize): void {
     this.ctx.fillStyle = color
-    this.ctx.fillRect(position.x, position.y, size, size)
+    this.ctx.fillRect(
+      position.x,
+      position.y,
+      size,
+      size
+    )
 
     if (showGrid) {
       this.ctx.strokeStyle = 'black'
-      this.ctx.strokeRect(position.x, position.y, size, size)
+      this.ctx.strokeRect(
+        position.x,
+        position.y,
+        size,
+        size
+      )
     }
 
     this.data.writeData(DiscretizationDataPosition(position, this), color)
   }
 
-  private _reloadCanvas (): void {
+  public reloadCanvas (): void {
     this._setSizeCanvas()
     this._zoomReload()
   }
 
   private _zoomReload (): void {
     this.ctx.transform(
-      this.settings.zoom.level,
+      this.zoom.level,
       0,
       0,
-      this.settings.zoom.level,
-      this.settings.zoom.offset.x,
-      this.settings.zoom.offset.y
+      this.zoom.level,
+      this.zoom.offset.x,
+      this.zoom.offset.y
     )
     this._redrawCanvas()
-  }
-
-  public zoomIn (): void {
-    this.settings.zoom.level = Clamp(
-      this.settings.zoom.level + 0.25,
-      this.settings.zoom.minLevel,
-      this.settings.zoom.maxLevel
-    )
-
-    const right: Vector = {
-      x: Math.trunc((this.canvas.width - this.settings.zoom.offset.x) / this.settings.zoom.level),
-      y: Math.trunc((this.canvas.width - this.settings.zoom.offset.y) / this.settings.zoom.level)
-    }
-    const left: Vector = {
-      x: Math.trunc(-this.settings.zoom.offset.x / this.settings.zoom.level),
-      y: Math.trunc(-this.settings.zoom.offset.y / this.settings.zoom.level)
-    }
-    const middle: Vector = {
-      x: (left.x + right.x) * 0.5,
-      y: (left.y + right.y) * 0.5
-    }
-
-    this.paintCanvas(middle, true, RandomColour())
-    this._reloadCanvas()
-  }
-
-  public zoomOut (): void {
-    this.settings.zoom.level = Clamp(
-      this.settings.zoom.level - 0.25,
-      this.settings.zoom.minLevel,
-      this.settings.zoom.maxLevel
-    )
-    this._reloadCanvas()
   }
 
   private _setSizeCanvas (): void {
@@ -128,5 +100,30 @@ export class Canvas {
         }, this), this.toolSelector.showGrid, this.data.pixels[i][j])
       }
     }
+  }
+
+  private _leftPointCanvas (): Vector {
+    return {
+      x: Math.trunc(-this.zoom.offset.x / this.zoom.level),
+      y: Math.trunc(-this.zoom.offset.y / this.zoom.level)
+    }
+  }
+
+  private _rightPointCanvas (): Vector {
+    return {
+      x: Math.trunc((this.canvas.width - this.zoom.offset.x) / this.zoom.level),
+      y: Math.trunc((this.canvas.width - this.zoom.offset.y) / this.zoom.level)
+    }
+  }
+
+  private _middlePointCanvas (): Vector {
+    return {
+      x: (this._leftPointCanvas().x + this._rightPointCanvas().x) * 0.5,
+      y: (this._leftPointCanvas().y + this._rightPointCanvas().y) * 0.5
+    }
+  }
+
+  private _pixelsOnScreen (): number {
+    return (this.ctx.canvas.width - this.zoom.offset.x) / (this.settings.pixelSize * this.zoom.level)
   }
 }

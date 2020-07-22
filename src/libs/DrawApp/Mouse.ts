@@ -28,11 +28,11 @@ export class Mouse {
 
   public get relativeRealPosition (): Vector {
     const position: Vector = { x: this.realPosition.x, y: this.realPosition.y }
-    position.x -= this._canvas.settings.zoom.offset.x
-    position.x /= this._canvas.settings.zoom.level
+    position.x -= this._canvas.zoom.offset.x
+    position.x /= this._canvas.zoom.level
 
-    position.y -= this._canvas.settings.zoom.offset.y
-    position.y /= this._canvas.settings.zoom.level
+    position.y -= this._canvas.zoom.offset.y
+    position.y /= this._canvas.zoom.level
     return position
   }
 
@@ -65,16 +65,15 @@ export class Mouse {
   }
 
   public mouseWheelDown (): void {
-    this._canvas.zoomOut()
+    this._canvas.zoom.zoomOut()
   }
 
   public mouseWheelUp (): void {
-    this._canvas.zoomIn()
+    this._canvas.zoom.zoomIn()
   }
 
   public mouseMove (position: Vector): void {
     this.realPosition = position
-    // console.log(this.relativeRealPosition, this.realPosition)
   }
 
   public mouseLeave (): void {
