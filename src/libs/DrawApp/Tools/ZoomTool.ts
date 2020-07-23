@@ -3,7 +3,7 @@ import { IZoom } from '@/libs/DrawApp/Interfaces'
 import { Clamp, Vector } from '@/libs/DrawApp/Utils'
 import { Tool } from '@/libs/DrawApp/Tools/Tool'
 import { ToolType } from '@/libs/DrawApp/Tools/ToolSelector'
-import { MouseScroll } from '@/libs/DrawApp/Mouse'
+import { MouseButton, MouseScroll } from '@/libs/DrawApp/Mouse'
 
 export class ZoomTool extends Tool implements IZoom {
   public level: number
@@ -72,6 +72,10 @@ export class ZoomTool extends Tool implements IZoom {
   }
 
   public onAction (): void {
+    if (this.canvas.mouse.button !== MouseButton.NONE) {
+      return
+    }
+
     if (this.canvas.mouse.scroll === MouseScroll.UP) {
       this.zoomIn()
     } else if (this.canvas.mouse.scroll === MouseScroll.DOWN) {

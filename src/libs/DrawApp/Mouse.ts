@@ -75,13 +75,19 @@ export class Mouse {
   }
 
   public mouseWheelDown (): void {
+    if (this.button !== MouseButton.NONE) {
+      return
+    }
+
     this.scroll = MouseScroll.DOWN
     this._canvas.toolSelector.selectTool = ToolType.ZOOM
-    // this._canvas.zoom.zoomOut()
   }
 
   public mouseWheelUp (): void {
-    // this._canvas.zoom.zoomIn()
+    if (this.button !== MouseButton.NONE) {
+      return
+    }
+
     this.scroll = MouseScroll.UP
     this._canvas.toolSelector.selectTool = ToolType.ZOOM
   }
