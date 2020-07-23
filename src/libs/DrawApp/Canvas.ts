@@ -2,31 +2,26 @@ import { ISettings } from '@/libs/DrawApp/Interfaces'
 import { Mouse } from '@/libs/DrawApp/Mouse'
 import { EventCanvas } from '@/libs/DrawApp/EventCanvas'
 import { Data } from '@/libs/DrawApp/Data'
-import { ToolSelector } from '@/libs/DrawApp/Tools/ToolSelector'
+import { ToolSelector, ToolType } from '@/libs/DrawApp/Tools/ToolSelector'
 import { DiscretizationDataPosition, DiscretizationPosition, Vector } from '@/libs/DrawApp/Utils'
-import { Zoom } from '@/libs/DrawApp/Zoom'
+import { ZoomTool } from '@/libs/DrawApp/Tools/ZoomTool'
 
 export class Canvas {
   public readonly canvas: HTMLCanvasElement
   public readonly mouse: Mouse
   public readonly eventCanvas: EventCanvas
-  public readonly zoom: Zoom
   public readonly settings: ISettings
   public readonly data: Data
   public readonly toolSelector: ToolSelector
   public readonly ctx: CanvasRenderingContext2D
+
+  public readonly zoom: ZoomTool
 
   public constructor (canvas: HTMLCanvasElement, settings: ISettings) {
     // Init canvas, mouse and events from canvas
     this.canvas = canvas
     this.mouse = new Mouse(this)
     this.eventCanvas = new EventCanvas(this)
-    this.zoom = new Zoom(this, {
-      level: 1,
-      minLevel: 1,
-      maxLevel: 8,
-      steps: 0.1
-    })
 
     // Data and setting from canvas
     this.data = new Data(settings.gridSize)
@@ -35,8 +30,11 @@ export class Canvas {
     // Canvas context
     this.ctx = canvas.getContext('2d')
 
-    // Init tool selector
+    // Init Tool Selector
     this.toolSelector = new ToolSelector(this)
+
+    // Zoom from Tool Selector
+    this.zoom = (this.toolSelector.tools[ToolType.ZOOM] as ZoomTool)
 
     // Init canvas
     this.reloadCanvas()
@@ -72,18 +70,7 @@ export class Canvas {
 
   public reloadCanvas (): void {
     this._setSizeCanvas()
-    this._zoomReload()
-  }
-
-  private _zoomReload (): void {
-    this.ctx.transform(
-      this.zoom.level,
-      0,
-      0,
-      this.zoom.level,
-      this.zoom.offset.x,
-      this.zoom.offset.y
-    )
+    this.zoom.zoomReload()
     this._redrawCanvas()
   }
 
@@ -102,30 +89,5 @@ export class Canvas {
         }, this), this.toolSelector.showGrid, this.data.pixels[i][j])
       }
     }
-  }
-
-  private _leftPointCanvas (): Vector {
-    return {
-      x: Math.trunc(-this.zoom.offset.x / this.zoom.level),
-      y: Math.trunc(-this.zoom.offset.y / this.zoom.level)
-    }
-  }
-
-  private _rightPointCanvas (): Vector {
-    return {
-      x: Math.trunc((this.canvas.width - this.zoom.offset.x) / this.zoom.level),
-      y: Math.trunc((this.canvas.width - this.zoom.offset.y) / this.zoom.level)
-    }
-  }
-
-  private _middlePointCanvas (): Vector {
-    return {
-      x: (this._leftPointCanvas().x + this._rightPointCanvas().x) * 0.5,
-      y: (this._leftPointCanvas().y + this._rightPointCanvas().y) * 0.5
-    }
-  }
-
-  private _pixelsOnScreen (): number {
-    return (this.ctx.canvas.width - this.zoom.offset.x) / (this.settings.pixelSize * this.zoom.level)
   }
 }

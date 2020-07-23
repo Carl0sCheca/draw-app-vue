@@ -2,7 +2,7 @@ import { Tool } from '@/libs/DrawApp/Tools/Tool'
 import { Canvas } from '@/libs/DrawApp/Canvas'
 import { ToolType } from '@/libs/DrawApp/Tools/ToolSelector'
 import { MouseButton } from '@/libs/DrawApp/Mouse'
-import { Clamp, Vector } from '@/libs/DrawApp/Utils'
+import { Vector } from '@/libs/DrawApp/Utils'
 
 export class MoveTool extends Tool {
   private dragging: boolean
@@ -13,8 +13,8 @@ export class MoveTool extends Tool {
     this.dragging = false
   }
 
-  public onClick (): void {
-    if (this.canvas.mouse.clicked === MouseButton.NONE) {
+  public onAction (): void {
+    if (this.canvas.mouse.button === MouseButton.NONE) {
       this.dragging = false
       this.canvas.toolSelector.restoreTool()
       return

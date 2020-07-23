@@ -3,8 +3,8 @@ import { MouseButton } from '@/libs/DrawApp/Mouse'
 import { DiscretizationDataPosition, DiscretizationPosition, Lerp, RandomColour, Vector } from '@/libs/DrawApp/Utils'
 
 export class PencilTool extends Tool {
-  public onClick (): void {
-    if (this.canvas.mouse.clicked === MouseButton.LEFT) {
+  public onAction (): void {
+    if (this.canvas.mouse.button === MouseButton.LEFT) {
       if (
         this.canvas.mouse.dataPosition.x < 0 || this.canvas.mouse.dataPosition.x >= this.canvas.settings.gridSize ||
         this.canvas.mouse.dataPosition.y < 0 || this.canvas.mouse.dataPosition.y >= this.canvas.settings.gridSize ||

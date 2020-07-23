@@ -49,6 +49,31 @@ export function DiscretizationDataPosition (position: Vector, canvas: Canvas): V
   }
 }
 
+export function LeftPointCanvas (canvas: Canvas): Vector {
+  return {
+    x: Math.trunc(-canvas.zoom.offset.x / canvas.zoom.level),
+    y: Math.trunc(-canvas.zoom.offset.y / canvas.zoom.level)
+  }
+}
+
+export function RightPointCanvas (canvas: Canvas): Vector {
+  return {
+    x: Math.trunc((canvas.canvas.width - canvas.zoom.offset.x) / canvas.zoom.level),
+    y: Math.trunc((canvas.canvas.height - canvas.zoom.offset.y) / canvas.zoom.level)
+  }
+}
+
+export function MiddlePointCanvas (canvas: Canvas): Vector {
+  return {
+    x: (LeftPointCanvas(canvas).x + RightPointCanvas(canvas).x) * 0.5,
+    y: (LeftPointCanvas(canvas).y + RightPointCanvas(canvas).y) * 0.5
+  }
+}
+
+export function PixelsOnScreen (canvas: Canvas): number {
+  return (canvas.canvas.width - canvas.zoom.offset.x) / (canvas.settings.pixelSize * canvas.zoom.level)
+}
+
 // private line (x0: number, y0: number, x1: number, y1: number): void {n
 //   const dx = Math.abs(x1 - x0)
 //   const dy = Math.abs(y1 - y0)

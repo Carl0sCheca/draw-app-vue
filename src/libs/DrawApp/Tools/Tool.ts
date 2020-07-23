@@ -12,8 +12,8 @@ export abstract class Tool {
     this.toolType = toolType
     this.name = this.toolType.toString()
     this.event = new Event(this.name)
-    canvas.canvas.addEventListener(this.name, () => this.onClick())
+    canvas.canvas.addEventListener(this.name, () => this.onAction())
   }
 
-  public abstract onClick(): void
+  public abstract onAction(): void
 }

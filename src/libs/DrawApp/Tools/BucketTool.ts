@@ -3,7 +3,7 @@ import { Canvas } from '@/libs/DrawApp/Canvas'
 import { ToolType } from '@/libs/DrawApp/Tools/ToolSelector'
 
 export class BucketTool extends Tool {
-  public onClick (): void {
+  public onAction (): void {
     console.log('bucket tool')
   }
 }

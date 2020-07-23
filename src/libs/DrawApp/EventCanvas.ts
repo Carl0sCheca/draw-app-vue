@@ -1,4 +1,4 @@
-import { Mouse, MouseButton } from '@/libs/DrawApp/Mouse'
+import { Mouse, MouseButton, MouseScroll } from '@/libs/DrawApp/Mouse'
 import { Canvas } from '@/libs/DrawApp/Canvas'
 
 export class EventCanvas {
@@ -28,7 +28,7 @@ export class EventCanvas {
       mouse.mouseWheelButtonDown()
     }
 
-    if (mouse.clicked !== MouseButton.NONE) {
+    if (mouse.button !== MouseButton.NONE) {
       this._canvas.canvas.dispatchEvent(this._canvas.toolSelector.tool.event)
     }
   }
@@ -44,6 +44,8 @@ export class EventCanvas {
     } else if (e.button === MouseButton.MIDDLE) {
       mouse.mouseWheelButtonUp()
     }
+
+    this._canvas.canvas.dispatchEvent(this._canvas.toolSelector.tool.event)
   }
 
   public onMouseWheel (e: WheelEvent, mouse: Mouse): void {
@@ -56,12 +58,17 @@ export class EventCanvas {
     } else if (e.deltaY < 0) {
       mouse.mouseWheelUp()
     }
+    if (mouse.scroll !== MouseScroll.NONE) {
+      this._canvas.canvas.dispatchEvent(this._canvas.toolSelector.tool.event)
+      mouse.scroll = MouseScroll.NONE
+      this._canvas.toolSelector.restoreTool()
+    }
   }
 
   public onMouseMove (e: MouseEvent, mouse: Mouse): void {
     this._setupMousePosition(e, mouse)
 
-    if (mouse.clicked !== MouseButton.NONE) {
+    if (mouse.button !== MouseButton.NONE) {
       this._canvas.canvas.dispatchEvent(this._canvas.toolSelector.tool.event)
     }
   }

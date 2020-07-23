@@ -4,13 +4,15 @@ import { Canvas } from '@/libs/DrawApp/Canvas'
 import { BucketTool } from '@/libs/DrawApp/Tools/BucketTool'
 import { ColourPickerTool } from '@/libs/DrawApp/Tools/ColourPickerTool'
 import { MoveTool } from '@/libs/DrawApp/Tools/MoveTool'
+import { ZoomTool } from '@/libs/DrawApp/Tools/ZoomTool'
 
 export enum ToolType {
   NONE = -1,
   PENCIL = 0,
   BUCKET = 1,
   COLOUR_PICKER = 2,
-  MOVE = 3
+  MOVE = 3,
+  ZOOM = 4
 }
 
 export class ToolSelector {
@@ -34,6 +36,12 @@ export class ToolSelector {
     this.tools.push(new BucketTool(canvas, ToolType.BUCKET))
     this.tools.push(new ColourPickerTool(canvas, ToolType.COLOUR_PICKER))
     this.tools.push(new MoveTool(canvas, ToolType.MOVE))
+    this.tools.push(new ZoomTool(canvas, ToolType.ZOOM, {
+      level: 1,
+      minLevel: 1,
+      maxLevel: 8,
+      steps: 0.1
+    }))
   }
 
   public get tool (): Tool {

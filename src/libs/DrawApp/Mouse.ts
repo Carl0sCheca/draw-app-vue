@@ -9,16 +9,24 @@ export enum MouseButton {
   RIGHT = 2
 }
 
+export enum MouseScroll {
+  NONE = -1,
+  UP = 0,
+  DOWN = 1
+}
+
 export class Mouse {
   public realPosition: Vector
   public lastPosition: Vector
-  public clicked: MouseButton
+  public button: MouseButton
+  public scroll: MouseScroll
 
   private readonly _canvas: Canvas
 
   public constructor (canvas: Canvas) {
     this._canvas = canvas
-    this.clicked = MouseButton.NONE
+    this.button = MouseButton.NONE
+    this.scroll = MouseScroll.NONE
     this.realPosition = { x: 0, y: 0 }
     this.lastPosition = { x: 0, y: 0 }
   }
@@ -42,37 +50,40 @@ export class Mouse {
   }
 
   public mouseDownLeft (): void {
-    this.clicked = MouseButton.LEFT
+    this.button = MouseButton.LEFT
   }
 
   public mouseDownRight (): void {
-    this.clicked = MouseButton.RIGHT
+    this.button = MouseButton.RIGHT
   }
 
   public mouseUpLeft (): void {
-    this.clicked = MouseButton.NONE
+    this.button = MouseButton.NONE
   }
 
   public mouseUpRight (): void {
-    this.clicked = MouseButton.NONE
+    this.button = MouseButton.NONE
   }
 
   public mouseWheelButtonDown (): void {
-    this.clicked = MouseButton.MIDDLE
+    this.button = MouseButton.MIDDLE
     this._canvas.toolSelector.selectTool = ToolType.MOVE
   }
 
   public mouseWheelButtonUp (): void {
-    this.clicked = MouseButton.NONE
-    this._canvas.canvas.dispatchEvent(this._canvas.toolSelector.tool.event)
+    this.button = MouseButton.NONE
   }
 
   public mouseWheelDown (): void {
-    this._canvas.zoom.zoomOut()
+    this.scroll = MouseScroll.DOWN
+    this._canvas.toolSelector.selectTool = ToolType.ZOOM
+    // this._canvas.zoom.zoomOut()
   }
 
   public mouseWheelUp (): void {
-    this._canvas.zoom.zoomIn()
+    // this._canvas.zoom.zoomIn()
+    this.scroll = MouseScroll.UP
+    this._canvas.toolSelector.selectTool = ToolType.ZOOM
   }
 
   public mouseMove (position: Vector): void {
@@ -80,6 +91,6 @@ export class Mouse {
   }
 
   public mouseLeave (): void {
-    this.clicked = MouseButton.NONE
+    this.button = MouseButton.NONE
   }
 }
