@@ -57,6 +57,7 @@ export class Canvas {
     )
 
     if (showGrid) {
+      this.ctx.lineWidth = this.zoom.level
       this.ctx.strokeStyle = this.settings.gridColor
       this.ctx.strokeRect(
         point.x,
