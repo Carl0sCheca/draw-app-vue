@@ -11,7 +11,7 @@ export class EventCanvas {
     this._canvas.canvas.addEventListener('mouseup', (e: MouseEvent) => this.onMouseUp(e, this._canvas.mouse))
     this._canvas.canvas.addEventListener('wheel', (e: WheelEvent) => this.onMouseWheel(e, this._canvas.mouse))
     this._canvas.canvas.addEventListener('mousemove', (e: MouseEvent) => this.onMouseMove(e, this._canvas.mouse))
-    this._canvas.canvas.addEventListener('mouseleave', () => this.onMouseLeave(this._canvas.mouse))
+    this._canvas.canvas.addEventListener('mouseenter', (e: MouseEvent) => this.onMouseEnter(e, this._canvas.mouse))
     this._canvas.canvas.addEventListener('contextmenu', (e: MouseEvent) => this.onContextMenu(e))
     window.addEventListener('resize', () => this.onResizeWindow(this._canvas))
   }
@@ -73,8 +73,14 @@ export class EventCanvas {
     }
   }
 
-  public onMouseLeave (mouse: Mouse): void {
-    mouse.mouseLeave()
+  public onMouseEnter (e: MouseEvent, mouse: Mouse): void {
+    if (e.buttons === MouseButton.LEFT) {
+      mouse.mouseLeave()
+    }
+
+    if (mouse.button !== MouseButton.NONE) {
+      this._setupMousePosition(e, mouse)
+    }
   }
 
   public onContextMenu (e: MouseEvent): void {
