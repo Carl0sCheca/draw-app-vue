@@ -41,25 +41,30 @@ export class Canvas {
   }
 
   public paintCanvas (position: Vector, showGrid = false, color: string = this.toolSelector.colorSelected, size: number = this.settings.pixelSize): void {
+    const point: Vector = {
+      x: position.x * this.zoom.level + this.zoom.offset.x,
+      y: position.y * this.zoom.level + this.zoom.offset.y
+    }
+
+    const pointSize: number = size * this.zoom.level
+
     this.ctx.fillStyle = color
     this.ctx.fillRect(
-      position.x,
-      position.y,
-      size,
-      size
+      point.x,
+      point.y,
+      pointSize,
+      pointSize
     )
 
     if (showGrid) {
       this.ctx.strokeStyle = this.settings.gridColor
       this.ctx.strokeRect(
-        position.x,
-        position.y,
-        size,
-        size
+        point.x,
+        point.y,
+        pointSize,
+        pointSize
       )
     }
-
-    this.data.writeData(DiscretizationDataPosition(position, this), color)
   }
 
   public resizeWindow (): void {
@@ -70,7 +75,6 @@ export class Canvas {
 
   public reloadCanvas (): void {
     this._setSizeCanvas()
-    this.zoom.zoomReload()
     this._redrawCanvas()
   }
 

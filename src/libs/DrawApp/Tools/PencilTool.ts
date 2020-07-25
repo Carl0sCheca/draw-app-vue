@@ -20,15 +20,16 @@ export class PencilTool extends Tool {
       )
 
       const _lerpSteps: number = 10 / distance
-      let _currentPos: Vector = { x: this.canvas.mouse.position.x, y: this.canvas.mouse.position.y }
 
       for (let _lerp = 0; _lerp <= 1; _lerp += _lerpSteps) {
-        _currentPos = DiscretizationDataPosition({
+        const _currentPos: Vector = DiscretizationDataPosition({
           x: Lerp(this.canvas.mouse.lastPosition.x, this.canvas.mouse.position.x, _lerp),
           y: Lerp(this.canvas.mouse.lastPosition.y, this.canvas.mouse.position.y, _lerp)
         }, this.canvas)
 
-        this.canvas.paintCanvas(DiscretizationPosition(_currentPos, this.canvas), this.canvas.toolSelector.showGrid, RandomColour())
+        const color: string = RandomColour()
+        this.canvas.paintCanvas(DiscretizationPosition(_currentPos, this.canvas), this.canvas.toolSelector.showGrid, color)
+        this.canvas.data.writeData(_currentPos, color)
       }
     }
   }

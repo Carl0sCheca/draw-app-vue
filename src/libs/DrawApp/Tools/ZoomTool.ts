@@ -32,17 +32,6 @@ export class ZoomTool extends Tool implements IZoom {
     this._zoomScaled(-this.steps)
   }
 
-  public zoomReload (): void {
-    this.canvas.ctx.transform(
-      this.level,
-      0,
-      0,
-      this.level,
-      this.offset.x,
-      this.offset.y
-    )
-  }
-
   private _zoomScaled (zoom: number): void {
     const position: Vector = {
       x: this.canvas.mouse.relativeRealPosition.x / this.canvas.canvas.width,
