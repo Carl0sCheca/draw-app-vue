@@ -50,7 +50,7 @@ export class Canvas {
     )
 
     if (showGrid) {
-      this.ctx.strokeStyle = 'black'
+      this.ctx.strokeStyle = this.settings.gridColor
       this.ctx.strokeRect(
         position.x,
         position.y,

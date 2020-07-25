@@ -3,6 +3,7 @@ import { Vector } from '@/libs/DrawApp/Utils';
 export interface ISettings {
   gridSize: number
   pixelSize?: number
+  gridColor?: string
 }
 
 export interface IZoom {
