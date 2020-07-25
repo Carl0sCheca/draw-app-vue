@@ -86,7 +86,12 @@ export class EventCanvas {
   }
 
   private _setupMousePosition (e: MouseEvent, mouse: Mouse): void {
-    mouse.lastPosition = { x: mouse.position.x, y: mouse.position.y }
-    mouse.mouseMove({ x: e.offsetX, y: e.offsetY })
+    if (mouse.lastPosition === null) {
+      mouse.mouseMove({ x: e.offsetX, y: e.offsetY })
+      mouse.lastPosition = { x: mouse.position.x, y: mouse.position.y }
+    } else {
+      mouse.lastPosition = { x: mouse.position.x, y: mouse.position.y }
+      mouse.mouseMove({ x: e.offsetX, y: e.offsetY })
+    }
   }
 }

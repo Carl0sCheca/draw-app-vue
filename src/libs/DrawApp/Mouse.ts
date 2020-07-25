@@ -28,7 +28,7 @@ export class Mouse {
     this.button = MouseButton.NONE
     this.scroll = MouseScroll.NONE
     this.realPosition = { x: 0, y: 0 }
-    this.lastPosition = { x: 0, y: 0 }
+    this.lastPosition = null
   }
 
   public get position (): Vector {
