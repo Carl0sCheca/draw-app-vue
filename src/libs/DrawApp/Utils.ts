@@ -1,9 +1,9 @@
 import { Canvas } from '@/libs/DrawApp/Canvas'
 
-export type Vector = {
-  x: number;
-  y: number;
-}
+export type Vector = { x: number; y: number }
+
+export type HSV = { H: number; S: number; V: number }
+export type HSL = { H: number; S: number; L: number }
 
 export function RandomNumber (min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min
@@ -72,6 +72,28 @@ export function MiddlePointCanvas (canvas: Canvas): Vector {
 
 export function PixelsOnScreen (canvas: Canvas): number {
   return (canvas.canvas.width - canvas.zoom.offset.x) / (canvas.settings.pixelSize * canvas.zoom.level)
+}
+
+export function HSVtoHSL (hsv: HSV): HSL {
+  const HSV: HSV = { H: hsv.H, S: hsv.S / 100, V: hsv.V / 100 }
+  const HSL: HSL = { H: HSV.H, S: undefined, L: undefined }
+
+  HSL.L = (HSV.V * (1 - (HSV.S / 2)))
+
+  if (HSL.L === 0 || HSL.L === 1) {
+    HSL.S = 0
+  } else {
+    HSL.S = (HSV.V - HSL.L) / Math.min(HSL.L, 1 - HSL.L)
+  }
+
+  HSL.L = Math.ceil(HSL.L * 100)
+  HSL.S = Math.ceil(HSL.S * 100)
+
+  return HSL
+}
+
+export function HSLtoString (hsl: HSL): string {
+  return `hsl(${hsl.H}, ${hsl.S}%, ${hsl.L}%)`
 }
 
 // private line (x0: number, y0: number, x1: number, y1: number): void {n
