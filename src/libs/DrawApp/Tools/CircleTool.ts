@@ -1,21 +1,20 @@
 import { Tool } from '@/libs/DrawApp/Tools/Tool'
-import {
-  DiscretizationPosition, RandomColour,
-  Vector
-} from '@/libs/DrawApp/Utils'
+import { DiscretizationPosition, PushIfNotExists, RecursiveFill, Vector } from '@/libs/DrawApp/Utils'
 import { Canvas } from '@/libs/DrawApp/Canvas'
 import { ToolType } from '@/libs/DrawApp/Tools/ToolSelector'
 import { MouseButton } from '@/libs/DrawApp/Mouse'
 
 export class CircleTool extends Tool {
   private dragging: boolean
-  private firstPoint: Vector
+  private centerCircle: Vector
   private _circlePixels: Vector[]
+  public fill: boolean
 
   public constructor (canvas: Canvas, toolType: ToolType) {
     super(canvas, toolType)
     this.dragging = false
     this._circlePixels = []
+    this.fill = true
   }
 
   public onAction (): void {
@@ -26,10 +25,10 @@ export class CircleTool extends Tool {
         this.canvas.reloadCanvas()
         this.dragging = false
       }
-    } else {
+    } else if (this.canvas.mouse.button === MouseButton.LEFT) {
       if (!this.dragging) {
-        this.firstPoint = this.canvas.mouse.dataPosition
-        this._draw(this.firstPoint)
+        this.centerCircle = this.canvas.mouse.dataPosition
+        this._draw(this.centerCircle)
 
         this.dragging = true
       } else if (this.dragging) {
@@ -45,12 +44,12 @@ export class CircleTool extends Tool {
     if (!this.dragging) return
 
     const radius: number = Math.max(
-      Math.abs(this.firstPoint.x - this.canvas.mouse.dataPosition.x),
-      Math.abs(this.firstPoint.y - this.canvas.mouse.dataPosition.y)
+      Math.abs(this.centerCircle.x - this.canvas.mouse.dataPosition.x),
+      Math.abs(this.centerCircle.y - this.canvas.mouse.dataPosition.y)
     )
 
     if (radius < 1) {
-      this._draw(this.firstPoint)
+      this._draw(this.centerCircle)
     } else {
       let d = (5 - radius * 4) / 4
       let x = 0
@@ -59,16 +58,14 @@ export class CircleTool extends Tool {
       this._circlePixels = []
 
       do {
-        this._circlePixels.push({ x: this.firstPoint.x + x, y: this.firstPoint.y + y })
-        this._circlePixels.push({ x: this.firstPoint.x + x, y: this.firstPoint.y - y })
-        this._circlePixels.push({ x: this.firstPoint.x - x, y: this.firstPoint.y + y })
-        this._circlePixels.push({ x: this.firstPoint.x - x, y: this.firstPoint.y - y })
-        this._circlePixels.push({ x: this.firstPoint.x + y, y: this.firstPoint.y + x })
-        this._circlePixels.push({ x: this.firstPoint.x + y, y: this.firstPoint.y - x })
-        this._circlePixels.push({ x: this.firstPoint.x - y, y: this.firstPoint.y + x })
-        this._circlePixels.push({ x: this.firstPoint.x - y, y: this.firstPoint.y - x })
-
-        this._circlePixels.forEach(position => this._draw(position))
+        PushIfNotExists({ x: this.centerCircle.x + x, y: this.centerCircle.y + y }, this._circlePixels)
+        PushIfNotExists({ x: this.centerCircle.x + x, y: this.centerCircle.y - y }, this._circlePixels)
+        PushIfNotExists({ x: this.centerCircle.x - x, y: this.centerCircle.y + y }, this._circlePixels)
+        PushIfNotExists({ x: this.centerCircle.x - x, y: this.centerCircle.y - y }, this._circlePixels)
+        PushIfNotExists({ x: this.centerCircle.x + y, y: this.centerCircle.y + x }, this._circlePixels)
+        PushIfNotExists({ x: this.centerCircle.x + y, y: this.centerCircle.y - x }, this._circlePixels)
+        PushIfNotExists({ x: this.centerCircle.x - y, y: this.centerCircle.y + x }, this._circlePixels)
+        PushIfNotExists({ x: this.centerCircle.x - y, y: this.centerCircle.y - x }, this._circlePixels)
 
         if (d < 0) {
           d += 2 * x + 1
@@ -76,8 +73,16 @@ export class CircleTool extends Tool {
           d += 2 * (x - y) + 1
           y--
         }
+
         x++
       } while (x <= y)
+
+      if (this.fill) {
+        PushIfNotExists(this.centerCircle, this._circlePixels)
+        RecursiveFill(this.centerCircle, this.canvas, this._circlePixels)
+      }
+
+      this._circlePixels.forEach(position => this._draw(position))
     }
   }
 

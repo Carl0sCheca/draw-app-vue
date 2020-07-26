@@ -129,3 +129,38 @@ export function LerpSteps (canvas: Canvas, firstPosition: Vector, lastPosition: 
 export function CheckRange (position: Vector, minPosition: Vector, maxPosition: Vector): boolean {
   return position.x >= minPosition.x && position.x <= maxPosition.x && position.y >= minPosition.y && position.y <= maxPosition.y
 }
+
+export function PushIfNotExists (pos: Vector, array: Array<any>): boolean {
+  if (!array.some(position => position.x === pos.x && position.y === pos.y)) {
+    array.push(pos)
+    return false
+  } else {
+    return true
+  }
+}
+
+export function RecursiveFill (pos: Vector, canvas: Canvas, array: Array<Vector>): void {
+  if (pos.x + 1 < canvas.settings.gridSize && !(array.some(position => position.x - 1 === pos.x && position.y === pos.y))) {
+    const p: Vector = { x: pos.x + 1, y: pos.y }
+    PushIfNotExists(p, array)
+    RecursiveFill(p, canvas, array)
+  }
+
+  if (pos.x - 1 >= 0 && !(array.some(position => position.x + 1 === pos.x && position.y === pos.y))) {
+    const p: Vector = { x: pos.x - 1, y: pos.y }
+    PushIfNotExists(p, array)
+    RecursiveFill(p, canvas, array)
+  }
+
+  if (pos.y + 1 < canvas.settings.gridSize && !(array.some(position => position.x === pos.x && position.y - 1 === pos.y))) {
+    const p: Vector = { x: pos.x, y: pos.y + 1 }
+    PushIfNotExists(p, array)
+    RecursiveFill(p, canvas, array)
+  }
+
+  if (pos.y - 1 >= 0 && !(array.some(position => position.x === pos.x && position.y + 1 === pos.y))) {
+    const p: Vector = { x: pos.x, y: pos.y - 1 }
+    PushIfNotExists(p, array)
+    RecursiveFill(p, canvas, array)
+  }
+}
