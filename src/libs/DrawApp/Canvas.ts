@@ -5,6 +5,7 @@ import { Data } from '@/libs/DrawApp/Data'
 import { ToolSelector, ToolType } from '@/libs/DrawApp/Tools/ToolSelector'
 import { DiscretizationDataPosition, DiscretizationPosition, Vector } from '@/libs/DrawApp/Utils'
 import { ZoomTool } from '@/libs/DrawApp/Tools/ZoomTool'
+import { GUI } from '@/libs/DrawApp/GUI/GUI'
 
 export class Canvas {
   public readonly canvas: HTMLCanvasElement
@@ -14,6 +15,7 @@ export class Canvas {
   public readonly data: Data
   public readonly toolSelector: ToolSelector
   public readonly ctx: CanvasRenderingContext2D
+  public readonly gui: GUI
 
   public readonly zoom: ZoomTool
 
@@ -36,24 +38,28 @@ export class Canvas {
     // Zoom from Tool Selector
     this.zoom = (this.toolSelector.tools[ToolType.ZOOM] as ZoomTool)
 
+    // Init GUI
+    this.gui = new GUI(this)
+
     // Init canvas
     this.reloadCanvas()
   }
 
-  public paintCanvas (position: Vector, showGrid = false, color: string = this.toolSelector.colorSelected, size: number = this.settings.pixelSize): void {
+  public paintCanvas (position: Vector, showGrid = false, color: string = this.toolSelector.colorSelected, sizeWidth: number = this.settings.pixelSize, sizeHeight: number = this.settings.pixelSize): void {
     const point: Vector = {
       x: position.x * this.zoom.level + this.zoom.offset.x,
       y: position.y * this.zoom.level + this.zoom.offset.y
     }
 
-    const pointSize: number = size * this.zoom.level
+    const pointSizeW: number = sizeWidth * this.zoom.level
+    const pointSizeH: number = sizeHeight * this.zoom.level
 
     this.ctx.fillStyle = color
     this.ctx.fillRect(
       point.x,
       point.y,
-      pointSize,
-      pointSize
+      pointSizeW,
+      pointSizeH
     )
 
     if (showGrid) {
@@ -62,9 +68,11 @@ export class Canvas {
       this.ctx.strokeRect(
         point.x,
         point.y,
-        pointSize,
-        pointSize
+        pointSizeW,
+        pointSizeH
       )
+
+      this.gui.reloadRelativeGUI()
     }
   }
 
@@ -94,5 +102,6 @@ export class Canvas {
         }, this), this.toolSelector.showGrid, this.data.pixels[i][j])
       }
     }
+    this.gui.reloadRelativeGUI()
   }
 }
