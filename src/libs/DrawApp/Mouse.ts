@@ -55,6 +55,7 @@ export class Mouse {
 
   public mouseDownRight (): void {
     this.button = MouseButton.RIGHT
+    this._canvas.toggleGrid()
   }
 
   public mouseUpLeft (): void {

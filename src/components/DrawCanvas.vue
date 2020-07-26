@@ -24,7 +24,7 @@ export default class DrawCanvas extends Vue {
   }
 
   mounted (): void {
-    this.drawApp = new DrawApp((document.getElementById(this.canvasId) as HTMLCanvasElement), { gridSize: this.gridSize, gridColor: 'black' })
+    this.drawApp = new DrawApp((document.getElementById(this.canvasId) as HTMLCanvasElement), { gridSize: this.gridSize, gridColor: 'black', showGrid: true })
   }
 }
 </script>

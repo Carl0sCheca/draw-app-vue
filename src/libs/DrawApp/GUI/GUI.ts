@@ -12,7 +12,7 @@ export class GUI {
   }
 
   private _centerLines (lineWidth = 6): void {
-    if (this._canvas.toolSelector.showGrid) {
+    if (this._canvas.settings.showGrid) {
       this._canvas.paintCanvas(
         { x: 0, y: (this._canvas.canvas.height / 2) - (lineWidth / 2) },
         false,

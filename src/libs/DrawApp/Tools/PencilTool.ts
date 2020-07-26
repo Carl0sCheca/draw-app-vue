@@ -28,7 +28,7 @@ export class PencilTool extends Tool {
         }, this.canvas)
 
         const color: string = RandomColour()
-        this.canvas.paintCanvas(DiscretizationPosition(_currentPos, this.canvas), this.canvas.toolSelector.showGrid, color)
+        this.canvas.paintCanvas(DiscretizationPosition(_currentPos, this.canvas), this.canvas.settings.showGrid, color)
         this.canvas.data.writeData(_currentPos, color)
       }
     }

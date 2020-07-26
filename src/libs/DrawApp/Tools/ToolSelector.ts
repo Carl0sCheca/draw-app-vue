@@ -22,14 +22,11 @@ export class ToolSelector {
 
   public colorSelected: string
 
-  public showGrid: boolean
-
   public constructor (canvas: Canvas) {
     this.selected = 0
     this.previousSelected = -1
 
     this.colorSelected = 'red'
-    this.showGrid = true
 
     this.tools = []
     this.tools.push(new PencilTool(canvas, ToolType.PENCIL))

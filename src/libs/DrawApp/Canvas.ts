@@ -93,13 +93,19 @@ export class Canvas {
     this.settings.pixelSize = this.canvas.width / this.settings.gridSize
   }
 
+  public toggleGrid (): void {
+    this.settings.showGrid = !this.settings.showGrid
+    this.resizeWindow()
+  }
+
   private _redrawCanvas (): void {
+    this.paintCanvas({ x: 0, y: 0 }, false, 'white', this.canvas.width, this.canvas.height)
     for (let i = 0; i < this.settings.gridSize; i++) {
       for (let j = 0; j < this.settings.gridSize; j++) {
         this.paintCanvas(DiscretizationPosition({
           x: i,
           y: j
-        }, this), this.toolSelector.showGrid, this.data.pixels[i][j])
+        }, this), this.settings.showGrid, this.data.pixels[i][j])
       }
     }
     this.gui.reloadRelativeGUI()
