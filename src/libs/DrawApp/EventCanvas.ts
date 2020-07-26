@@ -76,6 +76,7 @@ export class EventCanvas {
   public onMouseEnter (e: MouseEvent, mouse: Mouse): void {
     if (e.buttons === MouseButton.LEFT) {
       mouse.mouseLeave()
+      this._canvas.canvas.dispatchEvent(this._canvas.toolSelector.tool.event)
     }
 
     if (mouse.button !== MouseButton.NONE) {

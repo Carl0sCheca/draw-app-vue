@@ -106,24 +106,20 @@ export function IsInsideCanvas (canvas: Canvas): boolean {
 export function LerpSteps (canvas: Canvas, firstPosition: Vector, lastPosition: Vector, callback: CallableFunction): void {
   if (!IsInsideCanvas(canvas)) return
 
+  const startPosition: Vector = DiscretizationDataPosition(firstPosition, canvas)
+  const endPosition: Vector = DiscretizationDataPosition(lastPosition, canvas)
+
   const distance: number = Math.max(
-    Math.trunc(Math.abs(lastPosition.x - firstPosition.x)),
-    Math.trunc(Math.abs(lastPosition.y - firstPosition.y))
+    Math.trunc(Math.abs(startPosition.x - endPosition.x)),
+    Math.trunc(Math.abs(startPosition.y - endPosition.y))
   )
 
-  const _lerpSteps: number = 10 / distance
-  let _lastPosition: Vector = null
+  const _lerpSteps: number = 1 / distance
 
   for (let _lerp = _lerpSteps; _lerp <= 1; _lerp += _lerpSteps) {
-    const _currentPos: Vector = DiscretizationDataPosition({
-      x: Lerp(lastPosition.x, firstPosition.x, _lerp),
-      y: Lerp(lastPosition.y, firstPosition.y, _lerp)
-    }, canvas)
-
-    if (_lastPosition !== null && _currentPos.x === _lastPosition.x && _currentPos.y === _lastPosition.y) {
-      continue
-    } else {
-      _lastPosition = { x: _currentPos.x, y: _currentPos.y }
+    const _currentPos: Vector = {
+      x: Math.trunc(Lerp(endPosition.x, startPosition.x, _lerp)),
+      y: Math.trunc(Lerp(endPosition.y, startPosition.y, _lerp))
     }
 
     callback(_currentPos)

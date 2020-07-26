@@ -24,14 +24,7 @@ export class PencilTool extends Tool {
         this._started = true
         this._pencilTool(DiscretizationDataPosition(this.canvas.mouse.position, this.canvas))
       } else if (this.canvas.mouse.position.x !== this.canvas.mouse.lastPosition.x || this.canvas.mouse.position.y !== this.canvas.mouse.lastPosition.y) {
-        const position: Vector = { x: this.canvas.mouse.position.x, y: this.canvas.mouse.position.y }
-        if (position.x - this.canvas.mouse.lastPosition.x > Number.EPSILON) {
-          position.x += this.canvas.settings.pixelSize / 2
-        }
-        if (position.y - this.canvas.mouse.lastPosition.y > Number.EPSILON) {
-          position.y += this.canvas.settings.pixelSize / 2
-        }
-        LerpSteps(this.canvas, position, this.canvas.mouse.lastPosition, (currentPos: Vector) => this._pencilTool(currentPos))
+        LerpSteps(this.canvas, this.canvas.mouse.position, this.canvas.mouse.lastPosition, (currentPos: Vector) => this._pencilTool(currentPos))
       }
     } else {
       this._started = false
