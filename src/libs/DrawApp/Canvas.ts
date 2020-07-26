@@ -3,7 +3,7 @@ import { Mouse } from '@/libs/DrawApp/Mouse'
 import { EventCanvas } from '@/libs/DrawApp/EventCanvas'
 import { Data } from '@/libs/DrawApp/Data'
 import { ToolSelector, ToolType } from '@/libs/DrawApp/Tools/ToolSelector'
-import { DiscretizationDataPosition, DiscretizationPosition, Vector } from '@/libs/DrawApp/Utils'
+import { DiscretizationPosition, Vector } from '@/libs/DrawApp/Utils'
 import { ZoomTool } from '@/libs/DrawApp/Tools/ZoomTool'
 import { GUI } from '@/libs/DrawApp/GUI/GUI'
 

@@ -96,25 +96,36 @@ export function HSLtoString (hsl: HSL): string {
   return `hsl(${hsl.H}, ${hsl.S}%, ${hsl.L}%)`
 }
 
-// private line (x0: number, y0: number, x1: number, y1: number): void {n
-//   const dx = Math.abs(x1 - x0)
-//   const dy = Math.abs(y1 - y0)
-//   const sx = (x0 < x1) ? 1 : -1
-//   const sy = (y0 < y1) ? 1 : -1
-//   let err = dx - dy
-//
-//   while (true) {
-//   this._ctx.strokeRect(x0, y0, this._pixelSize, this._pixelSize)
-//
-//   if ((x0 === x1) && (y0 === y1)) break
-//   const e2 = 2 * err
-//   if (e2 > -dy) {
-//     err -= dy
-//     x0 += sx
-//   }
-//   if (e2 < dx) {
-//     err += dx
-//     y0 += sy
-//   }
-// }
-// }
+export function IsInsideCanvas (canvas: Canvas): boolean {
+  return !(canvas.mouse.dataPosition.x < 0 || canvas.mouse.dataPosition.x >= canvas.settings.gridSize ||
+    canvas.mouse.dataPosition.y < 0 || canvas.mouse.dataPosition.y >= canvas.settings.gridSize ||
+    canvas.mouse.position.x < 0 || canvas.mouse.position.x >= canvas.ctx.canvas.width ||
+    canvas.mouse.position.y < 0 || canvas.mouse.position.y >= canvas.ctx.canvas.height)
+}
+
+export function LerpSteps (canvas: Canvas, firstPosition: Vector, lastPosition: Vector, callback: CallableFunction): void {
+  if (!IsInsideCanvas(canvas)) return
+
+  const distance: number = Math.max(
+    Math.trunc(Math.abs(lastPosition.x - firstPosition.x)),
+    Math.trunc(Math.abs(lastPosition.y - firstPosition.y))
+  )
+
+  const _lerpSteps: number = 10 / distance
+  let _lastPosition: Vector = null
+
+  for (let _lerp = _lerpSteps; _lerp <= 1; _lerp += _lerpSteps) {
+    const _currentPos: Vector = DiscretizationDataPosition({
+      x: Lerp(lastPosition.x, firstPosition.x, _lerp),
+      y: Lerp(lastPosition.y, firstPosition.y, _lerp)
+    }, canvas)
+
+    if (_lastPosition !== null && _currentPos.x === _lastPosition.x && _currentPos.y === _lastPosition.y) {
+      continue
+    } else {
+      _lastPosition = { x: _currentPos.x, y: _currentPos.y }
+    }
+
+    callback(_currentPos)
+  }
+}
