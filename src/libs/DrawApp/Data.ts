@@ -1,7 +1,18 @@
-import { Vector } from '@/libs/DrawApp/Utils'
+import { CheckRange, Clamp, Vector } from '@/libs/DrawApp/Utils'
+
+export interface Pixel {
+  position: Vector;
+  color: string;
+}
+
+export interface LastAction {
+  before: Pixel[];
+}
 
 export class Data {
   public pixels: string[][]
+  public lastAction: LastAction[]
+
   private readonly _gridSize: number
 
   public constructor (gridSize: number) {
@@ -17,6 +28,8 @@ export class Data {
         this.pixels[i][j] = color
       }
     }
+
+    this.lastAction = []
   }
 
   public clearData (color = '#ffffff'): void {
@@ -29,7 +42,9 @@ export class Data {
 
   public writeData (position: Vector, color: string): void {
     if (this.pixels !== undefined || position !== undefined) {
-      this.pixels[position.x][position.y] = color
+      if (CheckRange(position, { x: 0, y: 0 }, { x: this._gridSize - 1, y: this._gridSize - 1 })) {
+        this.pixels[Clamp(position.x, 0, this._gridSize - 1)][Clamp(position.y, 0, this._gridSize - 1)] = color
+      }
     }
   }
 }

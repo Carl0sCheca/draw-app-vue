@@ -5,6 +5,7 @@ import { BucketTool } from '@/libs/DrawApp/Tools/BucketTool'
 import { ColourPickerTool } from '@/libs/DrawApp/Tools/ColourPickerTool'
 import { MoveTool } from '@/libs/DrawApp/Tools/MoveTool'
 import { ZoomTool } from '@/libs/DrawApp/Tools/ZoomTool'
+import { CircleTool } from '@/libs/DrawApp/Tools/CircleTool'
 
 export enum ToolType {
   NONE = -1,
@@ -12,7 +13,8 @@ export enum ToolType {
   BUCKET = 1,
   COLOUR_PICKER = 2,
   MOVE = 3,
-  ZOOM = 4
+  ZOOM = 4,
+  CIRCLE = 5
 }
 
 export class ToolSelector {
@@ -23,7 +25,7 @@ export class ToolSelector {
   public colorSelected: string
 
   public constructor (canvas: Canvas) {
-    this.selected = 0
+    this.selected = 5
     this.previousSelected = -1
 
     this.colorSelected = 'red'
@@ -39,6 +41,7 @@ export class ToolSelector {
       maxLevel: 8,
       steps: 0.1
     }))
+    this.tools.push(new CircleTool(canvas, ToolType.CIRCLE))
   }
 
   public get tool (): Tool {

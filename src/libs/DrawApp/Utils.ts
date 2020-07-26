@@ -125,3 +125,7 @@ export function LerpSteps (canvas: Canvas, firstPosition: Vector, lastPosition: 
     callback(_currentPos)
   }
 }
+
+export function CheckRange (position: Vector, minPosition: Vector, maxPosition: Vector): boolean {
+  return position.x >= minPosition.x && position.x <= maxPosition.x && position.y >= minPosition.y && position.y <= maxPosition.y
+}
