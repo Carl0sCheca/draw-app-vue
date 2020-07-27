@@ -1,12 +1,12 @@
 <template lang="pug">
 div.canvasDrawingWrapper(:style="maxSizeCanvasCSS")
   div.canvasDrawingContainer
-    canvas.canvasDrawing(:id="this.canvasId") Canvas
+    canvas.canvasDrawing(:id="this.canvasId") DrawApp
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'
-import { DrawApp } from '@/libs/DrawApp'
+import { DrawApp } from '@/libs/DrawApp/DrawApp'
 
 @Component
 export default class DrawCanvas extends Vue {

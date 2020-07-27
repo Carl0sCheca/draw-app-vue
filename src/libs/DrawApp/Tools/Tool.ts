@@ -1,13 +1,13 @@
-import { Canvas } from '@/libs/DrawApp/Canvas'
+import { DrawApp } from '@/libs/DrawApp/DrawApp'
 import { ToolType } from '@/libs/DrawApp/Tools/ToolSelector'
 
 export abstract class Tool {
   public name: string
   public event: Event
   public toolType: ToolType
-  protected canvas: Canvas
+  protected canvas: DrawApp
 
-  public constructor (canvas: Canvas, toolType: ToolType) {
+  public constructor (canvas: DrawApp, toolType: ToolType) {
     this.canvas = canvas
     this.toolType = toolType
     this.name = this.toolType.toString()

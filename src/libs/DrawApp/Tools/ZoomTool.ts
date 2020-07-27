@@ -1,4 +1,4 @@
-import { Canvas } from '@/libs/DrawApp/Canvas'
+import { DrawApp } from '@/libs/DrawApp/DrawApp'
 import { IZoom } from '@/libs/DrawApp/Interfaces'
 import { Clamp, Vector } from '@/libs/DrawApp/Utils/Math'
 import { Tool } from '@/libs/DrawApp/Tools/Tool'
@@ -13,7 +13,7 @@ export class ZoomTool extends Tool implements IZoom {
   public position: Vector
   public steps: number
 
-  public constructor (canvas: Canvas, toolType: ToolType, settings: IZoom) {
+  public constructor (canvas: DrawApp, toolType: ToolType, settings: IZoom) {
     super(canvas, toolType)
 
     this.level = settings.level

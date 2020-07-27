@@ -7,7 +7,7 @@ import { ZoomTool } from '@/libs/DrawApp/Tools/ZoomTool'
 import { GUI } from '@/libs/DrawApp/GUI/GUI'
 import { DiscretizationPosition, Vector } from '@/libs/DrawApp/Utils/Math'
 
-export class Canvas {
+export class DrawApp {
   public readonly canvas: HTMLCanvasElement
   public readonly mouse: Mouse
   public readonly eventCanvas: EventCanvas
@@ -29,7 +29,7 @@ export class Canvas {
     this.data = new Data(settings.gridSize)
     this.settings = settings
 
-    // Canvas context
+    // DrawApp context
     this.ctx = canvas.getContext('2d')
 
     // Init Tool Selector

@@ -1,4 +1,4 @@
-import { Canvas } from '@/libs/DrawApp/Canvas'
+import { DrawApp } from '@/libs/DrawApp/DrawApp'
 
 export interface EventsGUI {
   guiEnable: Event;
@@ -6,11 +6,11 @@ export interface EventsGUI {
 }
 
 export class EventGUI {
-  private _canvas: Canvas
+  private _canvas: DrawApp
 
   public events: EventsGUI
 
-  public constructor (canvas: Canvas) {
+  public constructor (canvas: DrawApp) {
     this._canvas = canvas
 
     this.events = {

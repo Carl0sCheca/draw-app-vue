@@ -1,6 +1,6 @@
 import { Tool } from '@/libs/DrawApp/Tools/Tool'
 import { PencilTool } from '@/libs/DrawApp/Tools/PencilTool'
-import { Canvas } from '@/libs/DrawApp/Canvas'
+import { DrawApp } from '@/libs/DrawApp/DrawApp'
 import { BucketTool } from '@/libs/DrawApp/Tools/BucketTool'
 import { ColourPickerTool } from '@/libs/DrawApp/Tools/ColourPickerTool'
 import { MoveTool } from '@/libs/DrawApp/Tools/MoveTool'
@@ -24,7 +24,7 @@ export class ToolSelector {
 
   public colorSelected: string
 
-  public constructor (canvas: Canvas) {
+  public constructor (canvas: DrawApp) {
     this.selected = 5
     this.previousSelected = -1
 

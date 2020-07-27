@@ -1,8 +1,8 @@
-import { Canvas } from '@/libs/DrawApp/Canvas'
+import { DrawApp } from '@/libs/DrawApp/DrawApp'
 import { Vector } from '@/libs/DrawApp/Utils/Math'
 
 export abstract class GUIElement {
-  protected canvas: Canvas
+  protected canvas: DrawApp
 
   public enabled: boolean
   public clickIn: boolean
@@ -10,7 +10,7 @@ export abstract class GUIElement {
   public position: Vector
   public size: Vector
 
-  public constructor (canvas: Canvas, name: string) {
+  public constructor (canvas: DrawApp, name: string) {
     this.canvas = canvas
     this.enabled = false
     this.name = name

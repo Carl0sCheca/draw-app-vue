@@ -1,4 +1,4 @@
-import { Canvas } from '@/libs/DrawApp/Canvas'
+import { DrawApp } from '@/libs/DrawApp/DrawApp'
 import { EventGUI } from '@/libs/DrawApp/GUI/EventGUI'
 import { GUIElement } from '@/libs/DrawApp/GUI/GUIElement'
 import { ToolBoxGUI } from '@/libs/DrawApp/GUI/ToolBoxGUI'
@@ -6,7 +6,7 @@ import { MouseButton } from '@/libs/DrawApp/Mouse'
 import { CheckRange } from '@/libs/DrawApp/Utils/Math'
 
 export class GUI {
-  private readonly _canvas: Canvas
+  private readonly _canvas: DrawApp
   public readonly eventGUI: EventGUI
 
   private _clickIn: boolean
@@ -15,7 +15,7 @@ export class GUI {
 
   private enabled: boolean
 
-  public constructor (canvas: Canvas) {
+  public constructor (canvas: DrawApp) {
     this._canvas = canvas
     this.enabled = false
     this._clickIn = true
@@ -91,7 +91,7 @@ export class GUI {
     })
   }
 
-  public static CheckInsideGUIElement (canvas: Canvas, element: GUIElement): boolean {
+  public static CheckInsideGUIElement (canvas: DrawApp, element: GUIElement): boolean {
     return element.enabled && CheckRange(canvas.mouse.realPosition, element.position, {
       x: element.position.x + element.size.x,
       y: element.position.y + element.size.y

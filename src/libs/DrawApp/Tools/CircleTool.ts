@@ -1,5 +1,5 @@
 import { Tool } from '@/libs/DrawApp/Tools/Tool'
-import { Canvas } from '@/libs/DrawApp/Canvas'
+import { DrawApp } from '@/libs/DrawApp/DrawApp'
 import { ToolType } from '@/libs/DrawApp/Tools/ToolSelector'
 import { MouseButton } from '@/libs/DrawApp/Mouse'
 import { DiscretizationPosition, Vector } from '@/libs/DrawApp/Utils/Math'
@@ -12,7 +12,7 @@ export class CircleTool extends Tool {
   private _circlePixels: Vector[]
   public fill: boolean
 
-  public constructor (canvas: Canvas, toolType: ToolType) {
+  public constructor (canvas: DrawApp, toolType: ToolType) {
     super(canvas, toolType)
     this.dragging = false
     this._circlePixels = []

@@ -1,5 +1,5 @@
 import { Tool } from '@/libs/DrawApp/Tools/Tool'
-import { Canvas } from '@/libs/DrawApp/Canvas'
+import { DrawApp } from '@/libs/DrawApp/DrawApp'
 import { ToolType } from '@/libs/DrawApp/Tools/ToolSelector'
 import { MouseButton } from '@/libs/DrawApp/Mouse'
 import { Vector } from '@/libs/DrawApp/Utils/Math'
@@ -8,7 +8,7 @@ export class MoveTool extends Tool {
   private dragging: boolean
   private firstPoint: Vector
 
-  public constructor (canvas: Canvas, toolType: ToolType) {
+  public constructor (canvas: DrawApp, toolType: ToolType) {
     super(canvas, toolType)
     this.dragging = false
   }

@@ -1,6 +1,6 @@
 import { Tool } from '@/libs/DrawApp/Tools/Tool'
 import { MouseButton } from '@/libs/DrawApp/Mouse'
-import { Canvas } from '@/libs/DrawApp/Canvas'
+import { DrawApp } from '@/libs/DrawApp/DrawApp'
 import { ToolType } from '@/libs/DrawApp/Tools/ToolSelector'
 import {
   DiscretizationDataPosition,
@@ -13,7 +13,7 @@ import {
 export class PencilTool extends Tool {
   private _started: boolean
 
-  public constructor (canvas: Canvas, toolType: ToolType) {
+  public constructor (canvas: DrawApp, toolType: ToolType) {
     super(canvas, toolType)
     this._started = false
   }

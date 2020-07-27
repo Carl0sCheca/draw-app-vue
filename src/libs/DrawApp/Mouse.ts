@@ -1,4 +1,4 @@
-import { Canvas } from '@/libs/DrawApp/Canvas'
+import { DrawApp } from '@/libs/DrawApp/DrawApp'
 import { ToolType } from '@/libs/DrawApp/Tools/ToolSelector'
 import { DiscretizationDataPosition, DiscretizationPosition, Vector } from '@/libs/DrawApp/Utils/Math'
 
@@ -22,9 +22,9 @@ export class Mouse {
   public scroll: MouseScroll
   public moving: boolean
 
-  private readonly _canvas: Canvas
+  private readonly _canvas: DrawApp
 
-  public constructor (canvas: Canvas) {
+  public constructor (canvas: DrawApp) {
     this._canvas = canvas
     this.button = MouseButton.NONE
     this.scroll = MouseScroll.NONE

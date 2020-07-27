@@ -1,10 +1,10 @@
 import { Mouse, MouseButton, MouseScroll } from '@/libs/DrawApp/Mouse'
-import { Canvas } from '@/libs/DrawApp/Canvas'
+import { DrawApp } from '@/libs/DrawApp/DrawApp'
 
 export class EventCanvas {
-  private readonly _canvas: Canvas
+  private readonly _canvas: DrawApp
 
-  public constructor (canvas: Canvas) {
+  public constructor (canvas: DrawApp) {
     this._canvas = canvas
 
     this._canvas.canvas.addEventListener('mousedown', (e: MouseEvent) => this.onMouseDown(e, this._canvas.mouse))
@@ -90,7 +90,7 @@ export class EventCanvas {
     e.preventDefault()
   }
 
-  public onResizeWindow (canvas: Canvas): void {
+  public onResizeWindow (canvas: DrawApp): void {
     canvas.resizeWindow()
   }
 

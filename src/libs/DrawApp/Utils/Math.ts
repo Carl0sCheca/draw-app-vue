@@ -1,4 +1,4 @@
-import { Canvas } from '@/libs/DrawApp/Canvas'
+import { DrawApp } from '@/libs/DrawApp/DrawApp'
 import { IsInsideCanvas } from '@/libs/DrawApp/Utils/Canvas'
 
 export type Vector = { x: number; y: number }
@@ -13,14 +13,14 @@ export function Clamp (value: number, min: number, max: number): number {
   }
 }
 
-export function DiscretizationPosition (discretePosition: Vector, canvas: Canvas): Vector {
+export function DiscretizationPosition (discretePosition: Vector, canvas: DrawApp): Vector {
   return {
     x: discretePosition.x * canvas.settings.pixelSize,
     y: discretePosition.y * canvas.settings.pixelSize
   }
 }
 
-export function DiscretizationDataPosition (position: Vector, canvas: Canvas): Vector {
+export function DiscretizationDataPosition (position: Vector, canvas: DrawApp): Vector {
   return {
     x: Clamp(Math.trunc(position.x / canvas.settings.pixelSize), 0, canvas.settings.gridSize - 1),
     y: Clamp(Math.trunc(position.y / canvas.settings.pixelSize), 0, canvas.settings.gridSize - 1)
@@ -31,7 +31,7 @@ export function Lerp (v0: number, v1: number, t: number): number {
   return (1 - t) * v0 + t * v1
 }
 
-export function LerpSteps (canvas: Canvas, firstPosition: Vector, lastPosition: Vector, callback: CallableFunction): void {
+export function LerpSteps (canvas: DrawApp, firstPosition: Vector, lastPosition: Vector, callback: CallableFunction): void {
   if (!IsInsideCanvas(canvas)) return
 
   const startPosition: Vector = DiscretizationDataPosition(firstPosition, canvas)
