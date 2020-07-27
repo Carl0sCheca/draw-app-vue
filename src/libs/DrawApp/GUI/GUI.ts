@@ -9,6 +9,8 @@ export class GUI {
   private readonly _canvas: Canvas
   public readonly eventGUI: EventGUI
 
+  private _clickIn: boolean
+
   public guiElements: GUIElement[]
 
   private enabled: boolean
@@ -16,6 +18,7 @@ export class GUI {
   public constructor (canvas: Canvas) {
     this._canvas = canvas
     this.enabled = false
+    this._clickIn = true
 
     this.guiElements = []
     this.guiElements.push(new ToolBoxGUI(canvas, 'toolboxGUI'))
@@ -65,18 +68,31 @@ export class GUI {
       return
     }
 
-    if (this._canvas.mouse.button === MouseButton.LEFT) {
-      this.guiElements.forEach(element => {
+    this.guiElements.forEach(element => {
+      if (!element.clickIn && !this._canvas.mouse.moving) {
+        element.clickIn = true
+
         if (element.enabled && CheckRange(this._canvas.mouse.realPosition, element.position, {
           x: element.position.x + element.size.x,
           y: element.position.y + element.size.y
         })) {
-          this._canvas.toolSelector.tool.event.stopImmediatePropagation()
-          if (!this._canvas.mouse.moving) {
-            console.log('click on gui')
-          }
+          // mouse button left up inside element
+          console.log('a')
         }
-      })
-    }
+      }
+    })
+
+    this.guiElements.forEach(element => {
+      if (element.enabled && CheckRange(this._canvas.mouse.realPosition, element.position, {
+        x: element.position.x + element.size.x,
+        y: element.position.y + element.size.y
+      })) {
+        this._canvas.toolSelector.tool.event.stopImmediatePropagation()
+        if (element.clickIn && this._canvas.mouse.button === MouseButton.LEFT && !this._canvas.mouse.moving) {
+          // mouse button left down inside element
+          element.clickIn = false
+        }
+      }
+    })
   }
 }

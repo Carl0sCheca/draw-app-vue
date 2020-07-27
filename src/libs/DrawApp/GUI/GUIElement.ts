@@ -5,6 +5,7 @@ export abstract class GUIElement {
   protected canvas: Canvas
 
   public enabled: boolean
+  public clickIn: boolean
   public name: string
   public position: Vector
   public size: Vector
@@ -13,6 +14,7 @@ export abstract class GUIElement {
     this.canvas = canvas
     this.enabled = false
     this.name = name
+    this.clickIn = true
   }
 
   public abstract show (): void
