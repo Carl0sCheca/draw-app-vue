@@ -20,6 +20,7 @@ export class Mouse {
   public lastPosition: Vector
   public button: MouseButton
   public scroll: MouseScroll
+  public moving: boolean
 
   private readonly _canvas: Canvas
 
@@ -27,6 +28,7 @@ export class Mouse {
     this._canvas = canvas
     this.button = MouseButton.NONE
     this.scroll = MouseScroll.NONE
+    this.moving = false
     this.realPosition = { x: 0, y: 0 }
     this.lastPosition = null
   }
@@ -55,7 +57,8 @@ export class Mouse {
 
   public mouseDownRight (): void {
     this.button = MouseButton.RIGHT
-    this._canvas.toggleGrid()
+    this._canvas.gui.toggleGUI()
+    // this._canvas.toggleGrid()
   }
 
   public mouseUpLeft (): void {

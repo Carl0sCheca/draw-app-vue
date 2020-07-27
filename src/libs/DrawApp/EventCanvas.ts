@@ -29,7 +29,7 @@ export class EventCanvas {
     }
 
     if (mouse.button !== MouseButton.NONE) {
-      this._canvas.canvas.dispatchEvent(this._canvas.toolSelector.tool.event)
+      this._dispatchEvent()
     }
   }
 
@@ -45,7 +45,7 @@ export class EventCanvas {
       mouse.mouseWheelButtonUp()
     }
 
-    this._canvas.canvas.dispatchEvent(this._canvas.toolSelector.tool.event)
+    this._dispatchEvent()
   }
 
   public onMouseWheel (e: WheelEvent, mouse: Mouse): void {
@@ -59,24 +59,26 @@ export class EventCanvas {
       mouse.mouseWheelUp()
     }
     if (mouse.scroll !== MouseScroll.NONE) {
-      this._canvas.canvas.dispatchEvent(this._canvas.toolSelector.tool.event)
+      this._dispatchEvent()
       mouse.scroll = MouseScroll.NONE
       this._canvas.toolSelector.restoreTool()
     }
   }
 
   public onMouseMove (e: MouseEvent, mouse: Mouse): void {
+    mouse.moving = true
     this._setupMousePosition(e, mouse)
 
     if (mouse.button !== MouseButton.NONE) {
-      this._canvas.canvas.dispatchEvent(this._canvas.toolSelector.tool.event)
+      this._dispatchEvent()
     }
+    mouse.moving = false
   }
 
   public onMouseEnter (e: MouseEvent, mouse: Mouse): void {
     if (e.buttons === MouseButton.LEFT) {
       mouse.mouseLeave()
-      this._canvas.canvas.dispatchEvent(this._canvas.toolSelector.tool.event)
+      this._dispatchEvent()
     }
 
     if (mouse.button !== MouseButton.NONE) {
@@ -100,5 +102,11 @@ export class EventCanvas {
       mouse.lastPosition = { x: mouse.position.x, y: mouse.position.y }
       mouse.mouseMove({ x: e.offsetX, y: e.offsetY })
     }
+  }
+
+  private _dispatchEvent (): void {
+    this._canvas.gui.mouseCheck()
+    this._canvas.canvas.dispatchEvent(this._canvas.toolSelector.tool.event)
+    this._canvas.gui.reloadGUI()
   }
 }
