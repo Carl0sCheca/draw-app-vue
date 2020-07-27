@@ -3,9 +3,9 @@ import { Mouse } from '@/libs/DrawApp/Mouse'
 import { EventCanvas } from '@/libs/DrawApp/EventCanvas'
 import { Data } from '@/libs/DrawApp/Data'
 import { ToolSelector, ToolType } from '@/libs/DrawApp/Tools/ToolSelector'
-import { DiscretizationPosition, Vector } from '@/libs/DrawApp/Utils'
 import { ZoomTool } from '@/libs/DrawApp/Tools/ZoomTool'
 import { GUI } from '@/libs/DrawApp/GUI/GUI'
+import { DiscretizationPosition, Vector } from '@/libs/DrawApp/Utils/Math'
 
 export class Canvas {
   public readonly canvas: HTMLCanvasElement

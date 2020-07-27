@@ -1,14 +1,14 @@
 import { Tool } from '@/libs/DrawApp/Tools/Tool'
 import { MouseButton } from '@/libs/DrawApp/Mouse'
+import { Canvas } from '@/libs/DrawApp/Canvas'
+import { ToolType } from '@/libs/DrawApp/Tools/ToolSelector'
 import {
   DiscretizationDataPosition,
   DiscretizationPosition,
   LerpSteps,
   RandomColour,
   Vector
-} from '@/libs/DrawApp/Utils'
-import { Canvas } from '@/libs/DrawApp/Canvas'
-import { ToolType } from '@/libs/DrawApp/Tools/ToolSelector'
+} from '@/libs/DrawApp/Utils/Math'
 
 export class PencilTool extends Tool {
   private _started: boolean

@@ -3,7 +3,7 @@ import { EventGUI } from '@/libs/DrawApp/GUI/EventGUI'
 import { GUIElement } from '@/libs/DrawApp/GUI/GUIElement'
 import { ToolBoxGUI } from '@/libs/DrawApp/GUI/ToolBoxGUI'
 import { MouseButton } from '@/libs/DrawApp/Mouse'
-import { CheckRange } from '@/libs/DrawApp/Utils'
+import { CheckRange } from '@/libs/DrawApp/Utils/Math'
 
 export class GUI {
   private readonly _canvas: Canvas
@@ -72,10 +72,7 @@ export class GUI {
       if (!element.clickIn && !this._canvas.mouse.moving) {
         element.clickIn = true
 
-        if (element.enabled && CheckRange(this._canvas.mouse.realPosition, element.position, {
-          x: element.position.x + element.size.x,
-          y: element.position.y + element.size.y
-        })) {
+        if (GUI.CheckInsideGUIElement(this._canvas, element)) {
           // mouse button left up inside element
           console.log('a')
         }
@@ -83,16 +80,21 @@ export class GUI {
     })
 
     this.guiElements.forEach(element => {
-      if (element.enabled && CheckRange(this._canvas.mouse.realPosition, element.position, {
-        x: element.position.x + element.size.x,
-        y: element.position.y + element.size.y
-      })) {
+      if (GUI.CheckInsideGUIElement(this._canvas, element)) {
         this._canvas.toolSelector.tool.event.stopImmediatePropagation()
+
         if (element.clickIn && this._canvas.mouse.button === MouseButton.LEFT && !this._canvas.mouse.moving) {
           // mouse button left down inside element
           element.clickIn = false
         }
       }
+    })
+  }
+
+  public static CheckInsideGUIElement (canvas: Canvas, element: GUIElement): boolean {
+    return element.enabled && CheckRange(canvas.mouse.realPosition, element.position, {
+      x: element.position.x + element.size.x,
+      y: element.position.y + element.size.y
     })
   }
 }

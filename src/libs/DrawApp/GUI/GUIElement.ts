@@ -1,5 +1,5 @@
 import { Canvas } from '@/libs/DrawApp/Canvas'
-import { Vector } from '@/libs/DrawApp/Utils'
+import { Vector } from '@/libs/DrawApp/Utils/Math'
 
 export abstract class GUIElement {
   protected canvas: Canvas

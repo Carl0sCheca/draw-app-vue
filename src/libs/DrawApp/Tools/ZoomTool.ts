@@ -1,6 +1,6 @@
 import { Canvas } from '@/libs/DrawApp/Canvas'
 import { IZoom } from '@/libs/DrawApp/Interfaces'
-import { Clamp, Vector } from '@/libs/DrawApp/Utils'
+import { Clamp, Vector } from '@/libs/DrawApp/Utils/Math'
 import { Tool } from '@/libs/DrawApp/Tools/Tool'
 import { ToolType } from '@/libs/DrawApp/Tools/ToolSelector'
 import { MouseButton, MouseScroll } from '@/libs/DrawApp/Mouse'

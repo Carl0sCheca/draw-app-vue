@@ -1,6 +1,6 @@
-import { DiscretizationDataPosition, DiscretizationPosition, Vector } from '@/libs/DrawApp/Utils'
 import { Canvas } from '@/libs/DrawApp/Canvas'
 import { ToolType } from '@/libs/DrawApp/Tools/ToolSelector'
+import { DiscretizationDataPosition, DiscretizationPosition, Vector } from '@/libs/DrawApp/Utils/Math'
 
 export enum MouseButton {
   NONE = -1,
@@ -58,7 +58,6 @@ export class Mouse {
   public mouseDownRight (): void {
     this.button = MouseButton.RIGHT
     this._canvas.gui.toggleGUI()
-    // this._canvas.toggleGrid()
   }
 
   public mouseUpLeft (): void {

@@ -25,7 +25,7 @@ export class ToolSelector {
   public colorSelected: string
 
   public constructor (canvas: Canvas) {
-    this.selected = 0
+    this.selected = 5
     this.previousSelected = -1
 
     this.colorSelected = 'red'

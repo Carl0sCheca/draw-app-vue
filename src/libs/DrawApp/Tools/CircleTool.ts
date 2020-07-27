@@ -1,8 +1,10 @@
 import { Tool } from '@/libs/DrawApp/Tools/Tool'
-import { DiscretizationPosition, PushIfNotExists, RecursiveFill, Vector } from '@/libs/DrawApp/Utils'
 import { Canvas } from '@/libs/DrawApp/Canvas'
 import { ToolType } from '@/libs/DrawApp/Tools/ToolSelector'
 import { MouseButton } from '@/libs/DrawApp/Mouse'
+import { DiscretizationPosition, Vector } from '@/libs/DrawApp/Utils/Math'
+import { PushIfNotExists } from '@/libs/DrawApp/Utils/Util'
+import { RecursiveFill } from '@/libs/DrawApp/Utils/Canvas'
 
 export class CircleTool extends Tool {
   private dragging: boolean
@@ -52,12 +54,11 @@ export class CircleTool extends Tool {
       this._draw(this.centerCircle)
     } else {
       let d = (5 - radius * 4) / 4
-      let x = 0
       let y = radius
 
       this._circlePixels = []
 
-      do {
+      for (let x = 0; x <= y; x++) {
         PushIfNotExists({ x: this.centerCircle.x + x, y: this.centerCircle.y + y }, this._circlePixels)
         PushIfNotExists({ x: this.centerCircle.x + x, y: this.centerCircle.y - y }, this._circlePixels)
         PushIfNotExists({ x: this.centerCircle.x - x, y: this.centerCircle.y + y }, this._circlePixels)
@@ -73,9 +74,7 @@ export class CircleTool extends Tool {
           d += 2 * (x - y) + 1
           y--
         }
-
-        x++
-      } while (x <= y)
+      }
 
       if (this.fill) {
         PushIfNotExists(this.centerCircle, this._circlePixels)

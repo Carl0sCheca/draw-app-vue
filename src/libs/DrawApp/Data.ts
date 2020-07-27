@@ -1,4 +1,4 @@
-import { CheckRange, Clamp, Vector } from '@/libs/DrawApp/Utils'
+import { CheckRange, Clamp, Vector } from '@/libs/DrawApp/Utils/Math'
 
 export interface Pixel {
   position: Vector;

@@ -1,4 +1,4 @@
-import { Vector } from '@/libs/DrawApp/Utils';
+import { Vector } from '@/libs/DrawApp/Utils/Math'
 
 export interface ISettings {
   gridSize: number
