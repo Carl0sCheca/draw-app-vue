@@ -1,4 +1,4 @@
-# draw-twitter-profile-pic
+# draw-app-vue
 
 ## Project setup
 ```
