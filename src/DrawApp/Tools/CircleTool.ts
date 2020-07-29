@@ -16,7 +16,7 @@ export class CircleTool extends Tool {
     super(drawApp, toolType)
     this.dragging = false
     this._circlePixels = []
-    this.fill = true
+    this.fill = false
   }
 
   public onAction (): void {

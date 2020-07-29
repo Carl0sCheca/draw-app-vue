@@ -63,6 +63,9 @@ export class GUI {
       if (!element.clickIn && !this._drawApp.mouse.moving) {
         element.clickIn = true
 
+        this._drawApp.reloadCanvas()
+        this.reloadGUI()
+
         if (GUI.CheckInsideGUIElement(this._drawApp, element)) {
           // mouse button left up inside element
           element.action()
@@ -73,8 +76,13 @@ export class GUI {
                 c.active = false
                 c.ui()
               })
+
               child.action()
               child.setActive()
+              child.ui()
+
+              this._drawApp.reloadCanvas()
+              this.reloadGUI()
             }
           })
         }

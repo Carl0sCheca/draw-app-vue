@@ -36,10 +36,17 @@ export class ToolBoxGUI extends GUIElement {
       x: this._position.x,
       y: this._position.y
     }))
-    await FetchSVG('circle').then(img => GUIElement.AddElement(this.child, this.drawApp, new CircleButton(this.drawApp, 'Circle'), img, {
-      x: this._position.x + 68,
-      y: this._position.y
-    }))
+    await FetchSVG('circle').then(img => {
+      const circleButton: CircleButton = new CircleButton(this.drawApp, 'Circle')
+
+      GUIElement.AddElement(this.child, this.drawApp, circleButton, img, {
+        x: this._position.x + 68,
+        y: this._position.y
+      })
+      FetchSVG('circle_filled').then(img2 => {
+        circleButton.imgFilled = img2
+      })
+    })
 
     this.child.find(element => element.name === 'Pencil').active = true
   }
