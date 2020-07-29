@@ -37,7 +37,11 @@ export class PencilTool extends Tool {
   }
 
   private _pencilTool (position: Vector): void {
-    const color: string = HSLtoString(HSVtoHSL({ H: Clamp(this._counter++, 0, 360), S: 100, V: 100 }))
+    this._counter++
+    if (this._counter > 360) {
+      this._counter = 0
+    }
+    const color: string = HSLtoString(HSVtoHSL({ H: this._counter, S: 100, V: 100 }))
     this.drawApp.paintCanvas(DiscretizationPosition(position, this.drawApp), this.drawApp.settings.showGrid, color)
     this.drawApp.data.writeData(position, color)
   }
