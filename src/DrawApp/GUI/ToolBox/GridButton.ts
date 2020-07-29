@@ -1,0 +1,14 @@
+import { GUIElement } from '../GUIElement'
+
+export class GridButton extends GUIElement {
+  public imgFilled: HTMLImageElement
+
+  public action (): void {
+    this.drawApp.toggleGrid()
+  }
+
+  public ui (): void {
+    const image: HTMLImageElement = this.drawApp.settings.showGrid ? this.imgFilled : this.img
+    this.drawApp.ctx.drawImage(image, this._position.x, this._position.y, this.size.x, this.size.y)
+  }
+}

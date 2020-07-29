@@ -7,14 +7,6 @@ export class PencilButton extends GUIElement {
     this.drawApp.toolSelector.selectTool = ToolType.PENCIL
   }
 
-  public hide (): void {
-    this.enabled = false
-  }
-
-  public show (): void {
-    this.enabled = true
-  }
-
   public ui (): void {
     if (this.active) {
       this.setActive()

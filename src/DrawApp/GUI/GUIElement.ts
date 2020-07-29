@@ -12,6 +12,7 @@ export abstract class GUIElement {
   public _position: Vector
   private _size: Vector
 
+  public selectable: boolean
   public active: boolean
 
   public child: Array<GUIElement>
@@ -27,6 +28,7 @@ export abstract class GUIElement {
 
     this.active = false
     this.loaded = false
+    this.selectable = true
   }
 
   public set size (size: Vector) {
@@ -45,9 +47,13 @@ export abstract class GUIElement {
     return this._position
   }
 
-  public abstract show (): void
+  public hide (): void {
+    this.enabled = false
+  }
 
-  public abstract hide (): void
+  public show (): void {
+    this.enabled = true
+  }
 
   public abstract ui (): void
 

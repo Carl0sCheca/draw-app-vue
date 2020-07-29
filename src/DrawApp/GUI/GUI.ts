@@ -72,6 +72,14 @@ export class GUI {
 
           element.child.forEach(child => {
             if (GUI.CheckInsideGUIElement(this._drawApp, child)) {
+              if (!child.selectable) {
+                child.action()
+                child.ui()
+                this._drawApp.reloadCanvas()
+                this.reloadGUI()
+                return
+              }
+
               element.child.filter(c => c.name !== child.name).forEach(c => {
                 c.active = false
                 c.ui()

@@ -9,18 +9,9 @@ export class CircleButton extends GUIElement {
     // console.log(`mouse button left up inside ${this.name}`)
     this.drawApp.toolSelector.selectTool = ToolType.CIRCLE
     const circleTool: CircleTool = this.drawApp.toolSelector.tool as CircleTool
-    console.log(circleTool.fill)
     if (this.active) {
       circleTool.fill = !circleTool.fill
     }
-  }
-
-  public hide (): void {
-    this.enabled = false
-  }
-
-  public show (): void {
-    this.enabled = true
   }
 
   public ui (): void {

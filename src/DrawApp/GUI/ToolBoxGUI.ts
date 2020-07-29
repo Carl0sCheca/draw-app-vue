@@ -3,6 +3,8 @@ import { PencilButton } from './ToolBox/PencilButton'
 import { FetchSVG } from '../Utils/Util'
 import { CircleButton } from './ToolBox/CircleButton'
 import { DrawApp } from '../DrawApp'
+import { GridButton } from './ToolBox/GridButton'
+import { ClearButton } from './ToolBox/ClearButton'
 
 export class ToolBoxGUI extends GUIElement {
   public constructor (drawApp: DrawApp, name: string) {
@@ -23,7 +25,7 @@ export class ToolBoxGUI extends GUIElement {
       x: 0,
       y: 0
     }
-    this.loadImages().then(() => {
+    this.loadImagesAndButtons().then(() => {
       guiElements.push(this)
       setTimeout(() => {
         this.loaded = true
@@ -31,7 +33,7 @@ export class ToolBoxGUI extends GUIElement {
     })
   }
 
-  public async loadImages (): Promise<void> {
+  public async loadImagesAndButtons (): Promise<void> {
     await FetchSVG('pencil').then(img => GUIElement.AddElement(this.child, this.drawApp, new PencilButton(this.drawApp, 'Pencil'), img, {
       x: this._position.x,
       y: this._position.y
@@ -40,11 +42,32 @@ export class ToolBoxGUI extends GUIElement {
       const circleButton: CircleButton = new CircleButton(this.drawApp, 'Circle')
 
       GUIElement.AddElement(this.child, this.drawApp, circleButton, img, {
-        x: this._position.x + 68,
+        x: this._position.x + 68 * this.child.length,
         y: this._position.y
       })
       FetchSVG('circle_filled').then(img2 => {
         circleButton.imgFilled = img2
+      })
+    })
+
+    await FetchSVG('grid').then(img => {
+      const circleButton: CircleButton = new GridButton(this.drawApp, 'Grid')
+      circleButton.selectable = false
+      GUIElement.AddElement(this.child, this.drawApp, circleButton, img, {
+        x: this._position.x + 68 * this.child.length,
+        y: this._position.y
+      })
+      FetchSVG('grid_disabled').then(img2 => {
+        circleButton.imgFilled = img2
+      })
+    })
+
+    await FetchSVG('clear').then(img => {
+      const clearButton: ClearButton = new ClearButton(this.drawApp, 'Clear')
+      clearButton.selectable = false
+      GUIElement.AddElement(this.child, this.drawApp, clearButton, img, {
+        x: this._position.x + 68 * this.child.length,
+        y: this._position.y
       })
     })
 
