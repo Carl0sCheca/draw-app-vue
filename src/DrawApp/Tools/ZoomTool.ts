@@ -61,6 +61,11 @@ export class ZoomTool extends Tool implements IZoom {
   }
 
   public onAction (): void {
+    super.onAction()
+    if (!this.canRun) {
+      return
+    }
+
     if (this.drawApp.mouse.button !== MouseButton.NONE) {
       return
     }

@@ -1,29 +1,26 @@
 import { Tool } from './Tool'
-import { DrawApp } from '../DrawApp'
-import { ToolType } from './ToolSelector'
 import { MouseButton } from '../Mouse'
 import { Vector } from '../Utils/Math'
 
 export class MoveTool extends Tool {
-  private dragging: boolean
   private firstPoint: Vector
 
-  public constructor (drawApp: DrawApp, toolType: ToolType) {
-    super(drawApp, toolType)
-    this.dragging = false
-  }
-
   public onAction (): void {
+    super.onAction()
+    if (!this.canRun) {
+      return
+    }
+
     if (this.drawApp.mouse.button === MouseButton.NONE) {
-      this.dragging = false
+      this._dragging = false
       this.drawApp.toolSelector.restoreTool()
       return
     }
 
-    if (!this.dragging) {
-      this.dragging = true
+    if (!this._dragging) {
+      this._dragging = true
       this.firstPoint = this.drawApp.mouse.realPosition
-    } else if (this.dragging) {
+    } else if (this._dragging) {
       const newPosition: Vector = {
         x: this.drawApp.zoom.offset.x - (this.firstPoint.x - this.drawApp.mouse.realPosition.x),
         y: this.drawApp.zoom.offset.y - (this.firstPoint.y - this.drawApp.mouse.realPosition.y)

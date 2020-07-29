@@ -5,6 +5,8 @@ import { CircleButton } from './ToolBox/CircleButton'
 import { DrawApp } from '../DrawApp'
 import { GridButton } from './ToolBox/GridButton'
 import { ClearButton } from './ToolBox/ClearButton'
+import { BucketButton } from './ToolBox/BucketButton'
+import { ColorPickerButton } from './ToolBox/ColorPickerButton'
 
 export class ToolBoxGUI extends GUIElement {
   public constructor (drawApp: DrawApp, name: string) {
@@ -70,6 +72,16 @@ export class ToolBoxGUI extends GUIElement {
         y: this._position.y
       })
     })
+
+    await FetchSVG('bucket').then(img => GUIElement.AddElement(this.child, this.drawApp, new BucketButton(this.drawApp, 'Bucket'), img, {
+      x: this._position.x + 68 * this.child.length,
+      y: this._position.y
+    }))
+
+    await FetchSVG('colorpicker').then(img => GUIElement.AddElement(this.child, this.drawApp, new ColorPickerButton(this.drawApp, 'ColorPicker'), img, {
+      x: this._position.x + 68 * this.child.length,
+      y: this._position.y
+    }))
 
     this.child.find(element => element.name === 'Pencil').active = true
   }

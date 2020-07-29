@@ -2,30 +2,34 @@ import { DrawApp } from '../DrawApp'
 import { PushIfNotExists } from './Util'
 import { Vector } from './Math'
 
-export function RecursiveFill (pos: Vector, drawApp: DrawApp, array: Array<Vector>): void {
+export function RecursiveFillPosition (pos: Vector, drawApp: DrawApp, array: Array<Vector>): void {
   if (pos.x + 1 < drawApp.settings.gridSize && !(array.some(position => position.x - 1 === pos.x && position.y === pos.y))) {
     const p: Vector = { x: pos.x + 1, y: pos.y }
     PushIfNotExists(p, array)
-    RecursiveFill(p, drawApp, array)
+    RecursiveFillPosition(p, drawApp, array)
   }
 
   if (pos.x - 1 >= 0 && !(array.some(position => position.x + 1 === pos.x && position.y === pos.y))) {
     const p: Vector = { x: pos.x - 1, y: pos.y }
     PushIfNotExists(p, array)
-    RecursiveFill(p, drawApp, array)
+    RecursiveFillPosition(p, drawApp, array)
   }
 
   if (pos.y + 1 < drawApp.settings.gridSize && !(array.some(position => position.x === pos.x && position.y - 1 === pos.y))) {
     const p: Vector = { x: pos.x, y: pos.y + 1 }
     PushIfNotExists(p, array)
-    RecursiveFill(p, drawApp, array)
+    RecursiveFillPosition(p, drawApp, array)
   }
 
   if (pos.y - 1 >= 0 && !(array.some(position => position.x === pos.x && position.y + 1 === pos.y))) {
     const p: Vector = { x: pos.x, y: pos.y - 1 }
     PushIfNotExists(p, array)
-    RecursiveFill(p, drawApp, array)
+    RecursiveFillPosition(p, drawApp, array)
   }
+}
+
+export function RecursiveFillColor (pos: Vector, drawApp: DrawApp, array: Array<Vector>, color: string): void {
+  // TODO: this
 }
 
 export function IsInsideCanvas (drawApp: DrawApp): boolean {

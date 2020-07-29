@@ -4,36 +4,39 @@ import { ToolType } from './ToolSelector'
 import { MouseButton } from '../Mouse'
 import { DiscretizationPosition, Vector } from '../Utils/Math'
 import { PushIfNotExists } from '../Utils/Util'
-import { RecursiveFill } from '../Utils/Canvas'
+import { RecursiveFillPosition } from '../Utils/Canvas'
 
 export class CircleTool extends Tool {
-  private dragging: boolean
   private centerCircle: Vector
   private _circlePixels: Vector[]
   public fill: boolean
 
   public constructor (drawApp: DrawApp, toolType: ToolType) {
     super(drawApp, toolType)
-    this.dragging = false
     this._circlePixels = []
     this.fill = false
   }
 
   public onAction (): void {
+    super.onAction()
+    if (!this.canRun) {
+      return
+    }
+
     if (this.drawApp.mouse.button === MouseButton.NONE) {
-      if (this.dragging) {
+      if (this._dragging) {
         this._circlePixels.forEach(position => this.drawApp.data.writeData(position, this.drawApp.toolSelector.colorSelected))
 
         this.drawApp.reloadCanvas()
-        this.dragging = false
+        this._dragging = false
       }
     } else if (this.drawApp.mouse.button === MouseButton.LEFT) {
-      if (!this.dragging) {
+      if (!this._dragging) {
         this.centerCircle = this.drawApp.mouse.dataPosition
         this._draw(this.centerCircle)
 
-        this.dragging = true
-      } else if (this.dragging) {
+        this._dragging = true
+      } else if (this._dragging) {
         if (this.drawApp.mouse.position.x !== this.drawApp.mouse.lastPosition.x || this.drawApp.mouse.position.y !== this.drawApp.mouse.lastPosition.y) {
           this.drawApp.reloadCanvas()
           this._circle()
@@ -43,7 +46,7 @@ export class CircleTool extends Tool {
   }
 
   private _circle (): void {
-    if (!this.dragging) return
+    if (!this._dragging) return
 
     const radius: number = Math.max(
       Math.abs(this.centerCircle.x - this.drawApp.mouse.dataPosition.x),
@@ -78,7 +81,7 @@ export class CircleTool extends Tool {
 
       if (this.fill) {
         PushIfNotExists(this.centerCircle, this._circlePixels)
-        RecursiveFill(this.centerCircle, this.drawApp, this._circlePixels)
+        RecursiveFillPosition(this.centerCircle, this.drawApp, this._circlePixels)
       }
 
       this._circlePixels.forEach(position => this._draw(position))
