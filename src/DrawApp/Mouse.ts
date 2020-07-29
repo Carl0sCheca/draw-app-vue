@@ -22,10 +22,10 @@ export class Mouse {
   public scroll: MouseScroll
   public moving: boolean
 
-  private readonly _canvas: DrawApp
+  private readonly _drawApp: DrawApp
 
-  public constructor (canvas: DrawApp) {
-    this._canvas = canvas
+  public constructor (drawApp: DrawApp) {
+    this._drawApp = drawApp
     this.button = MouseButton.NONE
     this.scroll = MouseScroll.NONE
     this.moving = false
@@ -34,21 +34,21 @@ export class Mouse {
   }
 
   public get position (): Vector {
-    return DiscretizationPosition(this.dataPosition, this._canvas)
+    return DiscretizationPosition(this.dataPosition, this._drawApp)
   }
 
   public get relativeRealPosition (): Vector {
     const position: Vector = { x: this.realPosition.x, y: this.realPosition.y }
-    position.x -= this._canvas.zoom.offset.x
-    position.x /= this._canvas.zoom.level
+    position.x -= this._drawApp.zoom.offset.x
+    position.x /= this._drawApp.zoom.level
 
-    position.y -= this._canvas.zoom.offset.y
-    position.y /= this._canvas.zoom.level
+    position.y -= this._drawApp.zoom.offset.y
+    position.y /= this._drawApp.zoom.level
     return position
   }
 
   public get dataPosition (): Vector {
-    return DiscretizationDataPosition(this.relativeRealPosition, this._canvas)
+    return DiscretizationDataPosition(this.relativeRealPosition, this._drawApp)
   }
 
   public mouseDownLeft (): void {
@@ -57,7 +57,7 @@ export class Mouse {
 
   public mouseDownRight (): void {
     this.button = MouseButton.RIGHT
-    this._canvas.gui.toggleGUI()
+    this._drawApp.gui.toolbox.toggle()
   }
 
   public mouseUpLeft (): void {
@@ -70,7 +70,7 @@ export class Mouse {
 
   public mouseWheelButtonDown (): void {
     this.button = MouseButton.MIDDLE
-    this._canvas.toolSelector.selectTool = ToolType.MOVE
+    this._drawApp.toolSelector.selectTool = ToolType.MOVE
   }
 
   public mouseWheelButtonUp (): void {
@@ -83,7 +83,7 @@ export class Mouse {
     }
 
     this.scroll = MouseScroll.DOWN
-    this._canvas.toolSelector.selectTool = ToolType.ZOOM
+    this._drawApp.toolSelector.selectTool = ToolType.ZOOM
   }
 
   public mouseWheelUp (): void {
@@ -92,7 +92,7 @@ export class Mouse {
     }
 
     this.scroll = MouseScroll.UP
-    this._canvas.toolSelector.selectTool = ToolType.ZOOM
+    this._drawApp.toolSelector.selectTool = ToolType.ZOOM
   }
 
   public mouseMove (position: Vector): void {

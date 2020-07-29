@@ -12,30 +12,30 @@ export class CircleTool extends Tool {
   private _circlePixels: Vector[]
   public fill: boolean
 
-  public constructor (canvas: DrawApp, toolType: ToolType) {
-    super(canvas, toolType)
+  public constructor (drawApp: DrawApp, toolType: ToolType) {
+    super(drawApp, toolType)
     this.dragging = false
     this._circlePixels = []
     this.fill = true
   }
 
   public onAction (): void {
-    if (this.canvas.mouse.button === MouseButton.NONE) {
+    if (this.drawApp.mouse.button === MouseButton.NONE) {
       if (this.dragging) {
-        this._circlePixels.forEach(position => this.canvas.data.writeData(position, this.canvas.toolSelector.colorSelected))
+        this._circlePixels.forEach(position => this.drawApp.data.writeData(position, this.drawApp.toolSelector.colorSelected))
 
-        this.canvas.reloadCanvas()
+        this.drawApp.reloadCanvas()
         this.dragging = false
       }
-    } else if (this.canvas.mouse.button === MouseButton.LEFT) {
+    } else if (this.drawApp.mouse.button === MouseButton.LEFT) {
       if (!this.dragging) {
-        this.centerCircle = this.canvas.mouse.dataPosition
+        this.centerCircle = this.drawApp.mouse.dataPosition
         this._draw(this.centerCircle)
 
         this.dragging = true
       } else if (this.dragging) {
-        if (this.canvas.mouse.position.x !== this.canvas.mouse.lastPosition.x || this.canvas.mouse.position.y !== this.canvas.mouse.lastPosition.y) {
-          this.canvas.reloadCanvas()
+        if (this.drawApp.mouse.position.x !== this.drawApp.mouse.lastPosition.x || this.drawApp.mouse.position.y !== this.drawApp.mouse.lastPosition.y) {
+          this.drawApp.reloadCanvas()
           this._circle()
         }
       }
@@ -46,8 +46,8 @@ export class CircleTool extends Tool {
     if (!this.dragging) return
 
     const radius: number = Math.max(
-      Math.abs(this.centerCircle.x - this.canvas.mouse.dataPosition.x),
-      Math.abs(this.centerCircle.y - this.canvas.mouse.dataPosition.y)
+      Math.abs(this.centerCircle.x - this.drawApp.mouse.dataPosition.x),
+      Math.abs(this.centerCircle.y - this.drawApp.mouse.dataPosition.y)
     )
 
     if (radius < 1) {
@@ -78,7 +78,7 @@ export class CircleTool extends Tool {
 
       if (this.fill) {
         PushIfNotExists(this.centerCircle, this._circlePixels)
-        RecursiveFill(this.centerCircle, this.canvas, this._circlePixels)
+        RecursiveFill(this.centerCircle, this.drawApp, this._circlePixels)
       }
 
       this._circlePixels.forEach(position => this._draw(position))
@@ -86,6 +86,6 @@ export class CircleTool extends Tool {
   }
 
   private _draw (position: Vector): void {
-    this.canvas.paintCanvas(DiscretizationPosition(position, this.canvas), this.canvas.settings.showGrid)
+    this.drawApp.paintCanvas(DiscretizationPosition(position, this.drawApp), this.drawApp.settings.showGrid)
   }
 }

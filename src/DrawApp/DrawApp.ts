@@ -38,6 +38,9 @@ export class DrawApp {
     // Zoom from Tool Selector
     this.zoom = (this.toolSelector.tools[ToolType.ZOOM] as ZoomTool)
 
+    // Set canvas size for GUI
+    this._setSizeCanvas()
+
     // Init GUI
     this.gui = new GUI(this)
 

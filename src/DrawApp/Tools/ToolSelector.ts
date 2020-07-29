@@ -24,24 +24,24 @@ export class ToolSelector {
 
   public colorSelected: string
 
-  public constructor (canvas: DrawApp) {
+  public constructor (drawApp: DrawApp) {
     this.selected = 0
     this.previousSelected = -1
 
     this.colorSelected = 'red'
 
     this.tools = []
-    this.tools.push(new PencilTool(canvas, ToolType.PENCIL))
-    this.tools.push(new BucketTool(canvas, ToolType.BUCKET))
-    this.tools.push(new ColourPickerTool(canvas, ToolType.COLOUR_PICKER))
-    this.tools.push(new MoveTool(canvas, ToolType.MOVE))
-    this.tools.push(new ZoomTool(canvas, ToolType.ZOOM, {
+    this.tools.push(new PencilTool(drawApp, ToolType.PENCIL))
+    this.tools.push(new BucketTool(drawApp, ToolType.BUCKET))
+    this.tools.push(new ColourPickerTool(drawApp, ToolType.COLOUR_PICKER))
+    this.tools.push(new MoveTool(drawApp, ToolType.MOVE))
+    this.tools.push(new ZoomTool(drawApp, ToolType.ZOOM, {
       level: 1,
       minLevel: 1,
       maxLevel: 8,
       steps: 0.1
     }))
-    this.tools.push(new CircleTool(canvas, ToolType.CIRCLE))
+    this.tools.push(new CircleTool(drawApp, ToolType.CIRCLE))
   }
 
   public get tool (): Tool {

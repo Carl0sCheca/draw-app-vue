@@ -31,11 +31,11 @@ export function Lerp (v0: number, v1: number, t: number): number {
   return (1 - t) * v0 + t * v1
 }
 
-export function LerpSteps (canvas: DrawApp, firstPosition: Vector, lastPosition: Vector, callback: CallableFunction): void {
-  if (!IsInsideCanvas(canvas)) return
+export function LerpSteps (drawApp: DrawApp, firstPosition: Vector, lastPosition: Vector, callback: CallableFunction): void {
+  if (!IsInsideCanvas(drawApp)) return
 
-  const startPosition: Vector = DiscretizationDataPosition(firstPosition, canvas)
-  const endPosition: Vector = DiscretizationDataPosition(lastPosition, canvas)
+  const startPosition: Vector = DiscretizationDataPosition(firstPosition, drawApp)
+  const endPosition: Vector = DiscretizationDataPosition(lastPosition, drawApp)
 
   const distance: number = Math.max(
     Math.trunc(Math.abs(startPosition.x - endPosition.x)),

@@ -5,14 +5,14 @@ export abstract class Tool {
   public name: string
   public event: Event
   public toolType: ToolType
-  protected canvas: DrawApp
+  protected drawApp: DrawApp
 
-  public constructor (canvas: DrawApp, toolType: ToolType) {
-    this.canvas = canvas
+  public constructor (drawApp: DrawApp, toolType: ToolType) {
+    this.drawApp = drawApp
     this.toolType = toolType
     this.name = this.toolType.toString()
     this.event = new Event(this.name)
-    canvas.canvas.addEventListener(this.name, () => this.onAction())
+    drawApp.canvas.addEventListener(this.name, () => this.onAction())
   }
 
   public abstract onAction(): void

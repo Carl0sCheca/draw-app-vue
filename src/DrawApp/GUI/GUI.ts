@@ -1,89 +1,94 @@
 import { DrawApp } from '../DrawApp'
-import { EventGUI } from './EventGUI'
 import { GUIElement } from './GUIElement'
 import { ToolBoxGUI } from './ToolBoxGUI'
 import { MouseButton } from '../Mouse'
 import { CheckRange } from '../Utils/Math'
 
 export class GUI {
-  private readonly _canvas: DrawApp
-  public readonly eventGUI: EventGUI
+  private readonly _drawApp: DrawApp
+
+  public toolbox: ToolBoxGUI
 
   private _clickIn: boolean
 
   public guiElements: GUIElement[]
 
-  private enabled: boolean
-
-  public constructor (canvas: DrawApp) {
-    this._canvas = canvas
-    this.enabled = false
+  public constructor (drawApp: DrawApp) {
+    this._drawApp = drawApp
     this._clickIn = true
 
     this.guiElements = []
-    this.guiElements.push(new ToolBoxGUI(canvas, 'toolboxGUI'))
-
-    this.eventGUI = new EventGUI(this._canvas)
+    this.toolbox = new ToolBoxGUI(drawApp, 'toolboxGUI')
+    this.toolbox.init(this.guiElements)
   }
 
   public reloadGUI (): void {
-    this.guiElements.filter(element => element.enabled).forEach(element => element.ui())
+    this.guiElements.filter(element => element.enabled).forEach(element => {
+      if (!element.enabled) {
+        return
+      }
+      element.ui()
+    })
   }
 
   public reloadRelativeGUI (): void {
     this._centerLines()
   }
 
-  public toggleGUI (): void {
-    this.enabled = !this.enabled
-    if (this.enabled) {
-      this._canvas.canvas.dispatchEvent(this.eventGUI.events.guiEnable)
-    } else {
-      this._canvas.canvas.dispatchEvent(this.eventGUI.events.guiDisable)
-      this._canvas.reloadCanvas()
-    }
-  }
-
   private _centerLines (lineSize = 6): void {
-    if (this._canvas.settings.showGrid) {
-      this._canvas.paintCanvas(
-        { x: 0, y: (this._canvas.canvas.height / 2) - (lineSize / 2) },
+    if (this._drawApp.settings.showGrid) {
+      this._drawApp.paintCanvas(
+        { x: 0, y: (this._drawApp.canvas.height / 2) - (lineSize / 2) },
         false,
-        this._canvas.settings.gridColor,
-        this._canvas.canvas.width,
+        this._drawApp.settings.gridColor,
+        this._drawApp.canvas.width,
         lineSize
       )
-      this._canvas.paintCanvas(
-        { x: (this._canvas.canvas.width / 2) - (lineSize / 2), y: 0 },
+      this._drawApp.paintCanvas(
+        { x: (this._drawApp.canvas.width / 2) - (lineSize / 2), y: 0 },
         false,
-        this._canvas.settings.gridColor,
+        this._drawApp.settings.gridColor,
         lineSize,
-        this._canvas.canvas.height
+        this._drawApp.canvas.height
       )
     }
   }
 
   public mouseCheck () {
-    if (!this.enabled) {
-      return
-    }
-
     this.guiElements.forEach(element => {
-      if (!element.clickIn && !this._canvas.mouse.moving) {
+      if (!element.enabled) {
+        return
+      }
+
+      if (!element.clickIn && !this._drawApp.mouse.moving) {
         element.clickIn = true
 
-        if (GUI.CheckInsideGUIElement(this._canvas, element)) {
+        if (GUI.CheckInsideGUIElement(this._drawApp, element)) {
           // mouse button left up inside element
-          console.log('a')
+          element.action()
+
+          element.child.forEach(child => {
+            if (GUI.CheckInsideGUIElement(this._drawApp, child)) {
+              element.child.filter(c => c.name !== child.name).forEach(c => {
+                c.active = false
+                c.ui()
+              })
+              child.action()
+              child.setActive()
+            }
+          })
         }
       }
     })
 
     this.guiElements.forEach(element => {
-      if (GUI.CheckInsideGUIElement(this._canvas, element)) {
-        this._canvas.toolSelector.tool.event.stopImmediatePropagation()
+      if (GUI.CheckInsideGUIElement(this._drawApp, element)) {
+        if (!element.enabled) {
+          return
+        }
+        this._drawApp.toolSelector.tool.event.stopImmediatePropagation()
 
-        if (element.clickIn && this._canvas.mouse.button === MouseButton.LEFT && !this._canvas.mouse.moving) {
+        if (element.clickIn && this._drawApp.mouse.button === MouseButton.LEFT && !this._drawApp.mouse.moving) {
           // mouse button left down inside element
           element.clickIn = false
         }
@@ -91,10 +96,10 @@ export class GUI {
     })
   }
 
-  public static CheckInsideGUIElement (canvas: DrawApp, element: GUIElement): boolean {
-    return element.enabled && CheckRange(canvas.mouse.realPosition, element.position, {
-      x: element.position.x + element.size.x,
-      y: element.position.y + element.size.y
+  public static CheckInsideGUIElement (drawApp: DrawApp, element: GUIElement): boolean {
+    return element.enabled && CheckRange(drawApp.mouse.realPosition, element._position, {
+      x: element._position.x + element.size.x,
+      y: element._position.y + element.size.y
     })
   }
 }

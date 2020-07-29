@@ -1,61 +1,61 @@
 import { DrawApp } from '../DrawApp'
-import { PushIfNotExists } from '../Utils/Util'
-import { Vector } from '../Utils/Math'
+import { PushIfNotExists } from './Util'
+import { Vector } from './Math'
 
-export function RecursiveFill (pos: Vector, canvas: DrawApp, array: Array<Vector>): void {
-  if (pos.x + 1 < canvas.settings.gridSize && !(array.some(position => position.x - 1 === pos.x && position.y === pos.y))) {
+export function RecursiveFill (pos: Vector, drawApp: DrawApp, array: Array<Vector>): void {
+  if (pos.x + 1 < drawApp.settings.gridSize && !(array.some(position => position.x - 1 === pos.x && position.y === pos.y))) {
     const p: Vector = { x: pos.x + 1, y: pos.y }
     PushIfNotExists(p, array)
-    RecursiveFill(p, canvas, array)
+    RecursiveFill(p, drawApp, array)
   }
 
   if (pos.x - 1 >= 0 && !(array.some(position => position.x + 1 === pos.x && position.y === pos.y))) {
     const p: Vector = { x: pos.x - 1, y: pos.y }
     PushIfNotExists(p, array)
-    RecursiveFill(p, canvas, array)
+    RecursiveFill(p, drawApp, array)
   }
 
-  if (pos.y + 1 < canvas.settings.gridSize && !(array.some(position => position.x === pos.x && position.y - 1 === pos.y))) {
+  if (pos.y + 1 < drawApp.settings.gridSize && !(array.some(position => position.x === pos.x && position.y - 1 === pos.y))) {
     const p: Vector = { x: pos.x, y: pos.y + 1 }
     PushIfNotExists(p, array)
-    RecursiveFill(p, canvas, array)
+    RecursiveFill(p, drawApp, array)
   }
 
   if (pos.y - 1 >= 0 && !(array.some(position => position.x === pos.x && position.y + 1 === pos.y))) {
     const p: Vector = { x: pos.x, y: pos.y - 1 }
     PushIfNotExists(p, array)
-    RecursiveFill(p, canvas, array)
+    RecursiveFill(p, drawApp, array)
   }
 }
 
-export function IsInsideCanvas (canvas: DrawApp): boolean {
-  return !(canvas.mouse.dataPosition.x < 0 || canvas.mouse.dataPosition.x >= canvas.settings.gridSize ||
-    canvas.mouse.dataPosition.y < 0 || canvas.mouse.dataPosition.y >= canvas.settings.gridSize ||
-    canvas.mouse.position.x < 0 || canvas.mouse.position.x >= canvas.ctx.canvas.width ||
-    canvas.mouse.position.y < 0 || canvas.mouse.position.y >= canvas.ctx.canvas.height)
+export function IsInsideCanvas (drawApp: DrawApp): boolean {
+  return !(drawApp.mouse.dataPosition.x < 0 || drawApp.mouse.dataPosition.x >= drawApp.settings.gridSize ||
+    drawApp.mouse.dataPosition.y < 0 || drawApp.mouse.dataPosition.y >= drawApp.settings.gridSize ||
+    drawApp.mouse.position.x < 0 || drawApp.mouse.position.x >= drawApp.canvas.width ||
+    drawApp.mouse.position.y < 0 || drawApp.mouse.position.y >= drawApp.canvas.height)
 }
 
-export function LeftPointCanvas (canvas: DrawApp): Vector {
+export function LeftPointCanvas (drawApp: DrawApp): Vector {
   return {
-    x: Math.trunc(-canvas.zoom.offset.x / canvas.zoom.level),
-    y: Math.trunc(-canvas.zoom.offset.y / canvas.zoom.level)
+    x: Math.trunc(-drawApp.zoom.offset.x / drawApp.zoom.level),
+    y: Math.trunc(-drawApp.zoom.offset.y / drawApp.zoom.level)
   }
 }
 
-export function RightPointCanvas (canvas: DrawApp): Vector {
+export function RightPointCanvas (drawApp: DrawApp): Vector {
   return {
-    x: Math.trunc((canvas.canvas.width - canvas.zoom.offset.x) / canvas.zoom.level),
-    y: Math.trunc((canvas.canvas.height - canvas.zoom.offset.y) / canvas.zoom.level)
+    x: Math.trunc((drawApp.canvas.width - drawApp.zoom.offset.x) / drawApp.zoom.level),
+    y: Math.trunc((drawApp.canvas.height - drawApp.zoom.offset.y) / drawApp.zoom.level)
   }
 }
 
-export function MiddlePointCanvas (canvas: DrawApp): Vector {
+export function MiddlePointCanvas (drawApp: DrawApp): Vector {
   return {
-    x: (LeftPointCanvas(canvas).x + RightPointCanvas(canvas).x) * 0.5,
-    y: (LeftPointCanvas(canvas).y + RightPointCanvas(canvas).y) * 0.5
+    x: (LeftPointCanvas(drawApp).x + RightPointCanvas(drawApp).x) * 0.5,
+    y: (LeftPointCanvas(drawApp).y + RightPointCanvas(drawApp).y) * 0.5
   }
 }
 
-export function PixelsOnScreen (canvas: DrawApp): number {
-  return (canvas.canvas.width - canvas.zoom.offset.x) / (canvas.settings.pixelSize * canvas.zoom.level)
+export function PixelsOnScreen (drawApp: DrawApp): number {
+  return (drawApp.canvas.width - drawApp.zoom.offset.x) / (drawApp.settings.pixelSize * drawApp.zoom.level)
 }

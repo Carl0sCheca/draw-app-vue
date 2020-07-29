@@ -13,8 +13,8 @@ export class ZoomTool extends Tool implements IZoom {
   public position: Vector
   public steps: number
 
-  public constructor (canvas: DrawApp, toolType: ToolType, settings: IZoom) {
-    super(canvas, toolType)
+  public constructor (drawApp: DrawApp, toolType: ToolType, settings: IZoom) {
+    super(drawApp, toolType)
 
     this.level = settings.level
     this.maxLevel = settings.maxLevel
@@ -34,8 +34,8 @@ export class ZoomTool extends Tool implements IZoom {
 
   private _zoomScaled (zoom: number): void {
     const position: Vector = {
-      x: this.canvas.mouse.relativeRealPosition.x / this.canvas.canvas.width,
-      y: this.canvas.mouse.relativeRealPosition.y / this.canvas.canvas.height
+      x: this.drawApp.mouse.relativeRealPosition.x / this.drawApp.canvas.width,
+      y: this.drawApp.mouse.relativeRealPosition.y / this.drawApp.canvas.height
     }
 
     this.level = Clamp(
@@ -46,28 +46,28 @@ export class ZoomTool extends Tool implements IZoom {
 
     this.offset = {
       x: -Clamp(
-        ((this.canvas.canvas.width * this.level * position.x) - this.canvas.mouse.realPosition.x),
+        ((this.drawApp.canvas.width * this.level * position.x) - this.drawApp.mouse.realPosition.x),
         0,
-        (this.canvas.canvas.width * this.level) - this.canvas.canvas.width
+        (this.drawApp.canvas.width * this.level) - this.drawApp.canvas.width
       ),
       y: -Clamp(
-        ((this.canvas.canvas.height * this.level * position.y) - this.canvas.mouse.realPosition.y),
+        ((this.drawApp.canvas.height * this.level * position.y) - this.drawApp.mouse.realPosition.y),
         0,
-        (this.canvas.canvas.height * this.level) - this.canvas.canvas.height
+        (this.drawApp.canvas.height * this.level) - this.drawApp.canvas.height
       )
     }
 
-    this.canvas.reloadCanvas()
+    this.drawApp.reloadCanvas()
   }
 
   public onAction (): void {
-    if (this.canvas.mouse.button !== MouseButton.NONE) {
+    if (this.drawApp.mouse.button !== MouseButton.NONE) {
       return
     }
 
-    if (this.canvas.mouse.scroll === MouseScroll.UP) {
+    if (this.drawApp.mouse.scroll === MouseScroll.UP) {
       this.zoomIn()
-    } else if (this.canvas.mouse.scroll === MouseScroll.DOWN) {
+    } else if (this.drawApp.mouse.scroll === MouseScroll.DOWN) {
       this.zoomOut()
     }
   }

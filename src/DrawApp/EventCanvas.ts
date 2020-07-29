@@ -2,18 +2,18 @@ import { Mouse, MouseButton, MouseScroll } from './Mouse'
 import { DrawApp } from './DrawApp'
 
 export class EventCanvas {
-  private readonly _canvas: DrawApp
+  private readonly _drawApp: DrawApp
 
-  public constructor (canvas: DrawApp) {
-    this._canvas = canvas
+  public constructor (drawApp: DrawApp) {
+    this._drawApp = drawApp
 
-    this._canvas.canvas.addEventListener('mousedown', (e: MouseEvent) => this.onMouseDown(e, this._canvas.mouse))
-    this._canvas.canvas.addEventListener('mouseup', (e: MouseEvent) => this.onMouseUp(e, this._canvas.mouse))
-    this._canvas.canvas.addEventListener('wheel', (e: WheelEvent) => this.onMouseWheel(e, this._canvas.mouse))
-    this._canvas.canvas.addEventListener('mousemove', (e: MouseEvent) => this.onMouseMove(e, this._canvas.mouse))
-    this._canvas.canvas.addEventListener('mouseenter', (e: MouseEvent) => this.onMouseEnter(e, this._canvas.mouse))
-    this._canvas.canvas.addEventListener('contextmenu', (e: MouseEvent) => this.onContextMenu(e))
-    window.addEventListener('resize', () => this.onResizeWindow(this._canvas))
+    this._drawApp.canvas.addEventListener('mousedown', (e: MouseEvent) => this.onMouseDown(e, this._drawApp.mouse))
+    this._drawApp.canvas.addEventListener('mouseup', (e: MouseEvent) => this.onMouseUp(e, this._drawApp.mouse))
+    this._drawApp.canvas.addEventListener('wheel', (e: WheelEvent) => this.onMouseWheel(e, this._drawApp.mouse))
+    this._drawApp.canvas.addEventListener('mousemove', (e: MouseEvent) => this.onMouseMove(e, this._drawApp.mouse))
+    this._drawApp.canvas.addEventListener('mouseenter', (e: MouseEvent) => this.onMouseEnter(e, this._drawApp.mouse))
+    this._drawApp.canvas.addEventListener('contextmenu', (e: MouseEvent) => this.onContextMenu(e))
+    window.addEventListener('resize', () => this.onResizeWindow(this._drawApp))
   }
 
   public onMouseDown (e: MouseEvent, mouse: Mouse): void {
@@ -61,7 +61,7 @@ export class EventCanvas {
     if (mouse.scroll !== MouseScroll.NONE) {
       this._dispatchEvent()
       mouse.scroll = MouseScroll.NONE
-      this._canvas.toolSelector.restoreTool()
+      this._drawApp.toolSelector.restoreTool()
     }
   }
 
@@ -90,8 +90,8 @@ export class EventCanvas {
     e.preventDefault()
   }
 
-  public onResizeWindow (canvas: DrawApp): void {
-    canvas.resizeWindow()
+  public onResizeWindow (drawApp: DrawApp): void {
+    drawApp.resizeWindow()
   }
 
   private _setupMousePosition (e: MouseEvent, mouse: Mouse): void {
@@ -105,8 +105,7 @@ export class EventCanvas {
   }
 
   private _dispatchEvent (): void {
-    this._canvas.gui.mouseCheck()
-    this._canvas.canvas.dispatchEvent(this._canvas.toolSelector.tool.event)
-    this._canvas.gui.reloadGUI()
+    this._drawApp.gui.mouseCheck()
+    this._drawApp.canvas.dispatchEvent(this._drawApp.toolSelector.tool.event)
   }
 }
