@@ -3,7 +3,6 @@ import { MouseButton } from '../Mouse'
 import { DrawApp } from '../DrawApp'
 import { ToolType } from './ToolSelector'
 import {
-  Clamp,
   DiscretizationDataPosition,
   DiscretizationPosition,
   LerpSteps, RandomNumber,

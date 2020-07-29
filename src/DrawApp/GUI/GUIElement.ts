@@ -4,6 +4,8 @@ import { Vector } from '../Utils/Math'
 export abstract class GUIElement {
   protected drawApp: DrawApp
 
+  public loaded: boolean
+
   public enabled: boolean
   public clickIn: boolean
   public name: string
@@ -24,6 +26,7 @@ export abstract class GUIElement {
     this.child = []
 
     this.active = false
+    this.loaded = false
   }
 
   public set size (size: Vector) {

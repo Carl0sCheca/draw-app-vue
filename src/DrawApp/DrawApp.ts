@@ -39,7 +39,7 @@ export class DrawApp {
     this.zoom = (this.toolSelector.tools[ToolType.ZOOM] as ZoomTool)
 
     // Set canvas size for GUI
-    this._setSizeCanvas()
+    this.setSizeCanvas()
 
     // Init GUI
     this.gui = new GUI(this)
@@ -86,11 +86,11 @@ export class DrawApp {
   }
 
   public reloadCanvas (): void {
-    this._setSizeCanvas()
+    this.setSizeCanvas()
     this._redrawCanvas()
   }
 
-  private _setSizeCanvas (): void {
+  public setSizeCanvas (): void {
     this.canvas.width = this.canvas.offsetWidth
     this.canvas.height = this.canvas.offsetHeight
     this.settings.pixelSize = this.canvas.width / this.settings.gridSize

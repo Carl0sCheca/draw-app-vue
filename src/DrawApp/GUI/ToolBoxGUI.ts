@@ -2,15 +2,33 @@ import { GUIElement } from './GUIElement'
 import { PencilButton } from './ToolBox/PencilButton'
 import { FetchSVG } from '../Utils/Util'
 import { CircleButton } from './ToolBox/CircleButton'
+import { DrawApp } from '../DrawApp'
 
 export class ToolBoxGUI extends GUIElement {
+  public constructor (drawApp: DrawApp, name: string) {
+    super(drawApp, name)
+
+    window.addEventListener('resize', () => {
+      this.drawApp.setSizeCanvas()
+      this.size = { x: this.drawApp.canvas.width, y: this.drawApp.canvas.height }
+      drawApp.resizeWindow()
+      drawApp.gui.reloadGUI()
+    })
+  }
+
   public init (guiElements: Array<GUIElement>): void {
+    this.drawApp.setSizeCanvas()
     this.size = { x: this.drawApp.canvas.width, y: this.drawApp.canvas.height }
     this.position = {
       x: 0,
       y: 0
     }
-    this.loadImages().then(() => guiElements.push(this))
+    this.loadImages().then(() => {
+      guiElements.push(this)
+      setTimeout(() => {
+        this.loaded = true
+      }, 100)
+    })
   }
 
   public async loadImages (): Promise<void> {
@@ -27,6 +45,10 @@ export class ToolBoxGUI extends GUIElement {
   }
 
   public toggle (): void {
+    if (!this.loaded) {
+      return
+    }
+
     if (this.enabled) {
       this.hide()
     } else {
