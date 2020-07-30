@@ -71,7 +71,10 @@ export class EventCanvas {
 
     if (mouse.button !== MouseButton.NONE) {
       this._dispatchEvent()
+    } else {
+      this._drawApp.gui.mouseCheck()
     }
+
     mouse.moving = false
   }
 

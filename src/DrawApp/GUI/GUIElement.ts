@@ -86,7 +86,7 @@ export abstract class GUIElement {
 
   public setActive (image: HTMLImageElement = this.img): void {
     this.active = true
-    this.drawApp.ctx.filter = 'hue-rotate(90deg)'
+    this.drawApp.ctx.filter = 'hue-rotate(270deg)'
     this.drawApp.ctx.drawImage(image, this._position.x, this._position.y, this.size.x, this.size.y)
     this.drawApp.ctx.filter = 'none'
   }

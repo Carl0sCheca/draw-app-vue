@@ -60,6 +60,21 @@ export class GUI {
         return
       }
 
+      if (this._drawApp.mouse.button === MouseButton.NONE) {
+        this._drawApp.reloadCanvas()
+        this.reloadGUI()
+        element.child.forEach(child => {
+          if (GUI.CheckInsideGUIElement(this._drawApp, child)) {
+            this._drawApp.ctx.filter = 'hue-rotate(180deg)'
+            child.ui()
+            this._drawApp.ctx.filter = 'none'
+            element.child.filter(c => c.name !== child.name).forEach(c => {
+              c.ui()
+            })
+          }
+        })
+      }
+
       if (!element.clickIn && !this._drawApp.mouse.moving) {
         element.clickIn = true
 
