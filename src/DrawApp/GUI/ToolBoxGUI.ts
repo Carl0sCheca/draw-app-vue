@@ -7,6 +7,7 @@ import { GridButton } from './ToolBox/GridButton'
 import { ClearButton } from './ToolBox/ClearButton'
 import { BucketButton } from './ToolBox/BucketButton'
 import { ColorPickerButton } from './ToolBox/ColorPickerButton'
+import { ColorSelector } from './ToolBox/ColorSelector'
 
 export class ToolBoxGUI extends GUIElement {
   public constructor (drawApp: DrawApp, name: string) {
@@ -44,8 +45,8 @@ export class ToolBoxGUI extends GUIElement {
       const circleButton: CircleButton = new CircleButton(this.drawApp, 'Circle')
 
       GUIElement.AddElement(this.child, this.drawApp, circleButton, img, {
-        x: this._position.x + 68 * this.child.length,
-        y: this._position.y
+        x: this._position.x,
+        y: this._position.y + 68 * this.child.length
       })
       FetchSVG('circle_filled').then(img2 => {
         circleButton.imgFilled = img2
@@ -56,8 +57,8 @@ export class ToolBoxGUI extends GUIElement {
       const circleButton: CircleButton = new GridButton(this.drawApp, 'Grid')
       circleButton.selectable = false
       GUIElement.AddElement(this.child, this.drawApp, circleButton, img, {
-        x: this._position.x + 68 * this.child.length,
-        y: this._position.y
+        x: this._position.x,
+        y: this._position.y + 68 * this.child.length
       })
       FetchSVG('grid_disabled').then(img2 => {
         circleButton.imgFilled = img2
@@ -68,20 +69,32 @@ export class ToolBoxGUI extends GUIElement {
       const clearButton: ClearButton = new ClearButton(this.drawApp, 'Clear')
       clearButton.selectable = false
       GUIElement.AddElement(this.child, this.drawApp, clearButton, img, {
-        x: this._position.x + 68 * this.child.length,
-        y: this._position.y
+        x: this._position.x,
+        y: this._position.y + 68 * this.child.length
       })
     })
 
     await FetchSVG('bucket').then(img => GUIElement.AddElement(this.child, this.drawApp, new BucketButton(this.drawApp, 'Bucket'), img, {
-      x: this._position.x + 68 * this.child.length,
-      y: this._position.y
+      x: this._position.x,
+      y: this._position.y + 68 * this.child.length
     }))
 
     await FetchSVG('colorpicker').then(img => GUIElement.AddElement(this.child, this.drawApp, new ColorPickerButton(this.drawApp, 'ColorPicker'), img, {
-      x: this._position.x + 68 * this.child.length,
-      y: this._position.y
+      x: this._position.x,
+      y: this._position.y + 68 * this.child.length
     }))
+
+    const colorSelector: ColorSelector = new ColorSelector(this.drawApp, 'Color Selector')
+    colorSelector.selectable = false
+    colorSelector.change = true
+    colorSelector.pixelSize = { x: 4, y: 2 }
+    GUIElement.AddElement(this.child, this.drawApp, colorSelector, null, {
+      x: 68,
+      y: 0
+    }, {
+      x: 400,
+      y: 200
+    })
 
     this.child.find(element => element.name === 'Pencil').active = true
   }

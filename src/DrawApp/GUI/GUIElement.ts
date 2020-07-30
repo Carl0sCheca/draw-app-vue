@@ -57,25 +57,29 @@ export abstract class GUIElement {
 
   public abstract ui (): void
 
-  public static AddElement (collection: Array<GUIElement>, drawApp: DrawApp, element: GUIElement, img: HTMLImageElement, position?: Vector, size?: number): void {
+  public static AddElement (collection: Array<GUIElement>, drawApp: DrawApp, element: GUIElement, img?: HTMLImageElement, position?: Vector, size?: Vector): void {
     if (position !== undefined) {
       element._position = position
     } else {
       element._position = { x: 0, y: 0 }
     }
 
-    if (size !== undefined) {
-      img.width = size
-      img.height = size
+    if (img !== null) {
+      if (size !== undefined) {
+        img.width = size.x
+        img.height = size.y
+      } else {
+        const defaultSize = 68
+        img.width = defaultSize
+        img.height = defaultSize
+      }
+
+      element.size = { x: img.width, y: img.height }
+
+      element.img = img
     } else {
-      const defaultSize = 68
-      img.width = defaultSize
-      img.height = defaultSize
+      element.size = size
     }
-
-    element.size = { x: img.width, y: img.height }
-
-    element.img = img
 
     collection.push(element)
   }
@@ -85,9 +89,11 @@ export abstract class GUIElement {
   }
 
   public setActive (image: HTMLImageElement = this.img): void {
-    this.active = true
-    this.drawApp.ctx.filter = 'hue-rotate(270deg)'
-    this.drawApp.ctx.drawImage(image, this._position.x, this._position.y, this.size.x, this.size.y)
-    this.drawApp.ctx.filter = 'none'
+    if (this.img !== undefined) {
+      this.active = true
+      this.drawApp.ctx.filter = 'hue-rotate(270deg)'
+      this.drawApp.ctx.drawImage(image, this._position.x, this._position.y, this.size.x, this.size.y)
+      this.drawApp.ctx.filter = 'none'
+    }
   }
 }

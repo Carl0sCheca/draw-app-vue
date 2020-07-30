@@ -1,3 +1,5 @@
+import { RandomNumber } from './Math'
+
 export type HSV = { H: number; S: number; V: number }
 export type HSL = { H: number; S: number; L: number }
 
@@ -21,4 +23,20 @@ export function HSVtoHSL (hsv: HSV): HSL {
 
 export function HSLtoString (hsl: HSL): string {
   return `hsl(${hsl.H}, ${hsl.S}%, ${hsl.L}%)`
+}
+
+export function RGBtoHEX (array: Array<number>): string {
+  let finalColour = '#'
+  for (let i = 0; i < 3; i++) {
+    let number: string = array[i].toString(16)
+    if (number.length === 1) {
+      number = '0' + number
+    }
+    finalColour += number
+  }
+  return finalColour
+}
+
+export function RandomColour (): string {
+  return RGBtoHEX([RandomNumber(0, 255), RandomNumber(0, 255), RandomNumber(0, 255)])
 }

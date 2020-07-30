@@ -58,18 +58,6 @@ export function RandomNumber (min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
-export function RandomColour (): string {
-  let finalColour = '#'
-  for (let i = 0; i < 3; i++) {
-    let number: string = RandomNumber(0, 255).toString(16)
-    if (number.length === 1) {
-      number = '0' + number
-    }
-    finalColour += number
-  }
-  return finalColour
-}
-
 export function CheckRange (position: Vector, minPosition: Vector, maxPosition: Vector): boolean {
   return position.x >= minPosition.x && position.x <= maxPosition.x && position.y >= minPosition.y && position.y <= maxPosition.y
 }
