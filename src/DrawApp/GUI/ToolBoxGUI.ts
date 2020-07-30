@@ -87,14 +87,14 @@ export class ToolBoxGUI extends GUIElement {
     const colorSelector: ColorSelector = new ColorSelector(this.drawApp, 'Color Selector')
     colorSelector.selectable = false
     colorSelector.change = true
-    colorSelector.pixelSize = { x: 4, y: 2 }
     GUIElement.AddElement(this.child, this.drawApp, colorSelector, null, {
       x: 68,
       y: 0
     }, {
-      x: 400,
+      x: 350,
       y: 200
     })
+    colorSelector.pixelSize = { x: Math.trunc(colorSelector.size.x / 100), y: Math.trunc(colorSelector.size.y / 100) }
 
     this.child.find(element => element.name === 'Pencil').active = true
   }
