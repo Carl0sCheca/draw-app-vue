@@ -64,10 +64,11 @@ export class GUI {
         this._drawApp.reloadCanvas()
         this.reloadGUI()
         element.child.forEach(child => {
+          if (!child.hoverable) {
+            return
+          }
           if (GUI.CheckInsideGUIElement(this._drawApp, child)) {
-            this._drawApp.ctx.filter = 'hue-rotate(180deg)'
-            child.ui()
-            this._drawApp.ctx.filter = 'none'
+            child.hover()
             element.child.filter(c => c.name !== child.name).forEach(c => {
               c.ui()
             })
@@ -128,9 +129,9 @@ export class GUI {
   }
 
   public static CheckInsideGUIElement (drawApp: DrawApp, element: GUIElement): boolean {
-    return element.enabled && CheckRange(drawApp.mouse.realPosition, element._position, {
-      x: element._position.x + element.size.x,
-      y: element._position.y + element.size.y
+    return element.enabled && CheckRange(drawApp.mouse.realPosition, element.position, {
+      x: element.position.x + element.size.x,
+      y: element.position.y + element.size.y
     })
   }
 }

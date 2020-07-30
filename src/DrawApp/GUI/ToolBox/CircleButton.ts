@@ -20,7 +20,7 @@ export class CircleButton extends GUIElement {
     if (this.active) {
       this.setActive(image)
     } else {
-      this.drawApp.ctx.drawImage(image, this._position.x, this._position.y, this.size.x, this.size.y)
+      this.drawApp.ctx.drawImage(image, this.position.x, this.position.y, this.size.x, this.size.y)
     }
   }
 }

@@ -10,7 +10,7 @@ export class BucketButton extends GUIElement {
     if (this.active) {
       this.setActive()
     } else {
-      this.drawApp.ctx.drawImage(this.img, this._position.x, this._position.y, this.size.x, this.size.y)
+      this.drawApp.ctx.drawImage(this.img, this.position.x, this.position.y, this.size.x, this.size.y)
     }
   }
 }

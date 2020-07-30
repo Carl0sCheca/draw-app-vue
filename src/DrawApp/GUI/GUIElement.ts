@@ -9,10 +9,11 @@ export abstract class GUIElement {
   public enabled: boolean
   public clickIn: boolean
   public name: string
-  public _position: Vector
+  private _position: Vector
   private _size: Vector
 
   public selectable: boolean
+  public hoverable: boolean
   public active: boolean
 
   public child: Array<GUIElement>
@@ -29,6 +30,7 @@ export abstract class GUIElement {
     this.active = false
     this.loaded = false
     this.selectable = true
+    this.hoverable = true
   }
 
   public set size (size: Vector) {
@@ -53,6 +55,12 @@ export abstract class GUIElement {
 
   public show (): void {
     this.enabled = true
+  }
+
+  public hover (): void {
+    this.drawApp.ctx.filter = 'hue-rotate(180deg)'
+    this.ui()
+    this.drawApp.ctx.filter = 'none'
   }
 
   public abstract ui (): void
