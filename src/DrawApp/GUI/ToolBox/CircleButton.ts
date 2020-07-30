@@ -8,14 +8,14 @@ export class CircleButton extends GUIElement {
   public action (): void {
     // console.log(`mouse button left up inside ${this.name}`)
     this.drawApp.toolSelector.selectTool = ToolType.CIRCLE
-    const circleTool: CircleTool = this.drawApp.toolSelector.tool as CircleTool
+    const circleTool: CircleTool = this.drawApp.toolSelector.tools[ToolType.CIRCLE] as CircleTool
     if (this.active) {
       circleTool.fill = !circleTool.fill
     }
   }
 
   public ui (): void {
-    const circleTool: CircleTool = this.drawApp.toolSelector.tool as CircleTool
+    const circleTool: CircleTool = this.drawApp.toolSelector.tools[ToolType.CIRCLE] as CircleTool
     const image: HTMLImageElement = circleTool.fill ? this.imgFilled : this.img
     if (this.active) {
       this.setActive(image)
