@@ -95,7 +95,7 @@ export class ToolBoxGUI extends GUIElement {
       x: 300,
       y: 250
     })
-    colorSelector.setSizes()
+    colorSelector.init()
 
     this.child.find(element => element.name === 'Pencil').active = true
   }

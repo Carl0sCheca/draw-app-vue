@@ -10,13 +10,17 @@ export class ColorSelector extends GUIElement {
   public pixelSize: Vector
   public imageData: ImageData
 
-  public setSizes (): void {
+  private _hue: number
+
+  public init (): void {
     this.colorSelectorSize = {
       x: 200,
       y: 200
     }
 
     this.pixelSize = { x: this.colorSelectorSize.x / 100, y: this.colorSelectorSize.y / 100 }
+
+    this._hue = 0
   }
 
   public action () {
@@ -29,16 +33,21 @@ export class ColorSelector extends GUIElement {
       x: this.position.x + this.colorSelectorSize.x,
       y: this.position.y + this.colorSelectorSize.y
     })) {
-      console.log('inside color selector')
+      this.onColorSelector(position)
     } else {
-      if (CheckRange(position, {
+      const minPosition: Vector = {
         x: this.position.x,
         y: this.position.y + this.colorSelectorSize.y
-      }, {
+      }
+      const maxPosition: Vector = {
         x: this.position.x + this.size.x,
         y: this.position.y + this.size.y
-      })) {
-        console.log('outside color selector')
+      }
+      if (CheckRange(position, minPosition, maxPosition)) {
+        const percent: number = (position.x - minPosition.x) / (maxPosition.x - minPosition.x)
+        const degrees: number = Math.round(percent * 360)
+        this._hue = degrees
+        this.change = true
       }
     }
   }
@@ -64,7 +73,7 @@ export class ColorSelector extends GUIElement {
         x0 = 0
         for (let x = 0; x < this.colorSelectorSize.x; x += this.pixelSize.x) {
           this.drawApp.ctx.fillStyle = HSLtoString(HSVtoHSL({
-            H: 0,
+            H: this._hue,
             S: x0,
             V: 100 - y0
           }))
@@ -76,13 +85,13 @@ export class ColorSelector extends GUIElement {
 
       this.imageData = this.drawApp.ctx.getImageData(this.position.x, this.position.y, this.colorSelectorSize.x, this.colorSelectorSize.y)
     } else {
-      this.drawApp.ctx.fillStyle = 'green'
-      this.drawApp.ctx.fillRect(this.position.x, this.position.y, this.colorSelectorSize.x, this.colorSelectorSize.y)
+      // this.drawApp.ctx.fillStyle = 'green'
+      // this.drawApp.ctx.fillRect(this.position.x, this.position.y, this.colorSelectorSize.x, this.colorSelectorSize.y)
 
       this.drawApp.ctx.fillStyle = 'yellow'
       this.drawApp.ctx.fillRect(this.position.x, this.position.y + this.colorSelectorSize.y, this.size.x, this.size.y - this.colorSelectorSize.y)
 
-      // this.drawApp.ctx.putImageData(this.imageData, this.position.x, this.position.y)
+      this.drawApp.ctx.putImageData(this.imageData, this.position.x, this.position.y)
     }
   }
 }
