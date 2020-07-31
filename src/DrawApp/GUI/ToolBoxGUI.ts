@@ -2,22 +2,19 @@ import { GUIElement } from './GUIElement'
 import { PencilButton } from './ToolBox/PencilButton'
 import { FetchSVG } from '../Utils/Util'
 import { CircleButton } from './ToolBox/CircleButton'
-import { DrawApp } from '../DrawApp'
 import { GridButton } from './ToolBox/GridButton'
 import { ClearButton } from './ToolBox/ClearButton'
 import { BucketButton } from './ToolBox/BucketButton'
 import { ColorPickerButton } from './ToolBox/ColorPickerButton'
-import { ColorSelector } from './ToolBox/ColorSelector'
+import { ColorSelectorButton } from './ToolBox/ColorSelector/ColorSelectorButton'
 
 export class ToolBoxGUI extends GUIElement {
-  public constructor (drawApp: DrawApp, name: string) {
-    super(drawApp, name)
-
-    window.addEventListener('resize', () => {
-      this.drawApp.setSizeCanvas()
-      this.size = { x: this.drawApp.canvas.width, y: this.drawApp.canvas.height }
-      drawApp.resizeWindow()
-      drawApp.gui.reloadGUI()
+  public windowResize () {
+    this.size = { x: this.drawApp.canvas.width, y: this.drawApp.canvas.height }
+    this.child.forEach(element => {
+      if (element.windowResize) {
+        element.windowResize()
+      }
     })
   }
 
@@ -84,18 +81,20 @@ export class ToolBoxGUI extends GUIElement {
       y: this.position.y + 68 * this.child.length
     }))
 
-    const colorSelector: ColorSelector = new ColorSelector(this.drawApp, 'Color Selector')
+    const colorSelector: ColorSelectorButton = new ColorSelectorButton(this.drawApp, 'Color Selector')
     colorSelector.selectable = false
     colorSelector.change = true
     colorSelector.hoverable = false
-    GUIElement.AddElement(this.child, this.drawApp, colorSelector, null, {
-      x: 100,
-      y: 10
-    }, {
+    colorSelector.size = {
       x: 300,
       y: 250
-    })
+    }
+    colorSelector.position = {
+      x: this.drawApp.canvas.width - colorSelector.size.x - 5,
+      y: this.drawApp.canvas.height - colorSelector.size.y - 5
+    }
     colorSelector.init()
+    this.child.push(colorSelector)
 
     this.child.find(element => element.name === 'Pencil').active = true
   }

@@ -16,6 +16,7 @@ export abstract class GUIElement {
   public hoverable: boolean
   public active: boolean
 
+  public parent?: GUIElement
   public child: Array<GUIElement>
 
   public img?: HTMLImageElement
@@ -32,6 +33,8 @@ export abstract class GUIElement {
     this.selectable = true
     this.hoverable = true
   }
+
+  public windowResize? (): void
 
   public set size (size: Vector) {
     this._size = size

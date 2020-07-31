@@ -83,6 +83,10 @@ export class DrawApp {
     this.zoom.zoomIn()
     this.zoom.zoomOut()
     this.reloadCanvas()
+    this.gui.guiElements.forEach(element => {
+      element.windowResize()
+    })
+    this.gui.reloadGUI()
   }
 
   public reloadCanvas (): void {
