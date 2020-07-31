@@ -5,7 +5,7 @@ export class ClearButton extends GUIElement {
     this.drawApp.ctx.drawImage(this.img, this.position.x, this.position.y, this.size.x, this.size.y)
   }
 
-  public action (): void {
+  public mouseUp (): void {
     this.drawApp.data.clearData()
   }
 }

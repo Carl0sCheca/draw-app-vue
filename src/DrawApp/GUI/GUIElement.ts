@@ -95,9 +95,8 @@ export abstract class GUIElement {
     collection.push(element)
   }
 
-  public action (): void {
-    // console.log(`click on ${this.name}`)
-  }
+  public mouseUp? (): void
+  public mouseDown? (): void
 
   public setActive (image: HTMLImageElement = this.img): void {
     if (this.img !== undefined) {

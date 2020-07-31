@@ -2,7 +2,7 @@ import { GUIElement } from '../GUIElement'
 import { ToolType } from '../../Tools/ToolSelector'
 
 export class BucketButton extends GUIElement {
-  public action (): void {
+  public mouseUp (): void {
     this.drawApp.toolSelector.selectTool = ToolType.BUCKET
   }
 

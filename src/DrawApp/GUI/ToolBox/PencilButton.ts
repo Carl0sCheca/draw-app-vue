@@ -2,7 +2,7 @@ import { GUIElement } from '../GUIElement'
 import { ToolType } from '../../Tools/ToolSelector'
 
 export class PencilButton extends GUIElement {
-  public action (): void {
+  public mouseUp (): void {
     // console.log(`mouse button left up inside ${this.name}`)
     this.drawApp.toolSelector.selectTool = ToolType.PENCIL
   }

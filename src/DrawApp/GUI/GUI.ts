@@ -84,31 +84,9 @@ export class GUI {
 
         if (GUI.CheckInsideGUIElement(this._drawApp, element)) {
           // mouse button left up inside element
-          element.action()
-
-          element.child.forEach(child => {
-            if (GUI.CheckInsideGUIElement(this._drawApp, child)) {
-              if (!child.selectable) {
-                child.action()
-                child.ui()
-                this._drawApp.reloadCanvas()
-                this.reloadGUI()
-                return
-              }
-
-              element.child.filter(c => c.name !== child.name).forEach(c => {
-                c.active = false
-                c.ui()
-              })
-
-              child.action()
-              child.setActive()
-              child.ui()
-
-              this._drawApp.reloadCanvas()
-              this.reloadGUI()
-            }
-          })
+          if (element.mouseUp) {
+            element.mouseUp()
+          }
         }
       }
     })
@@ -123,6 +101,9 @@ export class GUI {
         if (element.clickIn && this._drawApp.mouse.button === MouseButton.LEFT && !this._drawApp.mouse.moving) {
           // mouse button left down inside element
           element.clickIn = false
+          if (element.mouseDown) {
+            element.mouseDown()
+          }
         }
       }
     })

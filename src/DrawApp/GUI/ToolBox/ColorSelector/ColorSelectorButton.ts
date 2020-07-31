@@ -53,7 +53,7 @@ export class ColorSelectorButton extends GUIElement {
     this.hue = 10 || RandomNumber(0, 359)
   }
 
-  public action () {
+  public mouseUp () {
     const position: Vector = {
       x: Clamp(this.drawApp.mouse.realPosition.x, 0, this.position.x + this.size.x - 1),
       y: Clamp(this.drawApp.mouse.realPosition.y, 0, this.position.y + this.size.y - 1)
@@ -64,7 +64,7 @@ export class ColorSelectorButton extends GUIElement {
         x: element.position.x + element.size.x,
         y: element.position.y + element.size.y
       })) {
-        element.action()
+        element.mouseUp()
       }
     })
   }

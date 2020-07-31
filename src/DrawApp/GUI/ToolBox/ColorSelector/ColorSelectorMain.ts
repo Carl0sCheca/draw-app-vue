@@ -16,7 +16,7 @@ export class ColorSelectorMain extends GUIElement {
     }
   }
 
-  public action (): void {
+  public mouseUp (): void {
     const position: Vector = {
       x: Clamp(this.drawApp.mouse.realPosition.x, 0, this.position.x + this.size.x - 1),
       y: Clamp(this.drawApp.mouse.realPosition.y, 0, this.position.y + this.size.y - 1)

@@ -7,6 +7,7 @@ import { ClearButton } from './ToolBox/ClearButton'
 import { BucketButton } from './ToolBox/BucketButton'
 import { ColorPickerButton } from './ToolBox/ColorPickerButton'
 import { ColorSelectorButton } from './ToolBox/ColorSelector/ColorSelectorButton'
+import { GUI } from './GUI'
 
 export class ToolBoxGUI extends GUIElement {
   public windowResize () {
@@ -134,7 +135,31 @@ export class ToolBoxGUI extends GUIElement {
     this.child.forEach(button => button.ui())
   }
 
-  public action () {
-    // console.log(`mouse button left up inside ${this.name}`)
+  public mouseUp () {
+    this.child.forEach(child => {
+      if (GUI.CheckInsideGUIElement(this.drawApp, child)) {
+        if (!child.selectable) {
+          if (child.mouseUp) {
+            child.mouseUp()
+          }
+          child.ui()
+          this.drawApp.reloadCanvas()
+          this.drawApp.gui.reloadGUI()
+          return
+        }
+
+        this.child.filter(c => c.name !== child.name).forEach(c => {
+          c.active = false
+          c.ui()
+        })
+
+        child.mouseUp()
+        child.setActive()
+        child.ui()
+
+        this.drawApp.reloadCanvas()
+        this.drawApp.gui.reloadGUI()
+      }
+    })
   }
 }

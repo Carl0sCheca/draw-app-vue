@@ -2,7 +2,7 @@ import { GUIElement } from '../GUIElement'
 import { ToolType } from '../../Tools/ToolSelector'
 
 export class ColorPickerButton extends GUIElement {
-  public action () {
+  public mouseUp () {
     this.drawApp.toolSelector.selectTool = ToolType.COLOUR_PICKER
   }
 

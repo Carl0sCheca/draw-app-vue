@@ -3,7 +3,7 @@ import { GUIElement } from '../GUIElement'
 export class GridButton extends GUIElement {
   public imgFilled: HTMLImageElement
 
-  public action (): void {
+  public mouseUp (): void {
     this.drawApp.toggleGrid()
   }
 
