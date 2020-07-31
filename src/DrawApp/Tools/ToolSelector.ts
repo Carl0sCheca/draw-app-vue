@@ -6,6 +6,7 @@ import { ColourPickerTool } from './ColourPickerTool'
 import { MoveTool } from './MoveTool'
 import { ZoomTool } from './ZoomTool'
 import { CircleTool } from './CircleTool'
+import { RandomColour } from '../Utils/Color'
 
 export enum ToolType {
   NONE = -1,
@@ -28,7 +29,7 @@ export class ToolSelector {
     this.selected = 0
     this.previousSelected = -1
 
-    this.colorSelected = 'red'
+    this.colorSelected = RandomColour()
 
     this.tools = []
     this.tools.push(new PencilTool(drawApp, ToolType.PENCIL))
