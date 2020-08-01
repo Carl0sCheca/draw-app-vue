@@ -35,10 +35,18 @@ export class ToolBoxGUI extends GUIElement {
   }
 
   public async loadImagesAndButtons (): Promise<void> {
-    await FetchSVG('pencil').then(img => GUIElement.AddElement(this.child, this.drawApp, new PencilButton(this.drawApp, 'Pencil'), img, {
-      x: this.position.x,
-      y: this.position.y
-    }))
+    await FetchSVG('pencil').then(img => {
+      const pencilButton: PencilButton = new PencilButton(this.drawApp, 'Pencil')
+      pencilButton.init()
+      GUIElement.AddElement(this.child, this.drawApp, pencilButton, img, {
+        x: this.position.x,
+        y: this.position.y
+      })
+      FetchSVG('pencil_big').then(img => {
+        pencilButton.imgAlternative = img
+      })
+    })
+
     await FetchSVG('circle').then(img => {
       const circleButton: CircleButton = new CircleButton(this.drawApp, 'Circle')
 
@@ -50,6 +58,16 @@ export class ToolBoxGUI extends GUIElement {
         circleButton.imgFilled = img2
       })
     })
+
+    await FetchSVG('bucket').then(img => GUIElement.AddElement(this.child, this.drawApp, new BucketButton(this.drawApp, 'Bucket'), img, {
+      x: this.position.x,
+      y: this.position.y + 68 * this.child.length
+    }))
+
+    await FetchSVG('colorpicker').then(img => GUIElement.AddElement(this.child, this.drawApp, new ColorPickerButton(this.drawApp, 'ColorPicker'), img, {
+      x: this.position.x,
+      y: this.position.y + 68 * this.child.length
+    }))
 
     await FetchSVG('grid').then(img => {
       const circleButton: CircleButton = new GridButton(this.drawApp, 'Grid')
@@ -71,16 +89,6 @@ export class ToolBoxGUI extends GUIElement {
         y: this.position.y + 68 * this.child.length
       })
     })
-
-    await FetchSVG('bucket').then(img => GUIElement.AddElement(this.child, this.drawApp, new BucketButton(this.drawApp, 'Bucket'), img, {
-      x: this.position.x,
-      y: this.position.y + 68 * this.child.length
-    }))
-
-    await FetchSVG('colorpicker').then(img => GUIElement.AddElement(this.child, this.drawApp, new ColorPickerButton(this.drawApp, 'ColorPicker'), img, {
-      x: this.position.x,
-      y: this.position.y + 68 * this.child.length
-    }))
 
     const colorSelector: ColorSelectorButton = new ColorSelectorButton(this.drawApp, 'Color Selector')
     colorSelector.selectable = false

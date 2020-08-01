@@ -13,12 +13,14 @@ import { HSLtoString, HSVtoHSL } from '../Utils/Color'
 export class PencilTool extends Tool {
   private _counter: number
   public rainbow: boolean
+  public size: number
 
   public constructor (drawApp: DrawApp, toolType: ToolType) {
     super(drawApp, toolType)
 
     this._counter = RandomNumber(0, 360)
     this.rainbow = true
+    this.size = 1
   }
 
   public onAction (): void {
@@ -52,7 +54,21 @@ export class PencilTool extends Tool {
       color = this.drawApp.toolSelector.colorSelected
     }
 
-    this.drawApp.paintCanvas(DiscretizationPosition(position, this.drawApp), this.drawApp.settings.showGrid, color)
-    this.drawApp.data.writeData(position, color)
+    if (this.size === 1) {
+      this.drawApp.paintCanvas(DiscretizationPosition(position, this.drawApp), this.drawApp.settings.showGrid, color)
+      this.drawApp.data.writeData(position, color)
+    } else {
+      const positions: Array<Vector> = [
+        { x: position.x - 1, y: position.y },
+        { x: position.x + 1, y: position.y },
+        { x: position.x, y: position.y - 1 },
+        { x: position.x, y: position.y + 1 },
+        { x: position.x, y: position.y }
+      ]
+      positions.forEach(pos => {
+        this.drawApp.paintCanvas(DiscretizationPosition(pos, this.drawApp), this.drawApp.settings.showGrid, color)
+        this.drawApp.data.writeData(pos, color)
+      })
+    }
   }
 }
