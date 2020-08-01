@@ -49,8 +49,6 @@ export class ColorSelectorButton extends GUIElement {
     }
     colorSelectorSec.init()
     this.child.push(colorSelectorSec)
-
-    this.hue = 10 || RandomNumber(0, 359)
   }
 
   public mouseUp () {

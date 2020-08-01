@@ -1,6 +1,7 @@
 import { GUIElement } from '../../GUIElement'
 import { HSLtoString, HSVtoHSL } from '../../../Utils/Color'
-import { CheckRange, Vector } from '../../../Utils/Math'
+import { CheckRange, Clamp, RandomNumber, Vector } from '../../../Utils/Math'
+import { ColorSelectorButton } from './ColorSelectorButton'
 
 export class ColorSelectorSecondary extends GUIElement {
   private _imageData: ImageData
@@ -8,7 +9,17 @@ export class ColorSelectorSecondary extends GUIElement {
   private hueSelectorPosition: Vector
   private hueSelectorSize: Vector
 
+  private readonly numColours: number = 20
+
   private colorPickedSize: number
+
+  private _sizeHueSelector (n = 1): number {
+    return this.hueSelectorSize.x / this.numColours * n
+  }
+
+  private _hue (n: number): number {
+    return Math.trunc(360 / this.numColours * n)
+  }
 
   public init () {
     this.colorPickedSize = 50
@@ -23,16 +34,14 @@ export class ColorSelectorSecondary extends GUIElement {
       y: this.position.y
     }
 
-    const numColours = 20
-    const size: number = 360 / numColours
-
-    for (let i = 0; i <= numColours; i++) {
-      this.drawApp.ctx.fillStyle = HSLtoString(HSVtoHSL({ H: i * numColours, S: 100, V: 100 }))
-      this.drawApp.ctx.fillRect((i * size), this.hueSelectorPosition.y, size, this.hueSelectorSize.y)
-      // console.log(i, size, i * size)
+    for (let i = 0; i < this.numColours; i++) {
+      this.drawApp.ctx.fillStyle = HSLtoString(HSVtoHSL({ H: this._hue(i), S: 100, V: 100 }))
+      this.drawApp.ctx.fillRect(this.hueSelectorPosition.x + this._sizeHueSelector(i), this.hueSelectorPosition.y, this._sizeHueSelector(), this.hueSelectorSize.y)
     }
 
-    // this._imageData = this.drawApp.ctx.getImageData(this.hueSelectorPosition.x, this.hueSelectorPosition.y, this.hueSelectorSize.x, this.hueSelectorSize.y)
+    (this.parent as ColorSelectorButton).hue = this._hue(RandomNumber(0, 19))
+
+    this._imageData = this.drawApp.ctx.getImageData(this.hueSelectorPosition.x, this.hueSelectorPosition.y, this.hueSelectorSize.x, this.hueSelectorSize.y)
     this.drawApp.reloadCanvas()
   }
 
@@ -58,25 +67,17 @@ export class ColorSelectorSecondary extends GUIElement {
   }
 
   public changeHue (): void {
-    console.log('aa')
+    const position: Vector = this.drawApp.mouse.realPosition
+    const hue: number = this._hue(Math.floor(Clamp(position.x - this.hueSelectorPosition.x, 0, this.hueSelectorSize.x) / this._sizeHueSelector()))
+    const parent: ColorSelectorButton = this.parent as ColorSelectorButton
+    parent.hue = hue
+    parent.change = true
   }
 
   public ui (): void {
-    // this.drawApp.ctx.fillStyle = 'yellow'
-    // this.drawApp.ctx.fillRect(this.hueSelectorPosition.x, this.hueSelectorPosition.y, this.hueSelectorSize.x, this.hueSelectorSize.y)
-
     this.drawApp.ctx.fillStyle = this.drawApp.toolSelector.colorSelected
     this.drawApp.ctx.fillRect(this.position.x, this.position.y, this.colorPickedSize, this.hueSelectorSize.y)
 
-    const numColours = 20
-    const size: number = 360 / numColours
-
-    for (let i = 0; i < numColours - 2; i++) {
-      this.drawApp.ctx.fillStyle = HSLtoString(HSVtoHSL({ H: i * numColours, S: 100, V: 100 }))
-      this.drawApp.ctx.fillRect((this.hueSelectorPosition.x + (i * size)), this.hueSelectorPosition.y, size, this.hueSelectorSize.y)
-      // console.log(i, size, i * size)
-    }
-
-    // this.drawApp.ctx.putImageData(this._imageData, this.hueSelectorPosition.x, this.hueSelectorPosition.y)
+    this.drawApp.ctx.putImageData(this._imageData, this.hueSelectorPosition.x, this.hueSelectorPosition.y)
   }
 }

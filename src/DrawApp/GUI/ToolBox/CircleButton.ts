@@ -6,7 +6,6 @@ export class CircleButton extends GUIElement {
   public imgFilled: HTMLImageElement
 
   public mouseUp (): void {
-    // console.log(`mouse button left up inside ${this.name}`)
     this.drawApp.toolSelector.selectTool = ToolType.CIRCLE
     const circleTool: CircleTool = this.drawApp.toolSelector.tools[ToolType.CIRCLE] as CircleTool
     if (this.active) {

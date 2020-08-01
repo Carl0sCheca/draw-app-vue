@@ -29,7 +29,7 @@ export class ToolSelector {
     this.selected = 0
     this.previousSelected = -1
 
-    this.colorSelected = RandomColour()
+    this.colorSelected = 'black'
 
     this.tools = []
     this.tools.push(new PencilTool(drawApp, ToolType.PENCIL))
