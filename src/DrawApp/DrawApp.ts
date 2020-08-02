@@ -26,7 +26,7 @@ export class DrawApp {
     this.eventCanvas = new EventCanvas(this)
 
     // Data and setting from canvas
-    this.data = new Data(settings.gridSize)
+    this.data = new Data(this, settings.gridSize)
     this.settings = settings
 
     // DrawApp context
@@ -57,7 +57,14 @@ export class DrawApp {
     const pointSizeW: number = sizeWidth * this.zoom.level
     const pointSizeH: number = sizeHeight * this.zoom.level
 
-    this.ctx.fillStyle = color
+    if (color.includes('hsl')) {
+      this.ctx.fillStyle = color
+      color = this.ctx.fillStyle.substr(1)
+    } else if (color.includes('#')) {
+      color = color.substr(1)
+    }
+
+    this.ctx.fillStyle = '#' + color
     this.ctx.fillRect(
       point.x,
       point.y,

@@ -32,7 +32,7 @@ export class ToolSelector {
     this.selected = -1
     this.previousSelected = -1
 
-    this.colorSelected = '#000000'
+    this.colorSelected = '000000'
 
     this.tools = []
     this.tools.push(new PencilTool(drawApp, ToolType.PENCIL))

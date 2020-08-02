@@ -1,5 +1,5 @@
 import { CheckRange, Clamp, Vector } from './Utils/Math'
-import { HSV } from './Utils/Color'
+import { DrawApp } from './DrawApp'
 
 export interface Pixel {
   position: Vector;
@@ -11,17 +11,20 @@ export interface LastAction {
 }
 
 export class Data {
+  private _drawApp: DrawApp
+
   public pixels: string[][]
   public lastAction: LastAction[]
 
   private readonly _gridSize: number
 
-  public constructor (gridSize: number) {
+  public constructor (drawApp: DrawApp, gridSize: number) {
+    this._drawApp = drawApp
     this._gridSize = gridSize
     this._initData()
   }
 
-  private _initData (color = '#ffffff'): void {
+  private _initData (color = 'ffffff'): void {
     this.pixels = []
     for (let i = 0; i < this._gridSize; i++) {
       this.pixels[i] = []
@@ -33,7 +36,7 @@ export class Data {
     this.lastAction = []
   }
 
-  public clearData (color = '#ffffff'): void {
+  public clearData (color = 'ffffff'): void {
     for (let i = 0; i < this._gridSize; i++) {
       for (let j = 0; j < this._gridSize; j++) {
         this.pixels[i][j] = color
@@ -44,7 +47,8 @@ export class Data {
   public writeData (position: Vector, color: string): void {
     if (this.pixels !== undefined || position !== undefined) {
       if (CheckRange(position, { x: 0, y: 0 }, { x: this._gridSize - 1, y: this._gridSize - 1 })) {
-        this.pixels[Clamp(position.x, 0, this._gridSize - 1)][Clamp(position.y, 0, this._gridSize - 1)] = color
+        this._drawApp.ctx.fillStyle = color
+        this.pixels[Clamp(position.x, 0, this._gridSize - 1)][Clamp(position.y, 0, this._gridSize - 1)] = this._drawApp.ctx.fillStyle.substr(1)
       }
     }
   }

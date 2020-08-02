@@ -13,7 +13,7 @@ export class ColourPickerTool extends Tool {
     if (this.drawApp.mouse.button === MouseButton.NONE) {
       if (this._dragging) {
         this._dragging = false
-        this.drawApp.toolSelector.colorSelected = this.drawApp.data.pixels[this.drawApp.mouse.dataPosition.x][this.drawApp.mouse.dataPosition.y]
+        this.drawApp.toolSelector.colorSelected = '#' + this.drawApp.data.pixels[this.drawApp.mouse.dataPosition.x][this.drawApp.mouse.dataPosition.y]
         const pencilTool: PencilTool = this.drawApp.toolSelector.tools.find(tool => tool.toolType === ToolType.PENCIL) as PencilTool
         pencilTool.rainbow = false
       }

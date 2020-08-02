@@ -53,6 +53,9 @@ export class PencilTool extends Tool {
       color = this.drawApp.toolSelector.colorSelected
     }
 
+    this.drawApp.ctx.fillStyle = color
+    color = this.drawApp.ctx.fillStyle
+
     if (this.size === 1) {
       this.drawApp.paintCanvas(DiscretizationPosition(position, this.drawApp), this.drawApp.settings.showGrid, color)
       this.drawApp.data.writeData(position, color)
