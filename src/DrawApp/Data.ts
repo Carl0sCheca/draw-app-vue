@@ -52,4 +52,12 @@ export class Data {
       }
     }
   }
+
+  public undo (): void {
+    console.log('undo')
+  }
+
+  public redo (): void {
+    console.log('redo')
+  }
 }

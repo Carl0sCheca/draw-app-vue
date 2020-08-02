@@ -9,6 +9,8 @@ import { ColorPickerButton } from './ToolBox/ColorPickerButton'
 import { ColorSelectorButton } from './ToolBox/ColorSelector/ColorSelectorButton'
 import { GUI } from './GUI'
 import { ToolType } from '../Tools/ToolSelector'
+import { UndoButton } from './ToolBox/UndoButton'
+import { RedoButton } from './ToolBox/RedoButton'
 
 export class ToolBoxGUI extends GUIElement {
   public windowResize () {
@@ -89,6 +91,24 @@ export class ToolBoxGUI extends GUIElement {
       GUIElement.AddElement(this.child, this.drawApp, clearButton, img, {
         x: this.position.x,
         y: this.position.y + 68 * this.child.length
+      })
+    })
+
+    await FetchSVG('undo').then(img => {
+      const undoButton: UndoButton = new UndoButton(this.drawApp, 'undoButton')
+      undoButton.selectable = false
+      GUIElement.AddElement(this.child, this.drawApp, undoButton, img, {
+        x: this.position.x + 68,
+        y: this.position.y
+      })
+    })
+
+    await FetchSVG('redo').then(img => {
+      const redoButton: RedoButton = new RedoButton(this.drawApp, 'redoButton')
+      redoButton.selectable = false
+      GUIElement.AddElement(this.child, this.drawApp, redoButton, img, {
+        x: this.position.x + (68 * 2),
+        y: this.position.y
       })
     })
 
