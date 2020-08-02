@@ -48,7 +48,7 @@ export class PencilTool extends Tool {
 
     let color: string
     if (this.rainbow) {
-      color = HSLtoString(HSVtoHSL({ H: this.rainbowColor * this.drawApp.settings.numColors, S: 100, V: 100 }))
+      color = HSLtoString(HSVtoHSL({ H: this.rainbowColor * 360 / this.drawApp.settings.numColors, S: 100, V: 100 }))
     } else {
       color = this.drawApp.toolSelector.colorSelected
     }
