@@ -98,10 +98,10 @@ export abstract class GUIElement {
   public mouseUp? (): void
   public mouseDown? (): void
 
-  public setActive (image: HTMLImageElement = this.img): void {
+  public setActive (image: HTMLImageElement = this.img, rotation = 270): void {
     if (this.img !== undefined) {
       this.active = true
-      this.drawApp.ctx.filter = 'hue-rotate(270deg)'
+      this.drawApp.ctx.filter = `hue-rotate(${rotation}deg)`
       this.drawApp.ctx.drawImage(image, this._position.x, this._position.y, this.size.x, this.size.y)
       this.drawApp.ctx.filter = 'none'
     }

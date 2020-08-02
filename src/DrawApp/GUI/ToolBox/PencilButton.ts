@@ -39,7 +39,11 @@ export class PencilButton extends GUIElement {
     }
 
     if (this.active) {
-      this.setActive(img)
+      if (this._pencilTool.rainbow) {
+        this.setActive(img, 120)
+      } else {
+        this.setActive(img)
+      }
     } else {
       this.drawApp.ctx.drawImage(img, this.position.x, this.position.y, this.size.x, this.size.y)
     }
