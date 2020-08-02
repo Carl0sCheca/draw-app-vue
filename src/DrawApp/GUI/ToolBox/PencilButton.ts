@@ -1,6 +1,7 @@
 import { GUIElement } from '../GUIElement'
 import { ToolType } from '../../Tools/ToolSelector'
 import { PencilTool } from '../../Tools/PencilTool'
+import { ColorSelectorButton } from './ColorSelector/ColorSelectorButton'
 
 export class PencilButton extends GUIElement {
   public imgAlternative: HTMLImageElement
@@ -19,6 +20,7 @@ export class PencilButton extends GUIElement {
   public mouseUp (): void {
     if (this.drawApp.toolSelector.tool instanceof PencilTool) {
       if (new Date().getTime() - this._startTime > this._rainbowSelectorTime) {
+        this._pencilTool.rainbowColor = (this.parent.child.find(element => element instanceof ColorSelectorButton) as ColorSelectorButton).hue
         this._pencilTool.rainbow = !this._pencilTool.rainbow
       } else {
         this._pencilTool.size = this._pencilTool.size === 1 ? 2 : 1

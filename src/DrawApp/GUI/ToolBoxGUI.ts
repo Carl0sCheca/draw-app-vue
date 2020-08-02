@@ -38,6 +38,7 @@ export class ToolBoxGUI extends GUIElement {
   public async loadImagesAndButtons (): Promise<void> {
     await FetchSVG('pencil').then(img => {
       const pencilButton: PencilButton = new PencilButton(this.drawApp, ToolType.PENCIL.toString())
+      pencilButton.parent = this
       pencilButton.init()
       GUIElement.AddElement(this.child, this.drawApp, pencilButton, img, {
         x: this.position.x,

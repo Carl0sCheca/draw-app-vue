@@ -11,14 +11,13 @@ import {
 import { HSLtoString, HSVtoHSL } from '../Utils/Color'
 
 export class PencilTool extends Tool {
-  private _counter: number
+  public rainbowColor: number
   public rainbow: boolean
   public size: number
 
   public constructor (drawApp: DrawApp, toolType: ToolType) {
     super(drawApp, toolType)
 
-    this._counter = RandomNumber(0, 360)
     this.rainbow = false
     this.size = 1
   }
@@ -42,14 +41,14 @@ export class PencilTool extends Tool {
   }
 
   private _pencilTool (position: Vector): void {
-    this._counter++
-    if (this._counter > 360) {
-      this._counter = 0
+    this.rainbowColor++
+    if (this.rainbowColor > 360) {
+      this.rainbowColor = 0
     }
 
     let color: string
     if (this.rainbow) {
-      color = HSLtoString(HSVtoHSL({ H: this._counter, S: 100, V: 100 }))
+      color = HSLtoString(HSVtoHSL({ H: this.rainbowColor, S: 100, V: 100 }))
     } else {
       color = this.drawApp.toolSelector.colorSelected
     }
