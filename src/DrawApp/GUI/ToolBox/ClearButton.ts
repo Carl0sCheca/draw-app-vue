@@ -7,5 +7,7 @@ export class ClearButton extends GUIElement {
 
   public mouseUp (): void {
     this.drawApp.data.clearData()
+    this.drawApp.reloadCanvas()
+    this.drawApp.gui.reloadGUI()
   }
 }
