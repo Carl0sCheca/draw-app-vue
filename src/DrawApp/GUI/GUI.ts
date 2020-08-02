@@ -69,19 +69,12 @@ export class GUI {
           }
           if (GUI.CheckInsideGUIElement(this._drawApp, child)) {
             child.hover()
-            element.child.filter(c => c.name !== child.name).forEach(c => {
-              c.ui()
-            })
           }
         })
       }
 
       if (!element.clickIn && !this._drawApp.mouse.moving) {
         element.clickIn = true
-
-        this._drawApp.reloadCanvas()
-        this.reloadGUI()
-
         if (GUI.CheckInsideGUIElement(this._drawApp, element)) {
           // mouse button left up inside element
           if (element.mouseUp) {

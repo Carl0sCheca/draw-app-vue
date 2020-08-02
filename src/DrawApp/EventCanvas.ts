@@ -1,6 +1,5 @@
 import { Mouse, MouseButton, MouseScroll } from './Mouse'
 import { DrawApp } from './DrawApp'
-import { ToolType } from './Tools/ToolSelector'
 
 export class EventCanvas {
   private readonly _drawApp: DrawApp

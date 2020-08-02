@@ -153,9 +153,6 @@ export class ToolBoxGUI extends GUIElement {
           if (child.mouseUp) {
             child.mouseUp()
           }
-          child.ui()
-          this.drawApp.reloadCanvas()
-          this.drawApp.gui.reloadGUI()
           return
         }
 
