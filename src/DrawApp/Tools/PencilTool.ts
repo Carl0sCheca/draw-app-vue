@@ -19,7 +19,7 @@ export class PencilTool extends Tool {
     super(drawApp, toolType)
 
     this._counter = RandomNumber(0, 360)
-    this.rainbow = true
+    this.rainbow = false
     this.size = 1
   }
 

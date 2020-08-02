@@ -5,14 +5,24 @@ import { PencilTool } from '../../Tools/PencilTool'
 export class PencilButton extends GUIElement {
   public imgAlternative: HTMLImageElement
   private _pencilTool: PencilTool
+  private _startTime: number
+  private readonly _rainbowSelectorTime = 1000
 
   public init (): void {
     this._pencilTool = this.drawApp.toolSelector.tools.find(tool => tool.toolType === ToolType.PENCIL) as PencilTool
   }
 
+  public mouseDown (): void {
+    this._startTime = new Date().getTime()
+  }
+
   public mouseUp (): void {
     if (this.drawApp.toolSelector.tool instanceof PencilTool) {
-      this._pencilTool.size = this._pencilTool.size === 1 ? 2 : 1
+      if (new Date().getTime() - this._startTime > this._rainbowSelectorTime) {
+        this._pencilTool.rainbow = !this._pencilTool.rainbow
+      } else {
+        this._pencilTool.size = this._pencilTool.size === 1 ? 2 : 1
+      }
     } else {
       this.drawApp.toolSelector.selectTool = ToolType.PENCIL
     }

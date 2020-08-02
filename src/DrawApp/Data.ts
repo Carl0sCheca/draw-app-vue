@@ -1,4 +1,5 @@
 import { CheckRange, Clamp, Vector } from './Utils/Math'
+import { HSV } from './Utils/Color'
 
 export interface Pixel {
   position: Vector;
@@ -40,10 +41,17 @@ export class Data {
     }
   }
 
-  public writeData (position: Vector, color: string): void {
+  public writeData (position: Vector, color: string | HSV): void {
     if (this.pixels !== undefined || position !== undefined) {
       if (CheckRange(position, { x: 0, y: 0 }, { x: this._gridSize - 1, y: this._gridSize - 1 })) {
-        this.pixels[Clamp(position.x, 0, this._gridSize - 1)][Clamp(position.y, 0, this._gridSize - 1)] = color
+        let c: any
+        if (typeof color === 'string') {
+          c = color.substr(1)
+        } else {
+          // TODO: convert to rgb
+        }
+        console.log(c)
+        this.pixels[Clamp(position.x, 0, this._gridSize - 1)][Clamp(position.y, 0, this._gridSize - 1)] = c
       }
     }
   }

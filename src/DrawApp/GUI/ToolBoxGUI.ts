@@ -8,6 +8,7 @@ import { BucketButton } from './ToolBox/BucketButton'
 import { ColorPickerButton } from './ToolBox/ColorPickerButton'
 import { ColorSelectorButton } from './ToolBox/ColorSelector/ColorSelectorButton'
 import { GUI } from './GUI'
+import { ToolType } from '../Tools/ToolSelector'
 
 export class ToolBoxGUI extends GUIElement {
   public windowResize () {
@@ -36,7 +37,7 @@ export class ToolBoxGUI extends GUIElement {
 
   public async loadImagesAndButtons (): Promise<void> {
     await FetchSVG('pencil').then(img => {
-      const pencilButton: PencilButton = new PencilButton(this.drawApp, 'Pencil')
+      const pencilButton: PencilButton = new PencilButton(this.drawApp, ToolType.PENCIL.toString())
       pencilButton.init()
       GUIElement.AddElement(this.child, this.drawApp, pencilButton, img, {
         x: this.position.x,
@@ -48,7 +49,7 @@ export class ToolBoxGUI extends GUIElement {
     })
 
     await FetchSVG('circle').then(img => {
-      const circleButton: CircleButton = new CircleButton(this.drawApp, 'Circle')
+      const circleButton: CircleButton = new CircleButton(this.drawApp, ToolType.CIRCLE.toString())
 
       GUIElement.AddElement(this.child, this.drawApp, circleButton, img, {
         x: this.position.x,
@@ -59,18 +60,18 @@ export class ToolBoxGUI extends GUIElement {
       })
     })
 
-    await FetchSVG('bucket').then(img => GUIElement.AddElement(this.child, this.drawApp, new BucketButton(this.drawApp, 'Bucket'), img, {
+    await FetchSVG('bucket').then(img => GUIElement.AddElement(this.child, this.drawApp, new BucketButton(this.drawApp, ToolType.BUCKET.toString()), img, {
       x: this.position.x,
       y: this.position.y + 68 * this.child.length
     }))
 
-    await FetchSVG('colorpicker').then(img => GUIElement.AddElement(this.child, this.drawApp, new ColorPickerButton(this.drawApp, 'ColorPicker'), img, {
+    await FetchSVG('colorpicker').then(img => GUIElement.AddElement(this.child, this.drawApp, new ColorPickerButton(this.drawApp, ToolType.COLOUR_PICKER.toString()), img, {
       x: this.position.x,
       y: this.position.y + 68 * this.child.length
     }))
 
     await FetchSVG('grid').then(img => {
-      const circleButton: CircleButton = new GridButton(this.drawApp, 'Grid')
+      const circleButton: CircleButton = new GridButton(this.drawApp, ToolType.GRID.toString())
       circleButton.selectable = false
       GUIElement.AddElement(this.child, this.drawApp, circleButton, img, {
         x: this.position.x,
@@ -82,7 +83,7 @@ export class ToolBoxGUI extends GUIElement {
     })
 
     await FetchSVG('clear').then(img => {
-      const clearButton: ClearButton = new ClearButton(this.drawApp, 'Clear')
+      const clearButton: ClearButton = new ClearButton(this.drawApp, ToolType.CLEAR.toString())
       clearButton.selectable = false
       GUIElement.AddElement(this.child, this.drawApp, clearButton, img, {
         x: this.position.x,
@@ -105,7 +106,8 @@ export class ToolBoxGUI extends GUIElement {
     colorSelector.init()
     this.child.push(colorSelector)
 
-    this.child.find(element => element.name === 'Pencil').active = true
+    this.drawApp.toolSelector.selectTool = this.drawApp.toolSelector.startTool
+    this.child.find(element => element.name === this.drawApp.toolSelector.tool.name).active = true
   }
 
   public toggle (): void {
@@ -167,6 +169,16 @@ export class ToolBoxGUI extends GUIElement {
 
         this.drawApp.reloadCanvas()
         this.drawApp.gui.reloadGUI()
+      }
+    })
+  }
+
+  public mouseDown () {
+    this.child.forEach(child => {
+      if (GUI.CheckInsideGUIElement(this.drawApp, child)) {
+        if (child.mouseDown) {
+          child.mouseDown()
+        }
       }
     })
   }

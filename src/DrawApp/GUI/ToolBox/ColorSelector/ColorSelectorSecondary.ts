@@ -41,6 +41,12 @@ export class ColorSelectorSecondary extends GUIElement {
 
     (this.parent as ColorSelectorButton).hue = this._hue(RandomNumber(0, 19))
 
+    this.drawApp.toolSelector.colorSelected = HSLtoString(HSVtoHSL({
+      H: (this.parent as ColorSelectorButton).hue,
+      S: 100,
+      V: 100
+    }))
+
     this._imageData = this.drawApp.ctx.getImageData(this.hueSelectorPosition.x, this.hueSelectorPosition.y, this.hueSelectorSize.x, this.hueSelectorSize.y)
     this.drawApp.reloadCanvas()
   }

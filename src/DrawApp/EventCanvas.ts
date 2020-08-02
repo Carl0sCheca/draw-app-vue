@@ -1,5 +1,6 @@
 import { Mouse, MouseButton, MouseScroll } from './Mouse'
 import { DrawApp } from './DrawApp'
+import { ToolType } from './Tools/ToolSelector'
 
 export class EventCanvas {
   private readonly _drawApp: DrawApp
@@ -108,7 +109,9 @@ export class EventCanvas {
   }
 
   private _dispatchEvent (): void {
-    this._drawApp.gui.mouseCheck()
-    this._drawApp.canvas.dispatchEvent(this._drawApp.toolSelector.tool.event)
+    if (this._drawApp.toolSelector.tool !== undefined) {
+      this._drawApp.gui.mouseCheck()
+      this._drawApp.canvas.dispatchEvent(this._drawApp.toolSelector.tool.event)
+    }
   }
 }

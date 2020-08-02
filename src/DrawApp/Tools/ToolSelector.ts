@@ -6,7 +6,6 @@ import { ColourPickerTool } from './ColourPickerTool'
 import { MoveTool } from './MoveTool'
 import { ZoomTool } from './ZoomTool'
 import { CircleTool } from './CircleTool'
-import { RandomColour } from '../Utils/Color'
 
 export enum ToolType {
   NONE = -1,
@@ -15,7 +14,9 @@ export enum ToolType {
   COLOUR_PICKER = 2,
   MOVE = 3,
   ZOOM = 4,
-  CIRCLE = 5
+  CIRCLE = 5,
+  GRID = 6,
+  CLEAR = 7
 }
 
 export class ToolSelector {
@@ -23,13 +24,15 @@ export class ToolSelector {
   private selected: number
   private previousSelected: number
 
+  public readonly startTool: ToolType = ToolType.PENCIL
+
   public colorSelected: string
 
   public constructor (drawApp: DrawApp) {
-    this.selected = 0
+    this.selected = -1
     this.previousSelected = -1
 
-    this.colorSelected = 'black'
+    this.colorSelected = '#000000'
 
     this.tools = []
     this.tools.push(new PencilTool(drawApp, ToolType.PENCIL))
@@ -46,7 +49,7 @@ export class ToolSelector {
   }
 
   public get tool (): Tool {
-    return this.tools[this.selected]
+    return this.selected >= 0 ? this.tools[this.selected] : undefined
   }
 
   public set selectTool (toolType: ToolType) {
