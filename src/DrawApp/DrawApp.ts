@@ -28,6 +28,7 @@ export class DrawApp {
     // Data and setting from canvas
     this.data = new Data(this, settings.gridSize)
     this.settings = settings
+    this.settings.numColors = 20
 
     // DrawApp context
     this.ctx = canvas.getContext('2d')

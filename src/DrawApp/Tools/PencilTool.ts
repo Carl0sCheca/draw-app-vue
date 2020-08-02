@@ -5,7 +5,7 @@ import { ToolType } from './ToolSelector'
 import {
   DiscretizationDataPosition,
   DiscretizationPosition,
-  LerpSteps, RandomNumber,
+  LerpSteps,
   Vector
 } from '../Utils/Math'
 import { HSLtoString, HSVtoHSL } from '../Utils/Color'
@@ -42,13 +42,13 @@ export class PencilTool extends Tool {
 
   private _pencilTool (position: Vector): void {
     this.rainbowColor++
-    if (this.rainbowColor > 360) {
+    if (this.rainbowColor > this.drawApp.settings.numColors - 1) {
       this.rainbowColor = 0
     }
 
     let color: string
     if (this.rainbow) {
-      color = HSLtoString(HSVtoHSL({ H: this.rainbowColor, S: 100, V: 100 }))
+      color = HSLtoString(HSVtoHSL({ H: this.rainbowColor * this.drawApp.settings.numColors, S: 100, V: 100 }))
     } else {
       color = this.drawApp.toolSelector.colorSelected
     }

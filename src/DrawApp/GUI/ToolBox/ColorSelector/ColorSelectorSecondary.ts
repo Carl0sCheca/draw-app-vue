@@ -9,16 +9,14 @@ export class ColorSelectorSecondary extends GUIElement {
   private hueSelectorPosition: Vector
   private hueSelectorSize: Vector
 
-  private readonly numColours: number = 20
-
   private colorPickedSize: number
 
   private _sizeHueSelector (n = 1): number {
-    return this.hueSelectorSize.x / this.numColours * n
+    return this.hueSelectorSize.x / this.drawApp.settings.numColors * n
   }
 
   private _hue (n: number): number {
-    return Math.trunc(360 / this.numColours * n)
+    return Math.trunc(360 / this.drawApp.settings.numColors * n)
   }
 
   public init () {
@@ -34,7 +32,7 @@ export class ColorSelectorSecondary extends GUIElement {
       y: this.position.y
     }
 
-    for (let i = 0; i < this.numColours; i++) {
+    for (let i = 0; i < this.drawApp.settings.numColors; i++) {
       this.drawApp.ctx.fillStyle = HSLtoString(HSVtoHSL({ H: this._hue(i), S: 100, V: 100 }))
       this.drawApp.ctx.fillRect(this.hueSelectorPosition.x + this._sizeHueSelector(i), this.hueSelectorPosition.y, this._sizeHueSelector(), this.hueSelectorSize.y)
     }

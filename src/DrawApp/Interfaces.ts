@@ -5,6 +5,7 @@ export interface ISettings {
   pixelSize?: number
   gridColor: string
   showGrid: boolean
+  numColors?: number
 }
 
 export interface IZoom {
