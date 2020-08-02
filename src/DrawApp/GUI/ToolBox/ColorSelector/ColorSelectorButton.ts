@@ -63,6 +63,8 @@ export class ColorSelectorButton extends GUIElement {
         y: element.position.y + element.size.y
       })) {
         element.mouseUp()
+        this.drawApp.reloadCanvas()
+        this.drawApp.gui.reloadGUI()
       }
     })
   }
