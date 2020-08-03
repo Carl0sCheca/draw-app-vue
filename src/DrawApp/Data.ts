@@ -127,8 +127,12 @@ export class Data {
     }
   }
 
+  public canUndo (): boolean {
+    return this.lastActionIndex >= 0
+  }
+
   public undo (): void {
-    if (this.lastActionIndex >= 0) {
+    if (this.canUndo()) {
       const pixel: Pixel = this.lastAction[this.lastActionIndex]
       this.lastActionIndex--
 
@@ -145,8 +149,12 @@ export class Data {
     }
   }
 
+  public canRedo (): boolean {
+    return this.lastActionIndex + 1 < this.lastAction.length
+  }
+
   public redo (): void {
-    if (this.lastActionIndex + 1 < this.lastAction.length) {
+    if (this.canRedo()) {
       this.lastActionIndex++
       const pixel: Pixel = this.lastAction[this.lastActionIndex]
 

@@ -7,7 +7,21 @@ export class UndoButton extends GUIElement {
     this.drawApp.gui.reloadGUI()
   }
 
+  public hover () {
+    if (this.drawApp.data.canUndo()) {
+      super.hover()
+    }
+  }
+
   public ui (): void {
-    this.drawApp.ctx.drawImage(this.img, this.position.x, this.position.y, this.size.x, this.size.y)
+    if (this.drawApp.data.canUndo()) {
+      this.drawApp.ctx.drawImage(this.img, this.position.x, this.position.y, this.size.x, this.size.y)
+    } else {
+      this.drawApp.ctx.filter = 'grayscale(100%) hue-rotate(180deg)'
+      this.drawApp.ctx.globalAlpha = 0.5
+      this.drawApp.ctx.drawImage(this.img, this.position.x, this.position.y, this.size.x, this.size.y)
+      this.drawApp.ctx.globalAlpha = 1
+      this.drawApp.ctx.filter = 'none'
+    }
   }
 }
