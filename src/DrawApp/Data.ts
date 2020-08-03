@@ -102,10 +102,13 @@ export class Data {
       if (pixel.type === Type.Vector) {
         this._checkPixelAndPaint(pixel.position, pixel.color)
       } else if (pixel.type === Type.Array) {
-        const p: Pixel = { positions: pixel.positions, colors: [], type: Type.Array }
+        const p: Pixel = { positions: [], colors: [], type: Type.Array }
 
-        p.positions.forEach(pos => {
-          p.colors.push(this.pixels[pos.x][pos.y])
+        pixel.positions.forEach(pos => {
+          if (CheckRange(pos, { x: 0, y: 0 }, { x: this._gridSize - 1, y: this._gridSize - 1 })) {
+            p.positions.push({ x: pos.x, y: pos.y })
+            p.colors.push(this.pixels[pos.x][pos.y])
+          }
         })
 
         this._checkLastActionAndWrite(p)
