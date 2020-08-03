@@ -3,6 +3,35 @@ import { IsInsideCanvas } from './Canvas'
 
 export type Vector = { x: number; y: number }
 
+export function VectorAdd (vector1: Vector, vector2: Vector): Vector {
+  return { x: vector1.x + vector2.x, y: vector1.y + vector2.y }
+}
+
+export function VectorMidPoint (vector1: Vector, vector2: Vector): Vector {
+  return { x: (vector1.x + vector2.x) / 2, y: (vector1.y + vector2.y) / 2 }
+}
+
+export function VectorSub (vector1: Vector, vector2: Vector): Vector {
+  return { x: vector1.x - vector2.x, y: vector1.y - vector2.y }
+}
+
+export function VectorAbs (vector: Vector): Vector {
+  return { x: Math.abs(vector.x), y: Math.abs(vector.y) }
+}
+
+export function VectorTrunc (vector: Vector): Vector {
+  return { x: Math.trunc(vector.x), y: Math.trunc(vector.y) }
+}
+
+export function MaxComponentVector (vector: Vector): number {
+  return Math.max(vector.x, vector.y)
+}
+
+export function HypotVector (vector1: Vector, vector2: Vector): number {
+  const newVector: Vector = VectorSub(vector1, vector2)
+  return Math.hypot(newVector.x, newVector.y)
+}
+
 export function Clamp (value: number, min: number, max: number): number {
   if (value < min) {
     return min
