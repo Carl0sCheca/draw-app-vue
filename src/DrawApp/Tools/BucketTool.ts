@@ -2,6 +2,7 @@ import { Tool } from './Tool'
 import { MouseButton } from '../Mouse'
 import { RecursiveFillColor } from '../Utils/Canvas'
 import { Vector } from '../Utils/Math'
+import { Pixel, Type } from '../Data'
 
 export class BucketTool extends Tool {
   public onAction (): void {
@@ -13,11 +14,17 @@ export class BucketTool extends Tool {
     if (this.drawApp.mouse.button === MouseButton.NONE) {
       if (this._dragging) {
         this._dragging = false
-        const filledPixels: Array<Vector> = []
+
+        this.drawApp.ctx.fillStyle = this.drawApp.toolSelector.colorSelected
+
+        const filledPixels: Pixel = { positions: [], color: this.drawApp.ctx.fillStyle, type: Type.Array }
         const position: Vector = this.drawApp.mouse.dataPosition
-        RecursiveFillColor(position, this.drawApp, filledPixels, this.drawApp.data.pixels[position.x][position.y])
-        this.drawApp.data.writeData(position, this.drawApp.toolSelector.colorSelected)
-        filledPixels.forEach(position => this.drawApp.data.writeData(position, this.drawApp.toolSelector.colorSelected))
+
+        filledPixels.positions.push(position)
+        RecursiveFillColor(position, this.drawApp, filledPixels.positions, this.drawApp.data.pixels[position.x][position.y])
+
+        this.drawApp.data.writeData(filledPixels)
+
         this.drawApp.reloadCanvas()
       }
     } else if (this.drawApp.mouse.button === MouseButton.LEFT) {

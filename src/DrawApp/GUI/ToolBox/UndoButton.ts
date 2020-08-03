@@ -3,6 +3,8 @@ import { GUIElement } from '../GUIElement'
 export class UndoButton extends GUIElement {
   public mouseUp (): void {
     this.drawApp.data.undo()
+    this.drawApp.reloadCanvas()
+    this.drawApp.gui.reloadGUI()
   }
 
   public ui (): void {

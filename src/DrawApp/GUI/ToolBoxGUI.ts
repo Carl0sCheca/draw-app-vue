@@ -147,7 +147,6 @@ export class ToolBoxGUI extends GUIElement {
     this.enabled = true
 
     this.child.forEach(element => element.show())
-
     this.ui()
   }
 

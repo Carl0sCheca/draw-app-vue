@@ -5,6 +5,7 @@ import { MouseButton } from '../Mouse'
 import { DiscretizationPosition, Vector } from '../Utils/Math'
 import { PushIfNotExists } from '../Utils/Util'
 import { RecursiveFillPosition } from '../Utils/Canvas'
+import { Type } from '../Data'
 
 export class CircleTool extends Tool {
   private centerCircle: Vector
@@ -25,9 +26,18 @@ export class CircleTool extends Tool {
 
     if (this.drawApp.mouse.button === MouseButton.NONE) {
       if (this._dragging) {
-        this._circlePixels.forEach(position => this.drawApp.data.writeData(position, this.drawApp.toolSelector.colorSelected))
+        if (this._circlePixels.length > 1) {
+          this.drawApp.ctx.fillStyle = this.drawApp.toolSelector.colorSelected
+
+          this.drawApp.data.writeData({
+            positions: this._circlePixels,
+            color: this.drawApp.ctx.fillStyle,
+            type: Type.Array
+          })
+        }
 
         this.drawApp.reloadCanvas()
+
         this._dragging = false
       }
     } else if (this.drawApp.mouse.button === MouseButton.LEFT) {

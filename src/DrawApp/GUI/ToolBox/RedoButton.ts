@@ -3,6 +3,8 @@ import { GUIElement } from '../GUIElement'
 export class RedoButton extends GUIElement {
   public mouseUp (): void {
     this.drawApp.data.redo()
+    this.drawApp.reloadCanvas()
+    this.drawApp.gui.reloadGUI()
   }
 
   public ui (): void {

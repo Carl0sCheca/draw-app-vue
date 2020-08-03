@@ -41,6 +41,9 @@ export class EventCanvas {
       mouse.mouseUpLeft()
     } else if (e.button === MouseButton.RIGHT) {
       mouse.mouseUpRight()
+      if (this._drawApp.toolSelector.tool !== undefined) {
+        this._drawApp.canvas.dispatchEvent(this._drawApp.toolSelector.tool.event)
+      }
     } else if (e.button === MouseButton.MIDDLE) {
       mouse.mouseWheelButtonUp()
     }

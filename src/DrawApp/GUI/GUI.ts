@@ -60,6 +60,16 @@ export class GUI {
         return
       }
 
+      if (!element.clickIn && !this._drawApp.mouse.moving) {
+        element.clickIn = true
+        if (GUI.CheckInsideGUIElement(this._drawApp, element)) {
+          // mouse button left up inside element
+          if (element.mouseUp) {
+            element.mouseUp()
+          }
+        }
+      }
+
       if (this._drawApp.mouse.button === MouseButton.NONE) {
         this._drawApp.reloadCanvas()
         this.reloadGUI()
@@ -71,16 +81,6 @@ export class GUI {
             child.hover()
           }
         })
-      }
-
-      if (!element.clickIn && !this._drawApp.mouse.moving) {
-        element.clickIn = true
-        if (GUI.CheckInsideGUIElement(this._drawApp, element)) {
-          // mouse button left up inside element
-          if (element.mouseUp) {
-            element.mouseUp()
-          }
-        }
       }
     })
 
