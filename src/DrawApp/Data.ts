@@ -31,16 +31,32 @@ export class Data {
   }
 
   private _initData (color = 'ffffff'): void {
-    this.pixels = []
-    for (let i = 0; i < this._gridSize; i++) {
-      this.pixels[i] = []
-      for (let j = 0; j < this._gridSize; j++) {
-        this.pixels[i][j] = color
+    let loaded = false
+    if (typeof (Storage) !== undefined) {
+      if (localStorage.pixels) {
+        this.pixels = JSON.parse(localStorage.pixels)
+        loaded = true
+      }
+    }
+
+    if (!loaded) {
+      this.pixels = []
+      for (let i = 0; i < this._gridSize; i++) {
+        this.pixels[i] = []
+        for (let j = 0; j < this._gridSize; j++) {
+          this.pixels[i][j] = color
+        }
       }
     }
 
     this.lastAction = []
     this.lastActionIndex = -1
+  }
+
+  public saveLocalStorage (): void {
+    if (typeof (Storage) !== undefined) {
+      localStorage.pixels = JSON.stringify(this.pixels)
+    }
   }
 
   public clearData (color = 'ffffff'): void {
@@ -55,6 +71,7 @@ export class Data {
     }
 
     this._checkLastActionAndWrite(pixel)
+    this.saveLocalStorage()
   }
 
   public static FlushDuplicatedData (pixel: Pixel, gridSize: number): Pixel {
@@ -120,6 +137,7 @@ export class Data {
           }
         })
       }
+      this.saveLocalStorage()
     }
   }
 
@@ -149,6 +167,7 @@ export class Data {
       })
 
       this.lastAction[this.lastActionIndex + 1] = { positions: tempPositions, colors: tempColors, type: Type.Array }
+      this.saveLocalStorage()
     }
   }
 
@@ -171,6 +190,7 @@ export class Data {
       })
 
       this.lastAction[this.lastActionIndex] = { positions: tempPositions, colors: tempColors, type: Type.Array }
+      this.saveLocalStorage()
     }
   }
 }
