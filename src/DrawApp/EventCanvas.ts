@@ -254,6 +254,7 @@ export class EventCanvas {
             } else if (this._touchAction === TouchAction.MOVE) {
               mouse.mouseWheelButtonDown()
               this.onMove({ position: this._lastTouchPosition, button: MouseButton.MIDDLE }, mouse)
+              this._touchAction = TouchAction.NONE
               mouse.button = MouseButton.NONE
             } else if (this._touchAction === TouchAction.ZOOM) {
               let direction: number
@@ -269,6 +270,7 @@ export class EventCanvas {
               this.onZoom({ scroll: direction, position: VectorMidPoint(positions[0], positions[1]) }, mouse)
 
               this._distancePoints[0] = distanceSecondPosition
+              this._touchAction = TouchAction.NONE
             }
           }
         }
