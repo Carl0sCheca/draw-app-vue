@@ -15,12 +15,20 @@ export function VectorSub (vector1: Vector, vector2: Vector): Vector {
   return { x: vector1.x - vector2.x, y: vector1.y - vector2.y }
 }
 
+export function VectorDiv (vector1: Vector, vector2: Vector): Vector {
+  return { x: vector1.x / vector2.x, y: vector1.y / vector2.x }
+}
+
 export function VectorAbs (vector: Vector): Vector {
   return { x: Math.abs(vector.x), y: Math.abs(vector.y) }
 }
 
 export function VectorTrunc (vector: Vector): Vector {
   return { x: Math.trunc(vector.x), y: Math.trunc(vector.y) }
+}
+
+export function VectorCeil (vector: Vector): Vector {
+  return { x: Math.ceil(vector.x), y: Math.ceil(vector.y) }
 }
 
 export function MaxComponentVector (vector: Vector): number {
