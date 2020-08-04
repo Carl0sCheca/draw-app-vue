@@ -5,7 +5,8 @@ import { Data } from './Data'
 import { ToolSelector, ToolType } from './Tools/ToolSelector'
 import { ZoomTool } from './Tools/ZoomTool'
 import { GUI } from './GUI/GUI'
-import { DiscretizationPosition, Vector } from './Utils/Math'
+import { DiscretizationPosition, Vector, VectorAbs, VectorCeil, VectorDiv, VectorTrunc } from './Utils/Math'
+import { LeftPointCanvas, RightPointCanvas } from './Utils/Canvas'
 
 export class DrawApp {
   public readonly canvas: HTMLCanvasElement
@@ -31,7 +32,7 @@ export class DrawApp {
     this.settings.numColors = 20
 
     // DrawApp context
-    this.ctx = canvas.getContext('2d')
+    this.ctx = canvas.getContext('2d', { alpha: false })
 
     // Init Tool Selector
     this.toolSelector = new ToolSelector(this)
@@ -114,9 +115,12 @@ export class DrawApp {
   }
 
   private _redrawCanvas (): void {
+    const startPoint: Vector = VectorTrunc(VectorAbs(VectorDiv(LeftPointCanvas(this), { x: this.settings.pixelSize, y: this.settings.pixelSize })))
+    const endPoint: Vector = VectorCeil(VectorAbs(VectorDiv(RightPointCanvas(this), { x: this.settings.pixelSize, y: this.settings.pixelSize })))
+
     this.paintCanvas({ x: 0, y: 0 }, false, 'white', this.canvas.width, this.canvas.height)
-    for (let i = 0; i < this.settings.gridSize; i++) {
-      for (let j = 0; j < this.settings.gridSize; j++) {
+    for (let i = startPoint.x; i < endPoint.x; i++) {
+      for (let j = startPoint.y; j < endPoint.y; j++) {
         this.paintCanvas(DiscretizationPosition({
           x: i,
           y: j
