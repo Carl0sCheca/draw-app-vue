@@ -2,6 +2,7 @@ import { DrawApp } from '../DrawApp'
 import { IsInsideCanvas } from './Canvas'
 
 export type Vector = { x: number; y: number }
+export const VectorZero: Vector = { x: 0, y: 0 }
 
 export function VectorAdd (vector1: Vector, vector2: Vector): Vector {
   return { x: vector1.x + vector2.x, y: vector1.y + vector2.y }
@@ -31,11 +32,11 @@ export function VectorCeil (vector: Vector): Vector {
   return { x: Math.ceil(vector.x), y: Math.ceil(vector.y) }
 }
 
-export function MaxComponentVector (vector: Vector): number {
+export function VectorMaxComponent (vector: Vector): number {
   return Math.max(vector.x, vector.y)
 }
 
-export function HypotVector (vector1: Vector, vector2: Vector): number {
+export function VectorHypot (vector1: Vector, vector2: Vector): number {
   const newVector: Vector = VectorSub(vector1, vector2)
   return Math.hypot(newVector.x, newVector.y)
 }
@@ -48,6 +49,10 @@ export function Clamp (value: number, min: number, max: number): number {
   } else {
     return value
   }
+}
+
+export function VectorClamp (vector: Vector, min: Vector, max: Vector): Vector {
+  return { x: Clamp(vector.x, min.x, max.x), y: Clamp(vector.y, min.y, max.y) }
 }
 
 export function DiscretizationPosition (discretePosition: Vector, canvas: DrawApp): Vector {

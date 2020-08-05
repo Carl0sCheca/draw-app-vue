@@ -5,7 +5,15 @@ import { Data } from './Data'
 import { ToolSelector, ToolType } from './Tools/ToolSelector'
 import { ZoomTool } from './Tools/ZoomTool'
 import { GUI } from './GUI/GUI'
-import { DiscretizationPosition, Vector, VectorAbs, VectorCeil, VectorDiv, VectorTrunc } from './Utils/Math'
+import {
+  DiscretizationPosition,
+  Vector,
+  VectorAbs,
+  VectorCeil,
+  VectorClamp,
+  VectorDiv,
+  VectorTrunc, VectorZero
+} from './Utils/Math'
 import { LeftPointCanvas, RightPointCanvas } from './Utils/Canvas'
 
 export class DrawApp {
@@ -107,10 +115,10 @@ export class DrawApp {
       x: this.settings.pixelSize,
       y: this.settings.pixelSize
     })))
-    const endPoint: Vector = VectorCeil(VectorAbs(VectorDiv(RightPointCanvas(this), {
+    const endPoint: Vector = VectorClamp(VectorCeil(VectorAbs(VectorDiv(RightPointCanvas(this), {
       x: this.settings.pixelSize,
       y: this.settings.pixelSize
-    })))
+    }))), VectorZero, { x: this.settings.gridSize, y: this.settings.gridSize })
 
     this.paintCanvas({ x: 0, y: 0 }, false, 'white', this.canvas.width, this.canvas.height)
     for (let i = startPoint.x; i < endPoint.x; i++) {
