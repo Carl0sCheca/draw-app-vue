@@ -67,24 +67,12 @@ export class DrawApp {
     }
 
     this.ctx.fillStyle = '#' + color
-    this.ctx.fillRect(
-      point.x,
-      point.y,
-      pointSizeW,
-      pointSizeH
-    )
+    this.ctx.fillRect(point.x, point.y, pointSizeW, pointSizeH)
 
     if (showGrid) {
       this.ctx.lineWidth = this.zoom.level
       this.ctx.strokeStyle = this.settings.gridColor
-      this.ctx.strokeRect(
-        point.x,
-        point.y,
-        pointSizeW,
-        pointSizeH
-      )
-
-      this.gui.reloadRelativeGUI()
+      this.ctx.strokeRect(point.x, point.y, pointSizeW, pointSizeH)
     }
   }
 
@@ -115,8 +103,14 @@ export class DrawApp {
   }
 
   private _redrawCanvas (): void {
-    const startPoint: Vector = VectorTrunc(VectorAbs(VectorDiv(LeftPointCanvas(this), { x: this.settings.pixelSize, y: this.settings.pixelSize })))
-    const endPoint: Vector = VectorCeil(VectorAbs(VectorDiv(RightPointCanvas(this), { x: this.settings.pixelSize, y: this.settings.pixelSize })))
+    const startPoint: Vector = VectorTrunc(VectorAbs(VectorDiv(LeftPointCanvas(this), {
+      x: this.settings.pixelSize,
+      y: this.settings.pixelSize
+    })))
+    const endPoint: Vector = VectorCeil(VectorAbs(VectorDiv(RightPointCanvas(this), {
+      x: this.settings.pixelSize,
+      y: this.settings.pixelSize
+    })))
 
     this.paintCanvas({ x: 0, y: 0 }, false, 'white', this.canvas.width, this.canvas.height)
     for (let i = startPoint.x; i < endPoint.x; i++) {

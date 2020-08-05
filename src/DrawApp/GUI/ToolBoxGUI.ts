@@ -91,8 +91,8 @@ export class ToolBoxGUI extends GUIElement {
       const clearButton: ClearButton = new ClearButton(this.drawApp, ToolType.CLEAR.toString())
       clearButton.selectable = false
       GUIElement.AddElement(this.child, this.drawApp, clearButton, img, {
-        x: this.position.x,
-        y: this.position.y + globalSize * this.child.length
+        x: this.drawApp.canvas.width - globalSize,
+        y: 0
       })
     })
 
