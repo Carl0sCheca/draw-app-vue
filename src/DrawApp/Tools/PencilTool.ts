@@ -37,8 +37,6 @@ export class PencilTool extends Tool {
       }
     } else {
       if (this._pixelPoints.positions.length > 0) {
-        // TODO: remove duplicated elements from start and let the last one
-
         this._pixelPoints = Data.FlushDuplicatedData(this._pixelPoints, this.drawApp.settings.gridSize)
         this.drawApp.data.writeData(this._pixelPoints)
         this._pixelPoints = { positions: [], colors: [], type: Type.Array }
@@ -84,5 +82,6 @@ export class PencilTool extends Tool {
         this.drawApp.paintCanvas(DiscretizationPosition(position, this.drawApp), this.drawApp.settings.showGrid, color)
       })
     }
+    this.drawApp.gui.reloadRelativeGUI()
   }
 }

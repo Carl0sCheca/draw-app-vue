@@ -39,7 +39,7 @@ export class ZoomTool extends Tool implements IZoom {
     }
 
     this.level = Clamp(
-      this.level + zoom,
+      Math.round((this.level + zoom) * 10) / 10,
       this.minLevel,
       this.maxLevel
     )

@@ -38,6 +38,8 @@ export class ToolBoxGUI extends GUIElement {
   }
 
   public async loadImagesAndButtons (): Promise<void> {
+    const globalSize = 64
+
     await FetchSVG('pencil').then(img => {
       const pencilButton: PencilButton = new PencilButton(this.drawApp, ToolType.PENCIL.toString())
       pencilButton.parent = this
@@ -56,7 +58,7 @@ export class ToolBoxGUI extends GUIElement {
 
       GUIElement.AddElement(this.child, this.drawApp, circleButton, img, {
         x: this.position.x,
-        y: this.position.y + 68 * this.child.length
+        y: this.position.y + globalSize * this.child.length
       })
       FetchSVG('circle_filled').then(img2 => {
         circleButton.imgFilled = img2
@@ -65,12 +67,12 @@ export class ToolBoxGUI extends GUIElement {
 
     await FetchSVG('bucket').then(img => GUIElement.AddElement(this.child, this.drawApp, new BucketButton(this.drawApp, ToolType.BUCKET.toString()), img, {
       x: this.position.x,
-      y: this.position.y + 68 * this.child.length
+      y: this.position.y + globalSize * this.child.length
     }))
 
     await FetchSVG('colorpicker').then(img => GUIElement.AddElement(this.child, this.drawApp, new ColorPickerButton(this.drawApp, ToolType.COLOUR_PICKER.toString()), img, {
       x: this.position.x,
-      y: this.position.y + 68 * this.child.length
+      y: this.position.y + globalSize * this.child.length
     }))
 
     await FetchSVG('grid').then(img => {
@@ -78,7 +80,7 @@ export class ToolBoxGUI extends GUIElement {
       circleButton.selectable = false
       GUIElement.AddElement(this.child, this.drawApp, circleButton, img, {
         x: this.position.x,
-        y: this.position.y + 68 * this.child.length
+        y: this.position.y + globalSize * this.child.length
       })
       FetchSVG('grid_disabled').then(img2 => {
         circleButton.imgFilled = img2
@@ -90,7 +92,7 @@ export class ToolBoxGUI extends GUIElement {
       clearButton.selectable = false
       GUIElement.AddElement(this.child, this.drawApp, clearButton, img, {
         x: this.position.x,
-        y: this.position.y + 68 * this.child.length
+        y: this.position.y + globalSize * this.child.length
       })
     })
 
@@ -98,7 +100,7 @@ export class ToolBoxGUI extends GUIElement {
       const undoButton: UndoButton = new UndoButton(this.drawApp, 'undoButton')
       undoButton.selectable = false
       GUIElement.AddElement(this.child, this.drawApp, undoButton, img, {
-        x: this.position.x + 68,
+        x: this.position.x + globalSize,
         y: this.position.y
       })
     })
@@ -107,7 +109,7 @@ export class ToolBoxGUI extends GUIElement {
       const redoButton: RedoButton = new RedoButton(this.drawApp, 'redoButton')
       redoButton.selectable = false
       GUIElement.AddElement(this.child, this.drawApp, redoButton, img, {
-        x: this.position.x + (68 * 2),
+        x: this.position.x + (globalSize * 2),
         y: this.position.y
       })
     })
@@ -117,7 +119,7 @@ export class ToolBoxGUI extends GUIElement {
     colorSelector.change = true
     colorSelector.hoverable = false
     colorSelector.size = {
-      x: 300,
+      x: 280,
       y: 250
     }
     colorSelector.position = {
