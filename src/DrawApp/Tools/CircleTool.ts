@@ -100,5 +100,6 @@ export class CircleTool extends Tool {
 
   private _draw (position: Vector): void {
     this.drawApp.paintCanvas(DiscretizationPosition(position, this.drawApp), this.drawApp.settings.showGrid)
+    this.drawApp.gui.reloadRelativeGUI()
   }
 }

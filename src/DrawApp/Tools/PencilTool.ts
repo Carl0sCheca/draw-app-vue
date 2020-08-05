@@ -5,6 +5,7 @@ import { ToolType } from './ToolSelector'
 import { DiscretizationDataPosition, DiscretizationPosition, LerpSteps, Vector } from '../Utils/Math'
 import { HSLtoString, HSVtoHSL } from '../Utils/Color'
 import { Data, Pixel, Type } from '../Data'
+import { CheckIfSamePositionAsLast } from '../Utils/Canvas'
 
 export class PencilTool extends Tool {
   public rainbowColor: number
@@ -32,7 +33,7 @@ export class PencilTool extends Tool {
       if (!this._dragging) {
         this._dragging = true
         this._pencilTool(DiscretizationDataPosition(this.drawApp.mouse.position, this.drawApp))
-      } else if (this.drawApp.mouse.position.x !== this.drawApp.mouse.lastPosition.x || this.drawApp.mouse.position.y !== this.drawApp.mouse.lastPosition.y) {
+      } else if (CheckIfSamePositionAsLast(this.drawApp.mouse.position, this.drawApp.mouse.lastPosition)) {
         LerpSteps(this.drawApp, this.drawApp.mouse.position, this.drawApp.mouse.lastPosition, (currentPos: Vector) => this._pencilTool(currentPos))
       }
     } else {

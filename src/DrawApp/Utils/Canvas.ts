@@ -89,3 +89,7 @@ export function MiddlePointCanvas (drawApp: DrawApp): Vector {
 export function PixelsOnScreen (drawApp: DrawApp): number {
   return (drawApp.canvas.width - drawApp.zoom.offset.x) / (drawApp.settings.pixelSize * drawApp.zoom.level)
 }
+
+export function CheckIfSamePositionAsLast (actualPosition: Vector, lastPosition: Vector): boolean {
+  return actualPosition.x !== lastPosition.x || actualPosition.y !== lastPosition.y
+}
