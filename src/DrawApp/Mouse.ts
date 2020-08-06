@@ -20,6 +20,7 @@ export class Mouse {
   public lastPosition: Vector
   public button: MouseButton
   public scroll: MouseScroll
+  public scrollStep: number
   public moving: boolean
 
   private readonly _drawApp: DrawApp
@@ -31,6 +32,7 @@ export class Mouse {
     this.moving = false
     this.realPosition = { x: 0, y: 0 }
     this.lastPosition = null
+    this.scrollStep = 0.1
   }
 
   public get position (): Vector {

@@ -1,6 +1,8 @@
 import { Mouse, MouseButton, MouseScroll } from './Mouse'
 import { DrawApp } from './DrawApp'
-import { CheckRange, HypotVector, Vector, VectorMidPoint } from './Utils/Math'
+import { DiscretizationDataPosition, Vector, VectorZero } from './Utils/Math'
+import * as Hammer from 'hammerjs'
+import { CheckIfSamePositionAsLast } from './Utils/Canvas'
 
 interface EventButton {
   button?: MouseButton;
@@ -10,44 +12,133 @@ interface EventButton {
 
 enum TouchAction {
   NONE,
-  ZOOM,
-  MOVE
+  LEFTBUTTON,
+  MOVEZOOM
 }
 
 export class EventCanvas {
   private readonly _drawApp: DrawApp
 
-  private _touchesLength: number
-  private _touchesLocked: boolean
+  private readonly mc: HammerManager
+  private _currentDelta: Vector
+  private _currentScale: number
   private _touchAction: TouchAction
-  private readonly _distancePoints: Array<number>
-  private _distancePointsIndex: number
-  private _lastTouchButton: MouseButton
-  private _lastTouchPosition: Vector
-
-  private readonly _touches: Array<Vector>
+  private _touchLastPosition: Vector
+  private limiting: number
+  private lastScale: number
 
   public constructor (drawApp: DrawApp) {
     this._drawApp = drawApp
 
-    this._drawApp.canvas.addEventListener('mousedown', (e: MouseEvent) => this.onMouseDown(e, this._drawApp.mouse))
-    this._drawApp.canvas.addEventListener('mouseup', (e: MouseEvent) => this.onMouseUp(e, this._drawApp.mouse))
-    this._drawApp.canvas.addEventListener('wheel', (e: WheelEvent) => this.onMouseWheel(e, this._drawApp.mouse))
-    this._drawApp.canvas.addEventListener('mousemove', (e: MouseEvent) => this.onMouseMove(e, this._drawApp.mouse))
-    this._drawApp.canvas.addEventListener('mouseenter', (e: MouseEvent) => this.onMouseEnter(e, this._drawApp.mouse))
+    this._drawApp.canvas.addEventListener('mousedown', (e: MouseEvent) => this.onMouseDown(e))
+    this._drawApp.canvas.addEventListener('mouseup', (e: MouseEvent) => this.onMouseUp(e))
+    this._drawApp.canvas.addEventListener('wheel', (e: WheelEvent) => this.onMouseWheel(e))
+    this._drawApp.canvas.addEventListener('mousemove', (e: MouseEvent) => this.onMouseMove(e))
+    this._drawApp.canvas.addEventListener('mouseenter', (e: MouseEvent) => this.onMouseEnter(e))
     this._drawApp.canvas.addEventListener('contextmenu', (e: MouseEvent) => this.onContextMenu(e))
     window.addEventListener('resize', () => this.onResizeWindow(this._drawApp))
 
-    this._drawApp.canvas.addEventListener('touchstart', (e: TouchEvent) => this.onTouchStart(e, this._drawApp.mouse))
-    this._drawApp.canvas.addEventListener('touchend', (e: TouchEvent) => this.onTouchEnd(e, this._drawApp.mouse))
-    this._drawApp.canvas.addEventListener('touchmove', (e: TouchEvent) => this.onTouchMove(e, this._drawApp.mouse))
-    this._touches = []
-    this._touchesLength = 0
+    this.mc = new Hammer.Manager(drawApp.canvas)
+    this._initTouch()
+  }
+
+  private _initTouch (): void {
     this._touchAction = TouchAction.NONE
-    this._lastTouchButton = MouseButton.NONE
-    this._touchesLocked = false
-    this._distancePoints = []
-    this._distancePointsIndex = 0
+
+    this._currentDelta = { x: 0, y: 0 }
+    this._currentScale = 0
+
+    this._drawApp.canvas.addEventListener('touchstart', (e: TouchEvent) => e.cancelable ? e.preventDefault() : null)
+    this._drawApp.canvas.addEventListener('touchmove', (e: TouchEvent) => e.cancelable ? e.preventDefault() : null)
+    this._drawApp.canvas.addEventListener('touchend', (e: TouchEvent) => {
+      if (e.cancelable) {
+        e.preventDefault()
+      }
+
+      this.mc.get('twofingerspan').set({ enable: true })
+      this.mc.get('twofingerspinch').set({ enable: true })
+
+      if (this._touchAction === TouchAction.LEFTBUTTON || this._touchAction === TouchAction.MOVEZOOM) {
+        this.onButtonUp({ button: this._drawApp.mouse.button, position: this._touchLastPosition })
+        this._touchAction = TouchAction.NONE
+      }
+    })
+
+    this.mc.add(new Hammer.Press({ time: 25 }))
+    this.mc.add(new Hammer.Pan({ event: 'move', pointers: 1 }))
+    this.mc.add(new Hammer.Tap({ event: 'singletap' }))
+    this.mc.add(new Hammer.Tap({ event: 'doubletap', pointers: 2 }))
+    this.mc.add(new Hammer.Pan({ event: 'twofingerspan', pointers: 2 }))
+    this.mc.add(new Hammer.Pinch({ event: 'twofingerspinch', pointers: 2 }))
+
+    this.mc.on('press', (e: HammerInput) => {
+      if (e.pointerType === 'touch') {
+        if (e.pointers !== null && e.pointers[0].x !== undefined && e.pointers[0].y !== undefined) {
+          this._touchLastPosition = this._touchPosition({ x: e.pointers[0].x, y: e.pointers[0].y })
+          this.onButtonDown({
+            button: MouseButton.LEFT,
+            position: this._touchLastPosition
+          })
+          this._touchAction = TouchAction.LEFTBUTTON
+        }
+      }
+    })
+
+    this.mc.on('move', (e: HammerInput) => {
+      if (e.pointerType === 'touch' && this._touchAction === TouchAction.LEFTBUTTON) {
+        if (e.pointers !== null && e.pointers[0].x !== undefined && e.pointers[0].y !== undefined) {
+          const newPos: Vector = this._touchPosition({ x: e.pointers[0].x, y: e.pointers[0].y })
+          if (CheckIfSamePositionAsLast(DiscretizationDataPosition(newPos, this._drawApp), DiscretizationDataPosition(this._touchLastPosition, this._drawApp))) {
+            this._touchLastPosition = newPos
+            this.onMove({
+              button: MouseButton.LEFT,
+              position: this._touchLastPosition
+            })
+          }
+        }
+      }
+    })
+
+    this.mc.on('twofingerspanmove twofingerspinchmove', (e: HammerInput) => {
+      if ((e.pointerType === 'touch' && this._touchAction === TouchAction.NONE) || this._touchAction === TouchAction.MOVEZOOM) {
+        if (this._touchAction === TouchAction.NONE) {
+          this._touchAction = TouchAction.MOVEZOOM
+          this.limiting = 0
+          this.lastScale = e.scale
+        } else if (this._touchAction === TouchAction.MOVEZOOM) {
+          if (this.limiting > 10) {
+            const zoomIn: boolean = this.lastScale <= e.scale
+
+            this._touchLastPosition = this._touchPosition({ x: e.center.x, y: e.center.y })
+
+            const pinchMovement: number = Math.abs(this.lastScale - e.scale)
+
+            if (pinchMovement >= 0.08) { // Zoom
+              this._drawApp.mouse.scrollStep = zoomIn ? pinchMovement : pinchMovement * 2
+              this.onZoom({ button: MouseButton.MIDDLE, position: this._touchLastPosition, scroll: zoomIn ? -1 : 1 })
+            } else { // Move
+              this.onButtonDown({ button: MouseButton.MIDDLE, position: this._touchLastPosition })
+            }
+
+            this.lastScale = e.scale
+            this.limiting = 0
+          } else {
+            this.limiting++
+          }
+        }
+      }
+    })
+
+    this.mc.on('doubletap', (e: HammerInput) => {
+      if (e.pointerType === 'touch' && this._touchAction === TouchAction.NONE) {
+        this.mc.get('twofingerspan').set({ enable: false })
+        this.mc.get('twofingerspinch').set({ enable: false })
+        this.onButtonDown({ button: MouseButton.RIGHT, position: VectorZero })
+      }
+    })
+
+    this.mc.get('twofingerspinch').recognizeWith('doubletap')
+    this.mc.get('twofingerspan').recognizeWith('doubletap')
   }
 
   private _touchPosition (position: Vector): Vector {
@@ -55,70 +146,15 @@ export class EventCanvas {
     return { x: position.x - rect.left, y: position.y - rect.top }
   }
 
-  private touchesDetector (e: TouchEvent, mouse: Mouse): void {
-    setTimeout(() => {
-      if (this._touchesLength === e.touches.length && !this._touchesLocked) {
-        this._touchesLocked = true
-
-        this._lastTouchPosition = this._touchPosition({
-          x: e.touches[0].pageX,
-          y: e.touches[0].pageY
-        })
-
-        const eventButton: EventButton = {
-          button: MouseButton.NONE,
-          position: this._lastTouchPosition
-        }
-
-        switch (this._touchesLength) {
-          case 1:
-            eventButton.button = MouseButton.LEFT
-            break
-          case 2:
-            this._touches[0] = this._touchPosition({
-              x: e.touches[0].pageX,
-              y: e.touches[0].pageY
-            })
-            this._touches[1] = this._touchPosition({
-              x: e.touches[1].pageX,
-              y: e.touches[1].pageY
-            })
-            break
-          case 3:
-            eventButton.button = MouseButton.RIGHT
-            break
-          default:
-            eventButton.button = MouseButton.NONE
-            break
-        }
-
-        this._lastTouchButton = eventButton.button
-
-        this.onButtonDown(eventButton, mouse)
-      }
-    }, 50)
-  }
-
-  public onMouseDown (e: MouseEvent, mouse: Mouse): void {
+  public onMouseDown (e: MouseEvent): void {
     e.preventDefault()
-    this.onButtonDown({ button: e.button, position: { x: e.offsetX, y: e.offsetY } }, mouse)
+    this.onButtonDown({ button: e.button, position: { x: e.offsetX, y: e.offsetY } })
   }
 
-  public onTouchStart (e: TouchEvent, mouse: Mouse): void {
-    if (e.cancelable) {
-      e.preventDefault()
-    }
+  public onButtonDown (e: EventButton): void {
+    const mouse: Mouse = this._drawApp.mouse
 
-    if (this._touchesLocked) {
-      return
-    }
-    this._touchesLength++
-
-    this.touchesDetector(e, mouse)
-  }
-
-  public onButtonDown (e: EventButton, mouse: Mouse): void {
-    this._setupMousePosition(e.position, mouse)
+    this._setupMousePosition(e.position)
 
     if (e.button === MouseButton.LEFT) {
       mouse.mouseDownLeft()
@@ -133,31 +169,15 @@ export class EventCanvas {
     }
   }
 
-  public onMouseUp (e: MouseEvent, mouse: Mouse): void {
+  public onMouseUp (e: MouseEvent): void {
     e.preventDefault()
-    this.onButtonUp({ button: e.button, position: { x: e.offsetX, y: e.offsetY } }, mouse)
+    this.onButtonUp({ button: e.button, position: { x: e.offsetX, y: e.offsetY } })
   }
 
-  public onTouchEnd (e: TouchEvent, mouse: Mouse): void {
-    e.preventDefault()
-    this._touchesLength--
-    if (this._touchesLength <= 0) {
-      this._touchesLocked = false
-      this._touchesLength = 0
+  private onButtonUp (e: EventButton): void {
+    const mouse: Mouse = this._drawApp.mouse
 
-      this.onButtonUp({
-        button: this._lastTouchButton,
-        position: this._lastTouchPosition
-      }, mouse)
-
-      this._touchAction = TouchAction.NONE
-      this._distancePointsIndex = 0
-      this._lastTouchButton = MouseButton.NONE
-    }
-  }
-
-  private onButtonUp (e: EventButton, mouse: Mouse): void {
-    this._setupMousePosition(e.position, mouse)
+    this._setupMousePosition(e.position)
 
     if (e.button === MouseButton.LEFT) {
       mouse.mouseUpLeft()
@@ -173,13 +193,16 @@ export class EventCanvas {
     this._dispatchEvent()
   }
 
-  public onMouseWheel (e: WheelEvent, mouse: Mouse): void {
+  public onMouseWheel (e: WheelEvent): void {
     e.preventDefault()
-    this.onZoom({ scroll: e.deltaY, position: { x: e.offsetX, y: e.offsetY } }, mouse)
+    this._drawApp.mouse.scrollStep = this._drawApp.zoom.stepsMouseWheel
+    this.onZoom({ scroll: e.deltaY, position: { x: e.offsetX, y: e.offsetY } })
   }
 
-  public onZoom (e: EventButton, mouse: Mouse): void {
-    this._setupMousePosition(e.position, mouse)
+  public onZoom (e: EventButton): void {
+    const mouse: Mouse = this._drawApp.mouse
+
+    this._setupMousePosition(e.position)
 
     if (e.scroll > 0) {
       mouse.mouseWheelDown()
@@ -194,102 +217,17 @@ export class EventCanvas {
     }
   }
 
-  public onMouseMove (e: MouseEvent, mouse: Mouse): void {
+  public onMouseMove (e: MouseEvent): void {
     e.preventDefault()
 
-    this.onMove({ button: e.button, position: { x: e.offsetX, y: e.offsetY } }, mouse)
+    this.onMove({ button: e.button, position: { x: e.offsetX, y: e.offsetY } })
   }
 
-  public onTouchMove (e: TouchEvent, mouse: Mouse): void {
-    if (e.cancelable) {
-      e.preventDefault()
-    }
+  public onMove (e: EventButton): void {
+    const mouse: Mouse = this._drawApp.mouse
 
-    if (this._touchesLocked) {
-      if (CheckRange(
-        this._touchPosition(
-          {
-            x: e.touches[0].pageX,
-            y: e.touches[0].pageY
-          }), { x: 0, y: 0 }, {
-          x: this._drawApp.canvas.width,
-          y: this._drawApp.canvas.height
-        })) {
-        if (this._lastTouchButton === MouseButton.LEFT) {
-          mouse.button = this._lastTouchButton
-
-          this._lastTouchPosition = this._touchPosition({
-            x: e.touches[0].pageX,
-            y: e.touches[0].pageY
-          })
-
-          this.onMove({ button: this._lastTouchButton, position: this._lastTouchPosition }, mouse)
-        } else if (this._lastTouchButton === MouseButton.NONE) {
-          if (e.touches.length === 2) {
-            const positions: Array<Vector> = []
-            for (let i = 0; i < 2; i++) {
-              positions[i] = this._touchPosition({ x: e.touches[i].pageX, y: e.touches[i].pageY })
-            }
-
-            const distanceFirstPosition: number = HypotVector(this._touches[0], this._touches[1])
-            const distanceSecondPosition: number = HypotVector(positions[0], positions[1])
-
-            if (this._touchAction === TouchAction.NONE) {
-              this._distancePoints[this._distancePointsIndex] = distanceSecondPosition - distanceFirstPosition
-              this._distancePointsIndex++
-
-              if (this._distancePointsIndex > 2) {
-                const threshold = 20
-                let result = 0
-                for (let i = 0; i < 3; i++) {
-                  result += this._distancePoints[i]
-                }
-
-                if (Math.abs(result) < threshold) {
-                  this._touchAction = TouchAction.MOVE
-                } else {
-                  this._touchAction = TouchAction.ZOOM
-                }
-              }
-            } else if (this._touchAction === TouchAction.MOVE) {
-              mouse.mouseWheelButtonDown()
-              this.onMove({ position: this._lastTouchPosition, button: MouseButton.MIDDLE }, mouse)
-              this._touchAction = TouchAction.NONE
-              mouse.button = MouseButton.NONE
-            } else if (this._touchAction === TouchAction.ZOOM) {
-              let direction: number
-
-              if (this._distancePoints[0] > distanceSecondPosition) {
-                direction = 1
-              } else {
-                direction = -1
-              }
-
-              mouse.button = MouseButton.NONE
-
-              this.onZoom({ scroll: direction, position: VectorMidPoint(positions[0], positions[1]) }, mouse)
-
-              this._distancePoints[0] = distanceSecondPosition
-              this._touchAction = TouchAction.NONE
-            }
-          }
-        }
-      } else {
-        mouse.mouseLeave()
-        this._dispatchEvent()
-      }
-
-      this._lastTouchPosition = this._touchPosition(
-        {
-          x: e.touches[0].pageX,
-          y: e.touches[0].pageY
-        })
-    }
-  }
-
-  public onMove (e: EventButton, mouse: Mouse): void {
     mouse.moving = true
-    this._setupMousePosition(e.position, mouse)
+    this._setupMousePosition(e.position)
 
     if (mouse.button !== MouseButton.NONE) {
       this._dispatchEvent()
@@ -299,14 +237,16 @@ export class EventCanvas {
     mouse.moving = false
   }
 
-  public onMouseEnter (e: MouseEvent, mouse: Mouse): void {
+  public onMouseEnter (e: MouseEvent): void {
+    const mouse: Mouse = this._drawApp.mouse
+
     if (e.buttons === MouseButton.LEFT) {
       mouse.mouseLeave()
       this._dispatchEvent()
     }
 
     if (mouse.button !== MouseButton.NONE) {
-      this._setupMousePosition(e, mouse)
+      this._setupMousePosition({ x: e.offsetX, y: e.offsetY })
     }
   }
 
@@ -318,7 +258,9 @@ export class EventCanvas {
     drawApp.resizeWindow()
   }
 
-  private _setupMousePosition (e: Vector, mouse: Mouse): void {
+  private _setupMousePosition (e: Vector): void {
+    const mouse: Mouse = this._drawApp.mouse
+
     if (mouse.lastPosition === null) {
       mouse.mouseMove({ x: e.x, y: e.y })
       mouse.lastPosition = { x: mouse.position.x, y: mouse.position.y }

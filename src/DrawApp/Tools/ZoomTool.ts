@@ -11,7 +11,7 @@ export class ZoomTool extends Tool implements IZoom {
   public minLevel: number
   public offset: Vector
   public position: Vector
-  public steps: number
+  public stepsMouseWheel: number
 
   public constructor (drawApp: DrawApp, toolType: ToolType, settings: IZoom) {
     super(drawApp, toolType)
@@ -21,15 +21,15 @@ export class ZoomTool extends Tool implements IZoom {
     this.minLevel = settings.minLevel
     this.offset = { x: 0, y: 0 }
     this.position = { x: 0, y: 0 }
-    this.steps = settings.steps
+    this.stepsMouseWheel = settings.stepsMouseWheel
   }
 
   public zoomIn (): void {
-    this._zoomScaled(this.steps)
+    this._zoomScaled(this.drawApp.mouse.scrollStep)
   }
 
   public zoomOut (): void {
-    this._zoomScaled(-this.steps)
+    this._zoomScaled(-this.drawApp.mouse.scrollStep)
   }
 
   private _zoomScaled (zoom: number): void {

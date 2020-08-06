@@ -43,7 +43,7 @@ export class ToolSelector {
       level: 1,
       minLevel: 1,
       maxLevel: 8,
-      steps: 0.1
+      stepsMouseWheel: 0.1
     }))
     this.tools.push(new CircleTool(drawApp, ToolType.CIRCLE))
   }

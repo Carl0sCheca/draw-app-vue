@@ -95,8 +95,10 @@ export class DrawApp {
   }
 
   public reloadCanvas (): void {
+    console.time()
     this.setSizeCanvas()
     this._redrawCanvas()
+    console.timeEnd()
   }
 
   public setSizeCanvas (): void {

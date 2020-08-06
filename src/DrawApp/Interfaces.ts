@@ -14,5 +14,6 @@ export interface IZoom {
   offset?: Vector
   minLevel: number
   maxLevel: number
-  steps: number
+  stepsMouseWheel: number
+  stepsTouchPinch?: number
 }
