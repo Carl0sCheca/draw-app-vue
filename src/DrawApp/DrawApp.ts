@@ -15,10 +15,12 @@ import {
   VectorTrunc, VectorZero
 } from './Utils/Math'
 import { LeftPointCanvas, RightPointCanvas } from './Utils/Canvas'
+import { Touch } from './Touch'
 
 export class DrawApp {
   public readonly canvas: HTMLCanvasElement
   public readonly mouse: Mouse
+  public readonly touch: Touch
   public readonly eventCanvas: EventCanvas
   public readonly settings: ISettings
   public readonly data: Data
@@ -32,6 +34,7 @@ export class DrawApp {
     // Init canvas, mouse and events from canvas
     this.canvas = canvas
     this.mouse = new Mouse(this)
+    this.touch = new Touch(this)
     this.eventCanvas = new EventCanvas(this)
 
     // Data and setting from canvas
@@ -95,10 +98,8 @@ export class DrawApp {
   }
 
   public reloadCanvas (): void {
-    console.time()
     this.setSizeCanvas()
     this._redrawCanvas()
-    console.timeEnd()
   }
 
   public setSizeCanvas (): void {

@@ -1,8 +1,6 @@
 import { Mouse, MouseButton, MouseScroll } from './Mouse'
 import { DrawApp } from './DrawApp'
-import { DiscretizationDataPosition, Vector, VectorZero } from './Utils/Math'
-import * as Hammer from 'hammerjs'
-import { CheckIfSamePositionAsLast } from './Utils/Canvas'
+import { Vector, VectorZero } from './Utils/Math'
 
 interface EventButton {
   button?: MouseButton;
@@ -10,140 +8,73 @@ interface EventButton {
   scroll?: number;
 }
 
-enum TouchAction {
-  NONE,
-  LEFTBUTTON,
-  MOVEZOOM
-}
-
 export class EventCanvas {
   private readonly _drawApp: DrawApp
-
-  private readonly mc: HammerManager
-  private _currentDelta: Vector
-  private _currentScale: number
-  private _touchAction: TouchAction
-  private _touchLastPosition: Vector
-  private limiting: number
-  private lastScale: number
 
   public constructor (drawApp: DrawApp) {
     this._drawApp = drawApp
 
+    window.addEventListener('resize', () => this.onResizeWindow(this._drawApp))
+
+    // Mouse
     this._drawApp.canvas.addEventListener('mousedown', (e: MouseEvent) => this.onMouseDown(e))
     this._drawApp.canvas.addEventListener('mouseup', (e: MouseEvent) => this.onMouseUp(e))
     this._drawApp.canvas.addEventListener('wheel', (e: WheelEvent) => this.onMouseWheel(e))
     this._drawApp.canvas.addEventListener('mousemove', (e: MouseEvent) => this.onMouseMove(e))
     this._drawApp.canvas.addEventListener('mouseenter', (e: MouseEvent) => this.onMouseEnter(e))
     this._drawApp.canvas.addEventListener('contextmenu', (e: MouseEvent) => this.onContextMenu(e))
-    window.addEventListener('resize', () => this.onResizeWindow(this._drawApp))
 
-    this.mc = new Hammer.Manager(drawApp.canvas)
-    this._initTouch()
-  }
-
-  private _initTouch (): void {
-    this._touchAction = TouchAction.NONE
-
-    this._currentDelta = { x: 0, y: 0 }
-    this._currentScale = 0
-
+    // Touch
     this._drawApp.canvas.addEventListener('touchstart', (e: TouchEvent) => e.cancelable ? e.preventDefault() : null)
     this._drawApp.canvas.addEventListener('touchmove', (e: TouchEvent) => e.cancelable ? e.preventDefault() : null)
-    this._drawApp.canvas.addEventListener('touchend', (e: TouchEvent) => {
-      if (e.cancelable) {
-        e.preventDefault()
-      }
+    this._drawApp.canvas.addEventListener('touchend', (e: TouchEvent) => this.onTouchEnd(e))
 
-      this.mc.get('twofingerspan').set({ enable: true })
-      this.mc.get('twofingerspinch').set({ enable: true })
-
-      if (this._touchAction === TouchAction.LEFTBUTTON || this._touchAction === TouchAction.MOVEZOOM) {
-        this.onButtonUp({ button: this._drawApp.mouse.button, position: this._touchLastPosition })
-        this._touchAction = TouchAction.NONE
-      }
-    })
-
-    this.mc.add(new Hammer.Press({ time: 25 }))
-    this.mc.add(new Hammer.Pan({ event: 'move', pointers: 1 }))
-    this.mc.add(new Hammer.Tap({ event: 'singletap' }))
-    this.mc.add(new Hammer.Tap({ event: 'doubletap', pointers: 2 }))
-    this.mc.add(new Hammer.Pan({ event: 'twofingerspan', pointers: 2 }))
-    this.mc.add(new Hammer.Pinch({ event: 'twofingerspinch', pointers: 2 }))
-
-    this.mc.on('press', (e: HammerInput) => {
-      if (e.pointerType === 'touch') {
-        if (e.pointers !== null && e.pointers[0].x !== undefined && e.pointers[0].y !== undefined) {
-          this._touchLastPosition = this._touchPosition({ x: e.pointers[0].x, y: e.pointers[0].y })
-          this.onButtonDown({
-            button: MouseButton.LEFT,
-            position: this._touchLastPosition
-          })
-          this._touchAction = TouchAction.LEFTBUTTON
-        }
-      }
-    })
-
-    this.mc.on('move', (e: HammerInput) => {
-      if (e.pointerType === 'touch' && this._touchAction === TouchAction.LEFTBUTTON) {
-        if (e.pointers !== null && e.pointers[0].x !== undefined && e.pointers[0].y !== undefined) {
-          const newPos: Vector = this._touchPosition({ x: e.pointers[0].x, y: e.pointers[0].y })
-          if (CheckIfSamePositionAsLast(DiscretizationDataPosition(newPos, this._drawApp), DiscretizationDataPosition(this._touchLastPosition, this._drawApp))) {
-            this._touchLastPosition = newPos
-            this.onMove({
-              button: MouseButton.LEFT,
-              position: this._touchLastPosition
-            })
-          }
-        }
-      }
-    })
-
-    this.mc.on('twofingerspanmove twofingerspinchmove', (e: HammerInput) => {
-      if ((e.pointerType === 'touch' && this._touchAction === TouchAction.NONE) || this._touchAction === TouchAction.MOVEZOOM) {
-        if (this._touchAction === TouchAction.NONE) {
-          this._touchAction = TouchAction.MOVEZOOM
-          this.limiting = 0
-          this.lastScale = e.scale
-        } else if (this._touchAction === TouchAction.MOVEZOOM) {
-          if (this.limiting > 10) {
-            const zoomIn: boolean = this.lastScale <= e.scale
-
-            this._touchLastPosition = this._touchPosition({ x: e.center.x, y: e.center.y })
-
-            const pinchMovement: number = Math.abs(this.lastScale - e.scale)
-
-            if (pinchMovement >= 0.08) { // Zoom
-              this._drawApp.mouse.scrollStep = zoomIn ? pinchMovement : pinchMovement * 2
-              this.onZoom({ button: MouseButton.MIDDLE, position: this._touchLastPosition, scroll: zoomIn ? -1 : 1 })
-            } else { // Move
-              this.onButtonDown({ button: MouseButton.MIDDLE, position: this._touchLastPosition })
-            }
-
-            this.lastScale = e.scale
-            this.limiting = 0
-          } else {
-            this.limiting++
-          }
-        }
-      }
-    })
-
-    this.mc.on('doubletap', (e: HammerInput) => {
-      if (e.pointerType === 'touch' && this._touchAction === TouchAction.NONE) {
-        this.mc.get('twofingerspan').set({ enable: false })
-        this.mc.get('twofingerspinch').set({ enable: false })
-        this.onButtonDown({ button: MouseButton.RIGHT, position: VectorZero })
-      }
-    })
-
-    this.mc.get('twofingerspinch').recognizeWith('doubletap')
-    this.mc.get('twofingerspan').recognizeWith('doubletap')
+    this._drawApp.touch.mc.on('press', (e: HammerInput) => this.onTouchPress(e))
+    this._drawApp.touch.mc.on('move', (e: HammerInput) => this.onTouchMove(e))
+    this._drawApp.touch.mc.on('twofingerspanmove twofingerspinchmove', (e: HammerInput) => this.onTwoFingersMove(e))
+    this._drawApp.touch.mc.on('twofingerstap', (e: HammerInput) => this.onTwoFingersTap(e))
   }
 
-  private _touchPosition (position: Vector): Vector {
-    const rect: DOMRect = this._drawApp.canvas.getBoundingClientRect()
-    return { x: position.x - rect.left, y: position.y - rect.top }
+  public onTouchEnd (e: TouchEvent): void {
+    if (e.cancelable) {
+      e.preventDefault()
+    }
+
+    this._drawApp.touch.touchEnd((lastPosition: Vector) => this.onButtonUp({
+      button: this._drawApp.mouse.button,
+      position: lastPosition
+    }))
+  }
+
+  public onTouchPress (e: HammerInput): void {
+    this._drawApp.touch.touchPress(e, (lastPosition: Vector) => this.onButtonDown({
+      button: MouseButton.LEFT,
+      position: lastPosition
+    }))
+  }
+
+  public onTouchMove (e: HammerInput): void {
+    this._drawApp.touch.touchMove(e, (lastPosition: Vector) => this.onMove({
+      button: MouseButton.LEFT,
+      position: lastPosition
+    }))
+  }
+
+  public onTwoFingersMove (e: HammerInput): void {
+    this._drawApp.touch.touchTwoFingers(e,
+      (lastPosition: Vector) => this.onButtonDown({ button: MouseButton.MIDDLE, position: lastPosition }),
+      (lastPosition: Vector, zoomIn: boolean) => this.onZoom({
+        button: MouseButton.MIDDLE,
+        position: lastPosition,
+        scroll: zoomIn ? -1 : 1
+      }))
+  }
+
+  public onTwoFingersTap (e: HammerInput): void {
+    this._drawApp.touch.touchTwoFingersTap(e, () => this.onButtonDown({
+      button: MouseButton.RIGHT,
+      position: VectorZero
+    }))
   }
 
   public onMouseDown (e: MouseEvent): void {
