@@ -1,7 +1,6 @@
 import { DrawApp } from './DrawApp'
 import Hammer from 'hammerjs'
-import { DiscretizationDataPosition, Vector, VectorZero } from './Utils/Math'
-import { MouseButton } from './Mouse'
+import { DiscretizationDataPosition, Vector } from './Utils/Math'
 import { CheckIfSamePositionAsLast } from './Utils/Canvas'
 
 enum TouchAction {
