@@ -2,11 +2,8 @@ import { DrawApp } from '../DrawApp'
 import { GUIElement } from './GUIElement'
 import { ToolBoxGUI } from './ToolBoxGUI'
 import { MouseButton } from '../Mouse'
-import {
-  CheckRange,
-  DiscretizationPosition,
-  Vector
-} from '../Utils/Math'
+import { CheckRange, DiscretizationPosition, Vector } from '../Utils/Math'
+import { TouchAction } from '../Touch'
 
 export class GUI {
   private readonly _drawApp: DrawApp
@@ -38,12 +35,12 @@ export class GUI {
   public reloadRelativeGUI (): void {
     if (this._drawApp.settings.showGrid) {
       this._centerLines()
-      this._gridLines()
+      // this._gridLines()
     }
   }
 
   private _gridLines (): void {
-    if (this._drawApp.mouse.moving && this._drawApp.mouse.button === MouseButton.MIDDLE) {
+    if (this._drawApp.mouse.moving && (this._drawApp.mouse.button === MouseButton.MIDDLE || this._drawApp.touch.touchAction === TouchAction.MOVEZOOM)) {
       const ctx: CanvasRenderingContext2D = this._drawApp.ctx
 
       ctx.beginPath()

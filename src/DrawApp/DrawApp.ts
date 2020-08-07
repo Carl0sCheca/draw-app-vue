@@ -81,10 +81,12 @@ export class DrawApp {
     this.ctx.fillStyle = '#' + color
     this.ctx.fillRect(point.x, point.y, pointSizeW, pointSizeH)
 
-    if (showGrid && (this.mouse.button !== MouseButton.MIDDLE || this.touch.touchAction !== TouchAction.MOVEZOOM)) {
-      this.ctx.lineWidth = this.zoom.level
-      this.ctx.strokeStyle = this.settings.gridColor
-      this.ctx.strokeRect(point.x, point.y, pointSizeW, pointSizeH)
+    if (showGrid && this.mouse.button !== MouseButton.MIDDLE) {
+      if (this.touch.touchAction !== TouchAction.MOVEZOOM) {
+        this.ctx.lineWidth = this.zoom.level
+        this.ctx.strokeStyle = this.settings.gridColor
+        this.ctx.strokeRect(point.x, point.y, pointSizeW, pointSizeH)
+      }
     }
   }
 
@@ -99,10 +101,10 @@ export class DrawApp {
   }
 
   public reloadCanvas (): void {
-    console.time('reloadCanvas')
+    // console.time('reloadCanvas')
     this.setSizeCanvas()
     this._redrawCanvas()
-    console.timeEnd('reloadCanvas')
+    // console.timeEnd('reloadCanvas')
   }
 
   public setSizeCanvas (): void {
