@@ -137,6 +137,7 @@ export class EventCanvas {
 
     if (e.scroll > 0) {
       mouse.mouseWheelDown()
+      console.log(mouse.scroll)
     } else if (e.scroll < 0) {
       mouse.mouseWheelUp()
     }

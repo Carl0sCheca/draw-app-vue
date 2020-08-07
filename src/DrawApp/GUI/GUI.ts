@@ -2,7 +2,11 @@ import { DrawApp } from '../DrawApp'
 import { GUIElement } from './GUIElement'
 import { ToolBoxGUI } from './ToolBoxGUI'
 import { MouseButton } from '../Mouse'
-import { CheckRange } from '../Utils/Math'
+import {
+  CheckRange,
+  DiscretizationPosition,
+  Vector
+} from '../Utils/Math'
 
 export class GUI {
   private readonly _drawApp: DrawApp
@@ -32,26 +36,51 @@ export class GUI {
   }
 
   public reloadRelativeGUI (): void {
-    this._centerLines()
+    if (this._drawApp.settings.showGrid) {
+      this._centerLines()
+      this._gridLines()
+    }
+  }
+
+  private _gridLines (): void {
+    if (this._drawApp.mouse.moving && this._drawApp.mouse.button === MouseButton.MIDDLE) {
+      const ctx: CanvasRenderingContext2D = this._drawApp.ctx
+
+      ctx.beginPath()
+      ctx.lineWidth = this._drawApp.zoom.level
+      ctx.moveTo(0, 0)
+      for (let i = 1; i < this._drawApp.settings.gridSize; i++) {
+        const position: Vector = DiscretizationPosition({ x: i, y: i }, this._drawApp)
+
+        const point: Vector = {
+          x: position.x * this._drawApp.zoom.level + this._drawApp.zoom.offset.x,
+          y: position.y * this._drawApp.zoom.level + this._drawApp.zoom.offset.y
+        }
+
+        ctx.moveTo(0, point.y)
+        ctx.lineTo(this._drawApp.canvas.width, point.y)
+        ctx.moveTo(point.x, 0)
+        ctx.lineTo(point.x, this._drawApp.canvas.height)
+      }
+      ctx.stroke()
+    }
   }
 
   private _centerLines (lineSize = 6): void {
-    if (this._drawApp.settings.showGrid) {
-      this._drawApp.paintCanvas(
-        { x: 0, y: (this._drawApp.canvas.height / 2) - (lineSize / 2) },
-        false,
-        this._drawApp.settings.gridColor,
-        this._drawApp.canvas.width,
-        lineSize
-      )
-      this._drawApp.paintCanvas(
-        { x: (this._drawApp.canvas.width / 2) - (lineSize / 2), y: 0 },
-        false,
-        this._drawApp.settings.gridColor,
-        lineSize,
-        this._drawApp.canvas.height
-      )
-    }
+    this._drawApp.paintCanvas(
+      { x: 0, y: (this._drawApp.canvas.height / 2) - (lineSize / 2) },
+      false,
+      this._drawApp.settings.gridColor,
+      this._drawApp.canvas.width,
+      lineSize
+    )
+    this._drawApp.paintCanvas(
+      { x: (this._drawApp.canvas.width / 2) - (lineSize / 2), y: 0 },
+      false,
+      this._drawApp.settings.gridColor,
+      lineSize,
+      this._drawApp.canvas.height
+    )
   }
 
   public mouseCheck () {

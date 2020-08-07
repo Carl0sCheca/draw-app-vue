@@ -28,6 +28,10 @@ export function VectorTrunc (vector: Vector): Vector {
   return { x: Math.trunc(vector.x), y: Math.trunc(vector.y) }
 }
 
+export function VectorFloor (vector: Vector): Vector {
+  return { x: Math.floor(vector.x), y: Math.floor(vector.x) }
+}
+
 export function VectorCeil (vector: Vector): Vector {
   return { x: Math.ceil(vector.x), y: Math.ceil(vector.y) }
 }

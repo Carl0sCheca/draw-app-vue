@@ -2,8 +2,9 @@ import { DrawApp } from './DrawApp'
 import Hammer from 'hammerjs'
 import { DiscretizationDataPosition, Vector } from './Utils/Math'
 import { CheckIfSamePositionAsLast } from './Utils/Canvas'
+import { MouseButton } from './Mouse'
 
-enum TouchAction {
+export enum TouchAction {
   NONE,
   LEFTBUTTON,
   MOVEZOOM
@@ -13,7 +14,7 @@ export class Touch {
   private readonly _drawApp: DrawApp
   public readonly mc: HammerManager
 
-  private _touchAction: TouchAction
+  public touchAction: TouchAction
   private _touchLastPosition: Vector
   private limiting: number
   private lastScale: number
@@ -22,7 +23,7 @@ export class Touch {
     this._drawApp = drawApp
     this.mc = new Hammer.Manager(drawApp.canvas)
 
-    this._touchAction = TouchAction.NONE
+    this.touchAction = TouchAction.NONE
 
     this.mc.add(new Hammer.Press({ time: 25 }))
     this.mc.add(new Hammer.Pan({ event: 'move', pointers: 1 }))
@@ -44,9 +45,11 @@ export class Touch {
     this.mc.get('twofingerspan').set({ enable: true })
     this.mc.get('twofingerspinch').set({ enable: true })
 
-    if (this._touchAction === TouchAction.LEFTBUTTON || this._touchAction === TouchAction.MOVEZOOM) {
+    if (this.touchAction === TouchAction.LEFTBUTTON || this.touchAction === TouchAction.MOVEZOOM) {
       onButtonUp(this._touchLastPosition)
-      this._touchAction = TouchAction.NONE
+      this.touchAction = TouchAction.NONE
+      this._drawApp.mouse.button = MouseButton.NONE
+      this._drawApp.mouse.moving = false
     }
   }
 
@@ -55,14 +58,14 @@ export class Touch {
       try {
         this._touchLastPosition = this._touchPosition({ x: e.pointers[0].x, y: e.pointers[0].y })
         onButtonDown(this._touchLastPosition)
-        this._touchAction = TouchAction.LEFTBUTTON
+        this.touchAction = TouchAction.LEFTBUTTON
       } catch (error) {
       }
     }
   }
 
   public touchMove (e: HammerInput, onMove: CallableFunction): void {
-    if (e.pointerType === 'touch' && this._touchAction === TouchAction.LEFTBUTTON) {
+    if (e.pointerType === 'touch' && this.touchAction === TouchAction.LEFTBUTTON) {
       if (e.pointers !== null && e.pointers[0].x !== undefined && e.pointers[0].y !== undefined) {
         const newPos: Vector = this._touchPosition({ x: e.pointers[0].x, y: e.pointers[0].y })
         if (CheckIfSamePositionAsLast(DiscretizationDataPosition(newPos, this._drawApp), DiscretizationDataPosition(this._touchLastPosition, this._drawApp))) {
@@ -74,12 +77,13 @@ export class Touch {
   }
 
   public touchTwoFingers (e: HammerInput, onButtonDown: CallableFunction, onZoom: CallableFunction): void {
-    if ((e.pointerType === 'touch' && this._touchAction === TouchAction.NONE) || this._touchAction === TouchAction.MOVEZOOM) {
-      if (this._touchAction === TouchAction.NONE) {
-        this._touchAction = TouchAction.MOVEZOOM
+    if ((e.pointerType === 'touch' && this.touchAction === TouchAction.NONE) || this.touchAction === TouchAction.MOVEZOOM) {
+      if (this.touchAction === TouchAction.NONE) {
+        this._drawApp.mouse.moving = true
+        this.touchAction = TouchAction.MOVEZOOM
         this.limiting = 0
         this.lastScale = e.scale
-      } else if (this._touchAction === TouchAction.MOVEZOOM) {
+      } else if (this.touchAction === TouchAction.MOVEZOOM) {
         if (this.limiting > 10) {
           const zoomIn: boolean = this.lastScale <= e.scale
 
@@ -104,7 +108,7 @@ export class Touch {
   }
 
   public touchTwoFingersTap (e: HammerInput, onButtonDown: CallableFunction): void {
-    if (e.pointerType === 'touch' && this._touchAction === TouchAction.NONE) {
+    if (e.pointerType === 'touch' && this.touchAction === TouchAction.NONE) {
       this.mc.get('twofingerspan').set({ enable: false })
       this.mc.get('twofingerspinch').set({ enable: false })
       onButtonDown()

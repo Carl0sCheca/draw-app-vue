@@ -1,5 +1,5 @@
 import { ISettings } from './Interfaces'
-import { Mouse } from './Mouse'
+import { Mouse, MouseButton } from './Mouse'
 import { EventCanvas } from './EventCanvas'
 import { Data } from './Data'
 import { ToolSelector, ToolType } from './Tools/ToolSelector'
@@ -12,10 +12,11 @@ import {
   VectorCeil,
   VectorClamp,
   VectorDiv,
-  VectorTrunc, VectorZero
+  VectorTrunc,
+  VectorZero
 } from './Utils/Math'
 import { LeftPointCanvas, RightPointCanvas } from './Utils/Canvas'
-import { Touch } from './Touch'
+import { Touch, TouchAction } from './Touch'
 
 export class DrawApp {
   public readonly canvas: HTMLCanvasElement
@@ -80,7 +81,7 @@ export class DrawApp {
     this.ctx.fillStyle = '#' + color
     this.ctx.fillRect(point.x, point.y, pointSizeW, pointSizeH)
 
-    if (showGrid) {
+    if (showGrid && (this.mouse.button !== MouseButton.MIDDLE || this.touch.touchAction !== TouchAction.MOVEZOOM)) {
       this.ctx.lineWidth = this.zoom.level
       this.ctx.strokeStyle = this.settings.gridColor
       this.ctx.strokeRect(point.x, point.y, pointSizeW, pointSizeH)
@@ -98,8 +99,10 @@ export class DrawApp {
   }
 
   public reloadCanvas (): void {
+    console.time('reloadCanvas')
     this.setSizeCanvas()
     this._redrawCanvas()
+    console.timeEnd('reloadCanvas')
   }
 
   public setSizeCanvas (): void {
