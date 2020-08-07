@@ -35,7 +35,7 @@ export class GUI {
   public reloadRelativeGUI (): void {
     if (this._drawApp.settings.showGrid) {
       this._centerLines()
-      // this._gridLines()
+      this._gridLines()
     }
   }
 

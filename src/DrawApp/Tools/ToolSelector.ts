@@ -40,7 +40,7 @@ export class ToolSelector {
     this.tools.push(new ColourPickerTool(drawApp, ToolType.COLOUR_PICKER))
     this.tools.push(new MoveTool(drawApp, ToolType.MOVE))
     this.tools.push(new ZoomTool(drawApp, ToolType.ZOOM, {
-      level: 1.1,
+      level: 1,
       minLevel: 1,
       maxLevel: 8,
       stepsMouseWheel: 0.1
