@@ -20,7 +20,7 @@ export class MoveTool extends Tool {
     if (!this._dragging) {
       this._dragging = true
       this.firstPoint = this.drawApp.mouse.realPosition
-    } else if (this._dragging) {
+    } else if (this._dragging && this.drawApp.zoom.level !== this.drawApp.zoom.minLevel) {
       const newPosition: Vector = {
         x: this.drawApp.zoom.offset.x - (this.firstPoint.x - this.drawApp.mouse.realPosition.x),
         y: this.drawApp.zoom.offset.y - (this.firstPoint.y - this.drawApp.mouse.realPosition.y)

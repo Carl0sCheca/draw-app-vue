@@ -72,7 +72,7 @@ export class ZoomTool extends Tool implements IZoom {
 
     if (this.drawApp.mouse.scroll === MouseScroll.UP) {
       this.zoomIn()
-    } else if (this.drawApp.mouse.scroll === MouseScroll.DOWN) {
+    } else if (this.drawApp.mouse.scroll === MouseScroll.DOWN && this.drawApp.zoom.level !== this.drawApp.zoom.minLevel) {
       this.zoomOut()
     }
   }
