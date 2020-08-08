@@ -9,11 +9,7 @@ interface EventButton {
 }
 
 export class EventCanvas {
-  private readonly _drawApp: DrawApp
-
-  public constructor (drawApp: DrawApp) {
-    this._drawApp = drawApp
-
+  public constructor (private readonly _drawApp: DrawApp) {
     window.addEventListener('resize', () => this.onResizeWindow(this._drawApp))
 
     // Mouse

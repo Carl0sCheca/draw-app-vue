@@ -6,20 +6,17 @@ import { CheckRange, DiscretizationPosition, Vector } from '../Utils/Math'
 import { TouchAction } from '../Touch'
 
 export class GUI {
-  private readonly _drawApp: DrawApp
-
   public toolbox: ToolBoxGUI
 
   private _clickIn: boolean
 
   public guiElements: GUIElement[]
 
-  public constructor (drawApp: DrawApp) {
-    this._drawApp = drawApp
+  public constructor (private readonly _drawApp: DrawApp) {
     this._clickIn = true
 
     this.guiElements = []
-    this.toolbox = new ToolBoxGUI(drawApp, 'toolboxGUI')
+    this.toolbox = new ToolBoxGUI(_drawApp, 'toolboxGUI')
     this.toolbox.init(this.guiElements)
   }
 

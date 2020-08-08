@@ -11,7 +11,6 @@ export enum TouchAction {
 }
 
 export class Touch {
-  private readonly _drawApp: DrawApp
   public readonly mc: HammerManager
 
   public touchAction: TouchAction
@@ -19,9 +18,8 @@ export class Touch {
   private limiting: number
   private lastScale: number
 
-  public constructor (drawApp: DrawApp) {
-    this._drawApp = drawApp
-    this.mc = new Hammer.Manager(drawApp.canvas)
+  public constructor (private readonly _drawApp: DrawApp) {
+    this.mc = new Hammer.Manager(_drawApp.canvas)
 
     this.touchAction = TouchAction.NONE
 

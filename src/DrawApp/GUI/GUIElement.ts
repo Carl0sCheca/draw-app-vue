@@ -2,13 +2,10 @@ import { DrawApp } from '../DrawApp'
 import { Vector } from '../Utils/Math'
 
 export abstract class GUIElement {
-  protected drawApp: DrawApp
-
   public loaded: boolean
 
   public enabled: boolean
   public clickIn: boolean
-  public name: string
   private _position: Vector
   private _size: Vector
 
@@ -21,10 +18,8 @@ export abstract class GUIElement {
 
   public img?: HTMLImageElement
 
-  public constructor (drawApp: DrawApp, name: string) {
-    this.drawApp = drawApp
+  public constructor (protected readonly drawApp: DrawApp, public name: string) {
     this.enabled = false
-    this.name = name
     this.clickIn = true
     this.child = []
 

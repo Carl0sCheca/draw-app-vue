@@ -23,10 +23,7 @@ export class Mouse {
   public scrollStep: number
   public moving: boolean
 
-  private readonly _drawApp: DrawApp
-
-  public constructor (drawApp: DrawApp) {
-    this._drawApp = drawApp
+  public constructor (private readonly _drawApp: DrawApp) {
     this.button = MouseButton.NONE
     this.scroll = MouseScroll.NONE
     this.moving = false

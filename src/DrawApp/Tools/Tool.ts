@@ -6,13 +6,11 @@ export abstract class Tool {
   public name: string
   public event: Event
   public toolType: ToolType
-  protected drawApp: DrawApp
   protected _dragging: boolean
 
   protected canRun: boolean
 
-  public constructor (drawApp: DrawApp, toolType: ToolType) {
-    this.drawApp = drawApp
+  public constructor (protected readonly drawApp: DrawApp, toolType: ToolType) {
     this.toolType = toolType
     this.name = this.toolType.toString()
     this.event = new Event(this.name)

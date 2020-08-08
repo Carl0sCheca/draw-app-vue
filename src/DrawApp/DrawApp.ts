@@ -19,7 +19,6 @@ import { LeftPointCanvas, RightPointCanvas } from './Utils/Canvas'
 import { Touch, TouchAction } from './Touch'
 
 export class DrawApp {
-  public readonly canvas: HTMLCanvasElement
   public readonly mouse: Mouse
   public readonly touch: Touch
   public readonly eventCanvas: EventCanvas
@@ -31,9 +30,8 @@ export class DrawApp {
 
   public readonly zoom: ZoomTool
 
-  public constructor (canvas: HTMLCanvasElement, settings: ISettings) {
+  public constructor (public readonly canvas: HTMLCanvasElement, settings: ISettings) {
     // Init canvas, mouse and events from canvas
-    this.canvas = canvas
     this.mouse = new Mouse(this)
     this.touch = new Touch(this)
     this.eventCanvas = new EventCanvas(this)

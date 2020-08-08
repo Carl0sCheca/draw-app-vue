@@ -15,18 +15,12 @@ export interface Pixel {
 }
 
 export class Data {
-  private _drawApp: DrawApp
-
   public pixels: string[][]
   public lastAction: Pixel[]
 
   private lastActionIndex: number
 
-  private readonly _gridSize: number
-
-  public constructor (drawApp: DrawApp, gridSize: number) {
-    this._drawApp = drawApp
-    this._gridSize = gridSize
+  public constructor (private readonly _drawApp: DrawApp, private readonly _gridSize: number) {
     this._initData()
   }
 
