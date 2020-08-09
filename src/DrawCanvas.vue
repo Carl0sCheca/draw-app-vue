@@ -34,6 +34,11 @@ export default class DrawCanvas extends Vue {
   public Data (): string[][] {
     return this.drawApp.data.pixels
   }
+
+  public LoadData (pixels: string[][]): void {
+    this.drawApp.data.pixels = pixels
+    this.drawApp.reloadCanvas()
+  }
 }
 </script>
 
