@@ -1,7 +1,7 @@
 <template lang="pug">
-div.canvasDrawingWrapper(:style="maxSizeCanvasCSS")
-  div.canvasDrawingContainer
-    canvas.canvasDrawing(:id="this.canvasId") DrawApp
+  div.canvasDrawingWrapper(:style="maxSizeCanvasCSS")
+    div.canvasDrawingContainer
+      canvas.canvasDrawing(:id="this.canvasId") DrawApp
 </template>
 
 <script lang="ts">
@@ -14,7 +14,7 @@ export default class DrawCanvas extends Vue {
   @Prop({ required: false, default: 600 }) maxSize!: number
   @Prop({ required: false, default: 16 }) gridSize!: number
 
-  drawApp: DrawApp
+  public drawApp: DrawApp
 
   get maxSizeCanvasCSS (): { 'max-height': string; 'max-width': string } {
     return {
@@ -24,14 +24,22 @@ export default class DrawCanvas extends Vue {
   }
 
   mounted (): void {
-    this.drawApp = new DrawApp((document.getElementById(this.canvasId) as HTMLCanvasElement), { gridSize: this.gridSize, gridColor: '000000', showGrid: true })
+    this.drawApp = new DrawApp((document.getElementById(this.canvasId) as HTMLCanvasElement), {
+      gridSize: this.gridSize,
+      gridColor: '000000',
+      showGrid: true
+    })
+  }
+
+  public Data (): string[][] {
+    return this.drawApp.data.pixels
   }
 }
 </script>
 
 <style scoped lang="sass">
 .canvasDrawing
-  position:  absolute
+  position: absolute
   top: 0
   left: 0
   bottom: 0
@@ -41,17 +49,19 @@ export default class DrawCanvas extends Vue {
   color: white
   width: 100%
   height: 100%
-  image-rendering: optimizeSpeed             /* Older versions of FF          */
-  image-rendering: -moz-crisp-edges          /* FF 6.0+                       */
-  image-rendering: -o-crisp-edges            /* OS X & Windows Opera (12.02+) */
-  image-rendering: pixelated                 /* Awesome future-browsers       */
-  -ms-interpolation-mode: nearest-neighbor   /* IE                            */
+  image-rendering: optimizeSpeed
+  image-rendering: -moz-crisp-edges
+  image-rendering: -o-crisp-edges
+  image-rendering: pixelated
+  -ms-interpolation-mode: nearest-neighbor
+
 .canvasDrawingContainer
   display: table
   margin: 0 auto
   position: relative
   width: 100%
-  padding-top: 100% /* 1:1 Aspect Ratio */
+  padding-top: 100%
+
 .canvasDrawingWrapper
   margin-top: 10px
   max-width: 480px
