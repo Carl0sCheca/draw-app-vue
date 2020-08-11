@@ -29,7 +29,7 @@ export class Data {
     if (typeof (Storage) !== undefined) {
       if (localStorage.pixels) {
         const pixels = JSON.parse(localStorage.pixels)
-        if (pixels.length === this._gridSize) {
+        if (pixels.length === parseInt(this._gridSize as unknown as string)) {
           this.pixels = pixels
           loaded = true
         }
