@@ -19079,7 +19079,7 @@ var Data_Data = /*#__PURE__*/function () {
         if (localStorage.pixels) {
           var pixels = JSON.parse(localStorage.pixels);
 
-          if (pixels.length === this._gridSize) {
+          if (pixels.length === parseInt(this._gridSize)) {
             this.pixels = pixels;
             loaded = true;
           }
