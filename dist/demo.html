@@ -1,0 +1,19 @@
+<meta charset="utf-8">
+<title>DrawCanvas demo</title>
+<script src="https://unpkg.com/vue"></script>
+<script src="./DrawCanvas.umd.js"></script>
+
+<link rel="stylesheet" href="./DrawCanvas.css">
+
+
+<div id="app">
+  <demo canvas-id="canvas" max-size="824" grid-size="32"></demo>
+</div>
+
+<script>
+new Vue({
+  components: {
+    demo: DrawCanvas
+  }
+}).$mount('#app')
+</script>
