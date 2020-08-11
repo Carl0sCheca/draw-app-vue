@@ -7,7 +7,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "comp": "vue-cli-service build --target lib --name DrawCanvas ./src/DrawCanvas.vue"
+    "comp": "vue-cli-service build --target wc --name draw-canvas ./src/DrawCanvas.vue"
   },
   "dependencies": {
     "core-js": "^3.6.5",
