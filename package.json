@@ -2,12 +2,12 @@
   "name": "draw-app-vue",
   "version": "1.0.0",
   "private": true,
-  "main": "./dist/DrawApp.umd.js",
+  "main": "./dist/draw-canvas.js",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "comp": "vue-cli-service build --target wc --name draw-canvas ./src/DrawCanvas.vue"
+    "comp": "vue-cli-service build --target lib --inline-vue --name draw-canvas ./src/DrawCanvas.vue"
   },
   "dependencies": {
     "core-js": "^3.6.5",

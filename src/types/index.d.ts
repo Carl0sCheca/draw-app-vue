@@ -1,5 +1,12 @@
-declare module 'draw-app-vue' {
-  import DrawCanvas from 'src/DrawCanvas.vue'
+import Vue from 'vue'
+import { DrawApp } from '../DrawApp/DrawApp'
 
-  export { DrawCanvas };
+declare class DrawCanvas extends Vue {
+  drawApp: DrawApp;
+  Data: string[][];
+  LoadData: void;
 }
+
+export as namespace DrawCanvas;
+
+export = DrawCanvas;

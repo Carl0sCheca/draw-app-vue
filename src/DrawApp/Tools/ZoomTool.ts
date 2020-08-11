@@ -1,11 +1,11 @@
 import { DrawApp } from '../DrawApp'
-import { IZoom } from '../Interfaces'
+import { Zoom } from '../Interfaces'
 import { Clamp, Vector } from '../Utils/Math'
 import { Tool } from './Tool'
 import { ToolType } from './ToolSelector'
 import { MouseButton, MouseScroll } from '../Mouse'
 
-export class ZoomTool extends Tool implements IZoom {
+export class ZoomTool extends Tool implements Zoom {
   public level: number
   public maxLevel: number
   public minLevel: number
@@ -13,7 +13,7 @@ export class ZoomTool extends Tool implements IZoom {
   public position: Vector
   public stepsMouseWheel: number
 
-  public constructor (drawApp: DrawApp, toolType: ToolType, settings: IZoom) {
+  public constructor (drawApp: DrawApp, toolType: ToolType, settings: Zoom) {
     super(drawApp, toolType)
 
     this.level = settings.level

@@ -1,6 +1,5 @@
 import { GUIElement } from './GUIElement'
 import { PencilButton } from './ToolBox/PencilButton'
-import { FetchSVG } from '../Utils/Util'
 import { CircleButton } from './ToolBox/CircleButton'
 import { GridButton } from './ToolBox/GridButton'
 import { ClearButton } from './ToolBox/ClearButton'
@@ -11,6 +10,8 @@ import { GUI } from './GUI'
 import { ToolType } from '../Tools/ToolSelector'
 import { UndoButton } from './ToolBox/UndoButton'
 import { RedoButton } from './ToolBox/RedoButton'
+import * as Images from '../assets/images'
+import { LoadImage } from '../Utils/Util'
 
 export class ToolBoxGUI extends GUIElement {
   public windowResize () {
@@ -40,78 +41,60 @@ export class ToolBoxGUI extends GUIElement {
   public async loadImagesAndButtons (): Promise<void> {
     const globalSize = 64
 
-    await FetchSVG('pencil').then(img => {
-      const pencilButton: PencilButton = new PencilButton(this.drawApp, ToolType.PENCIL.toString())
-      pencilButton.parent = this
-      pencilButton.init()
-      GUIElement.AddElement(this.child, this.drawApp, pencilButton, img, {
-        x: this.position.x,
-        y: this.position.y
-      })
-      FetchSVG('pencil_big').then(img => {
-        pencilButton.imgAlternative = img
-      })
+    const pencilButton: PencilButton = new PencilButton(this.drawApp, ToolType.PENCIL.toString())
+    pencilButton.parent = this
+    pencilButton.init()
+
+    GUIElement.AddElement(this.child, this.drawApp, pencilButton, LoadImage(Images.pencil), {
+      x: this.position.x,
+      y: this.position.y
     })
+    pencilButton.imgAlternative = LoadImage(Images.pencilBig)
 
-    await FetchSVG('circle').then(img => {
-      const circleButton: CircleButton = new CircleButton(this.drawApp, ToolType.CIRCLE.toString())
-
-      GUIElement.AddElement(this.child, this.drawApp, circleButton, img, {
-        x: this.position.x,
-        y: this.position.y + globalSize * this.child.length
-      })
-      FetchSVG('circle_filled').then(img2 => {
-        circleButton.imgFilled = img2
-      })
-    })
-
-    await FetchSVG('bucket').then(img => GUIElement.AddElement(this.child, this.drawApp, new BucketButton(this.drawApp, ToolType.BUCKET.toString()), img, {
+    const circleButton: CircleButton = new CircleButton(this.drawApp, ToolType.CIRCLE.toString())
+    GUIElement.AddElement(this.child, this.drawApp, circleButton, LoadImage(Images.circle), {
       x: this.position.x,
       y: this.position.y + globalSize * this.child.length
-    }))
+    })
+    circleButton.imgFilled = LoadImage(Images.circleFilled)
 
-    await FetchSVG('colorpicker').then(img => GUIElement.AddElement(this.child, this.drawApp, new ColorPickerButton(this.drawApp, ToolType.COLOUR_PICKER.toString()), img, {
+    GUIElement.AddElement(this.child, this.drawApp, new BucketButton(this.drawApp, ToolType.BUCKET.toString()), LoadImage(Images.bucket), {
       x: this.position.x,
       y: this.position.y + globalSize * this.child.length
-    }))
-
-    await FetchSVG('grid').then(img => {
-      const circleButton: CircleButton = new GridButton(this.drawApp, ToolType.GRID.toString())
-      circleButton.selectable = false
-      GUIElement.AddElement(this.child, this.drawApp, circleButton, img, {
-        x: this.position.x,
-        y: this.position.y + globalSize * this.child.length
-      })
-      FetchSVG('grid_disabled').then(img2 => {
-        circleButton.imgFilled = img2
-      })
     })
 
-    await FetchSVG('clear').then(img => {
-      const clearButton: ClearButton = new ClearButton(this.drawApp, ToolType.CLEAR.toString())
-      clearButton.selectable = false
-      GUIElement.AddElement(this.child, this.drawApp, clearButton, img, {
-        x: this.drawApp.canvas.width - globalSize,
-        y: 0
-      })
+    GUIElement.AddElement(this.child, this.drawApp, new ColorPickerButton(this.drawApp, ToolType.COLOUR_PICKER.toString()), LoadImage(Images.colorpicker), {
+      x: this.position.x,
+      y: this.position.y + globalSize * this.child.length
     })
 
-    await FetchSVG('undo').then(img => {
-      const undoButton: UndoButton = new UndoButton(this.drawApp, 'undoButton')
-      undoButton.selectable = false
-      GUIElement.AddElement(this.child, this.drawApp, undoButton, img, {
-        x: this.position.x + globalSize,
-        y: this.position.y
-      })
+    const gridButton: GridButton = new GridButton(this.drawApp, ToolType.GRID.toString())
+    gridButton.selectable = false
+    GUIElement.AddElement(this.child, this.drawApp, gridButton, LoadImage(Images.grid), {
+      x: this.position.x,
+      y: this.position.y + globalSize * this.child.length
+    })
+    gridButton.imgFilled = LoadImage(Images.gridDisabled)
+
+    const clearButton: ClearButton = new ClearButton(this.drawApp, ToolType.CLEAR.toString())
+    clearButton.selectable = false
+    GUIElement.AddElement(this.child, this.drawApp, clearButton, LoadImage(Images.clear), {
+      x: this.drawApp.canvas.width - globalSize,
+      y: 0
     })
 
-    await FetchSVG('redo').then(img => {
-      const redoButton: RedoButton = new RedoButton(this.drawApp, 'redoButton')
-      redoButton.selectable = false
-      GUIElement.AddElement(this.child, this.drawApp, redoButton, img, {
-        x: this.position.x + (globalSize * 2),
-        y: this.position.y
-      })
+    const undoButton: UndoButton = new UndoButton(this.drawApp, 'undoButton')
+    undoButton.selectable = false
+    GUIElement.AddElement(this.child, this.drawApp, undoButton, LoadImage(Images.undo), {
+      x: this.position.x + globalSize,
+      y: this.position.y
+    })
+
+    const redoButton: RedoButton = new RedoButton(this.drawApp, 'redoButton')
+    redoButton.selectable = false
+    GUIElement.AddElement(this.child, this.drawApp, redoButton, LoadImage(Images.redo), {
+      x: this.position.x + (globalSize * 2),
+      y: this.position.y
     })
 
     const colorSelector: ColorSelectorButton = new ColorSelectorButton(this.drawApp, 'Color Selector')

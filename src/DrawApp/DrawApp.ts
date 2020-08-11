@@ -1,4 +1,4 @@
-import { ISettings } from './Interfaces'
+import { Settings } from './Interfaces'
 import { Mouse, MouseButton } from './Mouse'
 import { EventCanvas } from './EventCanvas'
 import { Data } from './Data'
@@ -22,7 +22,7 @@ export class DrawApp {
   public readonly mouse: Mouse
   public readonly touch: Touch
   public readonly eventCanvas: EventCanvas
-  public readonly settings: ISettings
+  public readonly settings: Settings
   public readonly data: Data
   public readonly toolSelector: ToolSelector
   public readonly ctx: CanvasRenderingContext2D
@@ -30,7 +30,7 @@ export class DrawApp {
 
   public readonly zoom: ZoomTool
 
-  public constructor (public readonly canvas: HTMLCanvasElement, settings: ISettings) {
+  public constructor (public readonly canvas: HTMLCanvasElement, settings: Settings) {
     // Init canvas, mouse and events from canvas
     this.mouse = new Mouse(this)
     this.touch = new Touch(this)
@@ -55,6 +55,7 @@ export class DrawApp {
 
     // Init GUI
     this.gui = new GUI(this)
+    this.gui.initToolBox()
 
     // Init canvas
     this.reloadCanvas()

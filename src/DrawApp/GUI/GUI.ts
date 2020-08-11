@@ -16,7 +16,10 @@ export class GUI {
     this._clickIn = true
 
     this.guiElements = []
-    this.toolbox = new ToolBoxGUI(_drawApp, 'toolboxGUI')
+  }
+
+  public initToolBox (): void {
+    this.toolbox = new ToolBoxGUI(this._drawApp, 'toolboxGUI')
     this.toolbox.init(this.guiElements)
   }
 
