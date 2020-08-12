@@ -23,7 +23,7 @@ export class Touch {
 
     this.touchAction = TouchAction.NONE
 
-    this.mc.add(new Hammer.Press({ time: 25 }))
+    this.mc.add(new Hammer.Press({ time: 40 }))
     this.mc.add(new Hammer.Pan({ event: 'move', pointers: 1 }))
     this.mc.add(new Hammer.Tap({ event: 'singletap' }))
     this.mc.add(new Hammer.Tap({ event: 'twofingerstap', pointers: 2 }))

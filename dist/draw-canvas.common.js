@@ -21461,7 +21461,7 @@ var Touch_Touch = /*#__PURE__*/function () {
     this.mc = new hammer_default.a.Manager(_drawApp.canvas);
     this.touchAction = TouchAction.NONE;
     this.mc.add(new hammer_default.a.Press({
-      time: 25
+      time: 40
     }));
     this.mc.add(new hammer_default.a.Pan({
       event: 'move',
