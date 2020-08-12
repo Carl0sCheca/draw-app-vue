@@ -20099,12 +20099,12 @@ var EventCanvas_EventCanvas = /*#__PURE__*/function () {
       return _this.onTouchMove(e);
     });
 
-    this._drawApp.touch.mc.on('twofingerspanmove twofingerspinchmove', function (e) {
-      return _this.onTwoFingersMove(e);
-    });
-
     this._drawApp.touch.mc.on('twofingerstap', function (e) {
       return _this.onTwoFingersTap(e);
+    });
+
+    this._drawApp.touch.mc.on('twofingerspanmove twofingerspinchmove', function (e) {
+      return _this.onTwoFingersMove(e);
     });
   }
 
@@ -20336,6 +20336,10 @@ var EventCanvas_EventCanvas = /*#__PURE__*/function () {
     key: "_setupMousePosition",
     value: function _setupMousePosition(e) {
       var mouse = this._drawApp.mouse;
+
+      if (e === undefined) {
+        e = VectorZero;
+      }
 
       if (mouse.lastPosition === null) {
         mouse.mouseMove({
@@ -20988,6 +20992,14 @@ var ClearButton_ClearButton = /*#__PURE__*/function (_GUIElement) {
   }
 
   _createClass(ClearButton, [{
+    key: "windowResize",
+    value: function windowResize() {
+      this.position = {
+        x: this.drawApp.canvas.width - this.size.x,
+        y: 0
+      };
+    }
+  }, {
     key: "ui",
     value: function ui() {
       this.drawApp.ctx.drawImage(this.img, this.position.x, this.position.y, this.size.x, this.size.y);
@@ -21470,7 +21482,7 @@ var Touch_Touch = /*#__PURE__*/function () {
     this.mc = new hammer_default.a.Manager(_drawApp.canvas);
     this.touchAction = TouchAction.NONE;
     this.mc.add(new hammer_default.a.Press({
-      time: 40
+      time: 25
     }));
     this.mc.add(new hammer_default.a.Pan({
       event: 'move',
@@ -21485,11 +21497,13 @@ var Touch_Touch = /*#__PURE__*/function () {
     }));
     this.mc.add(new hammer_default.a.Pan({
       event: 'twofingerspan',
-      pointers: 2
+      pointers: 2,
+      threshold: 5
     }));
     this.mc.add(new hammer_default.a.Pinch({
       event: 'twofingerspinch',
-      pointers: 2
+      pointers: 2,
+      threshold: 5
     }));
     this.mc.get('twofingerspinch').recognizeWith('twofingerstap');
     this.mc.get('twofingerspan').recognizeWith('twofingerstap');
@@ -21515,7 +21529,7 @@ var Touch_Touch = /*#__PURE__*/function () {
         enable: true
       });
 
-      if (this.touchAction === TouchAction.LEFTBUTTON || this.touchAction === TouchAction.MOVEZOOM) {
+      if (this.touchAction !== TouchAction.NONE) {
         onButtonUp(this._touchLastPosition);
         this.touchAction = TouchAction.NONE;
         this._drawApp.mouse.button = MouseButton.NONE;
