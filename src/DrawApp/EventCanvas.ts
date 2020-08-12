@@ -27,8 +27,8 @@ export class EventCanvas {
 
     this._drawApp.touch.mc.on('press', (e: HammerInput) => this.onTouchPress(e))
     this._drawApp.touch.mc.on('move', (e: HammerInput) => this.onTouchMove(e))
-    this._drawApp.touch.mc.on('twofingerspanmove twofingerspinchmove', (e: HammerInput) => this.onTwoFingersMove(e))
     this._drawApp.touch.mc.on('twofingerstap', (e: HammerInput) => this.onTwoFingersTap(e))
+    this._drawApp.touch.mc.on('twofingerspanmove twofingerspinchmove', (e: HammerInput) => this.onTwoFingersMove(e))
   }
 
   public onTouchEnd (e: TouchEvent): void {
@@ -187,6 +187,10 @@ export class EventCanvas {
 
   private _setupMousePosition (e: Vector): void {
     const mouse: Mouse = this._drawApp.mouse
+
+    if (e === undefined) {
+      e = VectorZero
+    }
 
     if (mouse.lastPosition === null) {
       mouse.mouseMove({ x: e.x, y: e.y })

@@ -23,12 +23,12 @@ export class Touch {
 
     this.touchAction = TouchAction.NONE
 
-    this.mc.add(new Hammer.Press({ time: 40 }))
+    this.mc.add(new Hammer.Press({ time: 25 }))
     this.mc.add(new Hammer.Pan({ event: 'move', pointers: 1 }))
     this.mc.add(new Hammer.Tap({ event: 'singletap' }))
     this.mc.add(new Hammer.Tap({ event: 'twofingerstap', pointers: 2 }))
-    this.mc.add(new Hammer.Pan({ event: 'twofingerspan', pointers: 2 }))
-    this.mc.add(new Hammer.Pinch({ event: 'twofingerspinch', pointers: 2 }))
+    this.mc.add(new Hammer.Pan({ event: 'twofingerspan', pointers: 2, threshold: 5 }))
+    this.mc.add(new Hammer.Pinch({ event: 'twofingerspinch', pointers: 2, threshold: 5 }))
 
     this.mc.get('twofingerspinch').recognizeWith('twofingerstap')
     this.mc.get('twofingerspan').recognizeWith('twofingerstap')
@@ -43,7 +43,7 @@ export class Touch {
     this.mc.get('twofingerspan').set({ enable: true })
     this.mc.get('twofingerspinch').set({ enable: true })
 
-    if (this.touchAction === TouchAction.LEFTBUTTON || this.touchAction === TouchAction.MOVEZOOM) {
+    if (this.touchAction !== TouchAction.NONE) {
       onButtonUp(this._touchLastPosition)
       this.touchAction = TouchAction.NONE
       this._drawApp.mouse.button = MouseButton.NONE
