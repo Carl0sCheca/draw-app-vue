@@ -1,4 +1,5 @@
-# draw-app-vue
+# draw-pixelart-app
 
-## Project setup
-Link this project to any vue project and import **DrawCanvas.vue**
+## Demo
+
+[Demo](https://drawapp.demos.carl0scheca.com/)

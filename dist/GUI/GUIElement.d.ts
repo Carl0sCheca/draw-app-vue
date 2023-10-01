@@ -1,0 +1,31 @@
+import { DrawApp } from '../index';
+import { Vector } from '../Utils/Math';
+export declare abstract class GUIElement {
+    protected readonly drawApp: DrawApp;
+    name: string;
+    loaded: boolean;
+    enabled: boolean;
+    clickIn: boolean;
+    private _position;
+    private _size;
+    selectable: boolean;
+    hoverable: boolean;
+    active: boolean;
+    parent?: GUIElement;
+    child: Array<GUIElement>;
+    img?: HTMLImageElement;
+    constructor(drawApp: DrawApp, name: string);
+    windowResize?(): void;
+    set size(size: Vector);
+    get size(): Vector;
+    set position(position: Vector);
+    get position(): Vector;
+    hide(): void;
+    show(): void;
+    hover(): void;
+    abstract ui(): void;
+    static AddElement(collection: Array<GUIElement>, drawApp: DrawApp, element: GUIElement, img?: HTMLImageElement, position?: Vector, size?: Vector): void;
+    mouseUp?(): void;
+    mouseDown?(): void;
+    setActive(image?: HTMLImageElement, rotation?: number): void;
+}

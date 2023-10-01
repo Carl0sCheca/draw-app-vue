@@ -1,0 +1,10 @@
+import { DrawApp } from '../index';
+import { Vector } from './Math';
+export declare function RecursiveFillPosition(pos: Vector, drawApp: DrawApp, array: Array<Vector>): void;
+export declare function RecursiveFillColor(pos: Vector, drawApp: DrawApp, array: Array<Vector>, color: string): void;
+export declare function IsInsideCanvas(drawApp: DrawApp): boolean;
+export declare function LeftPointCanvas(drawApp: DrawApp): Vector;
+export declare function RightPointCanvas(drawApp: DrawApp): Vector;
+export declare function MiddlePointCanvas(drawApp: DrawApp): Vector;
+export declare function PixelsOnScreen(drawApp: DrawApp): number;
+export declare function CheckIfSamePositionAsLast(actualPosition: Vector, lastPosition: Vector): boolean;
