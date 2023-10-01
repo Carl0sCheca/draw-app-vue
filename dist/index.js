@@ -31,6 +31,29 @@ export class DrawApp {
         // Init canvas
         this.reloadCanvas();
     }
+    getData() {
+        return this.data.pixels;
+    }
+    loadData(pixels) {
+        this.data.pixels = pixels;
+        this.reloadCanvas();
+    }
+    saveImage() {
+        let wasGridEnabled = false;
+        if (this.settings.showGrid) {
+            wasGridEnabled = true;
+            this.toggleGrid();
+        }
+        const canvasUrl = this.canvas.toDataURL();
+        const createEl = document.createElement('a');
+        createEl.href = canvasUrl;
+        createEl.download = 'image';
+        createEl.click();
+        createEl.remove();
+        if (wasGridEnabled) {
+            this.toggleGrid();
+        }
+    }
     paintCanvas(position, showGrid = false, color = this.toolSelector.colorSelected, sizeWidth = this.settings.pixelSize, sizeHeight = this.settings.pixelSize) {
         const point = {
             x: position.x * this.zoom.level + this.zoom.offset.x,

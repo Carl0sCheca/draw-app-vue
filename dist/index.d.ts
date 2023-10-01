@@ -19,6 +19,9 @@ export declare class DrawApp {
     readonly gui: GUI;
     readonly zoom: ZoomTool;
     constructor(canvas: HTMLCanvasElement, settings: Settings);
+    getData(): string[][];
+    loadData(pixels: string[][]): void;
+    saveImage(): void;
     paintCanvas(position: Vector, showGrid?: boolean, color?: string, sizeWidth?: number, sizeHeight?: number): void;
     resizeWindow(): void;
     reloadCanvas(): void;
